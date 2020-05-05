@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://34.238.240.220:3000'
+  apiUrl: 'https://pure-beyond-85422.herokuapp.com/api'
 };
