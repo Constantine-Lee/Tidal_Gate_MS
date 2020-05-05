@@ -1,0 +1,71 @@
+<nav *ngIf="currentUser" class="navbar navbar-expand-lg navbar-light bg-white ">
+    <a class="navbar-brand " href="#" routerLinkActive="active">
+        <img src="../../assets/images/sarawakLogo.svg" width="45" height="45" alt="">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+        aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <!--<li class="nav-item">
+                <a *ngIf="currentUser" class="nav-link" routerLink="/profile" routerLinkActive="active">Profile</a>
+            </li>-->
+            <li class="nav-item">
+                <a *ngIf="isAdmin" class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a>
+            </li>
+            <li class="nav-item">
+                <a *ngIf="currentUser" class="nav-link" routerLink="/gate" routerLinkActive="active">Gate<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a *ngIf="currentUser" class="nav-link" routerLink="/maintenanceLog"
+                    routerLinkActive="active">Maintenance Log</a>
+            </li>
+            <li class="nav-item">
+                <a *ngIf="currentUser" class="nav-link" routerLink="/inspectionLog" routerLinkActive="active">Inspection
+                    Log</a>
+            </li>
+            <!--
+            <li class="nav-item">
+                <a *ngIf="isAdmin" class="nav-link" routerLink="/addGate" routerLinkActive="active">Add Gate</a>
+            </li>
+            <li class="nav-item">
+                <a *ngIf="currentUser" class="nav-link" routerLink="/addMaintenanceLog" routerLinkActive="active">Add
+                    Maintenance Log</a>
+            </li>
+            <li class="nav-item">
+                <a *ngIf="currentUser" class="nav-link" routerLink="/addInspectionLog" routerLinkActive="active">Add
+                    Inspection Log</a>
+            </li>-->
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    Add
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a *ngIf="isAdmin" class="dropdown-item" routerLink="/addGate" routerLinkActive="active">Gate</a>
+                    <div *ngIf="isAdmin" class="dropdown-divider"></div>
+                    <a *ngIf="currentUser" class="dropdown-item" routerLink="/addMaintenanceLog"
+                        routerLinkActive="active">Maintenance Log</a>
+                    <a *ngIf="currentUser" class="dropdown-item" routerLink="/addInspectionLog" routerLinkActive="active"> Inspection Log</a>                 
+                </div>
+            </li>
+
+        </ul>
+        <ul class="navbar-nav navbar-right">
+            <li class="nav-item">
+                <a (click)="logout()" routerLink="/logout" class="nav-link" *ngIf="currentUser"
+                    routerLinkActive="active">Logout</a>
+            </li>
+
+        </ul>
+        <ul class="navbar-nav navbar-right">
+            <li class="nav-item">
+                <a routerLink="/login" class="nav-link" *ngIf="!currentUser" routerLinkActive="active">Log In</a>
+            </li>
+        </ul>
+
+    </div>
+</nav>

@@ -1,0 +1,56 @@
+<!--
+<div class="card mt-4 ">    
+    <div class="card-body">
+        <h4 >User Profile</h4>
+        
+        <p>Your role is: <strong>{{currentUser.role}}</strong>.</p>
+        <p>This page can be accessed by <u>all authenticated users</u>.</p>
+        <p class="mb-1">Current user from secure api end point:</p>
+        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
+        <ul *ngIf="userFromApi">
+            <li>{{userFromApi.firstName}} {{userFromApi.lastName}}</li>
+        </ul>
+    </div>
+</div>-->
+<div>
+    <nav aria-label="breadcrumb ">
+        <ol class="breadcrumb mb-2">
+            <li class="breadcrumb-item"><a routerLink="home">Home</a></li>
+        </ol>
+    </nav>
+    <div class="container">
+
+        <div>
+            <div class="card-deck align-bottom" >
+                <div class="card ">
+                    <a routerLink="gate">
+                        <img class="card-img-top p-5" src="../../assets/images/tidalControlGate.svg" height="300">
+                        <div class="card-body">
+                            <h1 class="card-title  text-center">Tidal Control Gate</h1>
+                        </div>
+                    </a>
+                </div>
+                <div class="card">
+                    <a routerLink="maintenanceLog">
+                        <img class="card-img-top p-5" src="../../assets/images/maintenanceLogo.svg" alt="Card image cap"
+                            height="300">
+                        <div class="card-body">
+                            <h1 class="card-title text-center">Maintenance Log</h1>
+
+                        </div>
+                    </a>
+                </div>
+                <div class="card">
+                    <a routerLink="inspectionLog">
+                        <img class="card-img-top p-5" src="../../assets/images/inspectionLog.svg" alt="Card image cap"
+                            height="300">
+                        <div class="card-body">
+                            <h1 class="card-title text-center">Inspection Log</h1>
+
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
