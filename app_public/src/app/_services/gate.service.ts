@@ -8,36 +8,39 @@ import { Gate } from '../_models/gate';
 import { QuestionBase } from '.././question/questionBase';
 
 const httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'image/jpeg',
-      'responseType':  'blob'      
-    })
-  };
+  headers: new HttpHeaders({
+    'Content-Type': 'image/jpeg',
+    //'responseType':  'blob'      
+  })
+};
 
 @Injectable({ providedIn: 'root' })
 export class GateService {
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-    addGate(questions: any): Observable<any>{
-        return this.http.post<any>(`${environment.apiUrl}/gate`, questions).pipe(
-            tap((answer: any) => console.log(answer))
-        );
-    }
-
-    getGates(): Observable<any>{
-       return this.http.get<any>(`${environment.apiUrl}/gate`);
-    }
-
-    getProfilePic(){
-      return this.http.get<any>(`${environment.apiUrl}/gate/image/gate-1587126279204.jpg`, httpOptions).pipe(
-        tap((answer: any) => console.log(answer))
-    );
-    }
-
-    deleteGate(id : number){
-      const url = `${environment.apiUrl}/gate/${id}`;      
-      return this.http.delete<any>(url).pipe(
-        tap(_ => console.log(`deleted gate id=${id}`))
-      );
+  addGate(gate: FormData): Observable<any> {
+    return this.http.post<any>(`${environment.apiUrl}/gates`, gate);
   }
+
+  getGates(): Observable<Gate[]> {
+    return this.http.get<Gate[]>(`${environment.apiUrl}/gates`);
+  }
+
+  async getGateByID(id: string): Promise<Gate> {
+    return await this.http.get<Gate>(`${environment.apiUrl}/gates/${id}`).toPromise();
+  }
+
+  getProfilePic(url: string) {
+    return this.http.get<any>(`${environment.apiUrl}/gates/images/${url}`, httpOptions);
+  }
+
+  deleteGate(id: number) {
+    const url = `${environment.apiUrl}/gates/${id}`;
+    return this.http.delete<Gate>(url);
+  }
+
+  updateGate(gate: FormData): Observable<any>{
+    const url = `${environment.apiUrl}/gates/${gate['_id']}`;
+    return this.http.put<any>(url, gate);
+}
 }

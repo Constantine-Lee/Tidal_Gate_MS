@@ -20,9 +20,7 @@ export class InspectionLogTableComponent implements OnInit {
   logIdAscending: boolean = true;
   pager: any = {};
 
-  currentViewLog: InspectionLog;
-
-  constructor(private insepctionLogService: InspectionLogService) { }
+  constructor(private insepctionLogService: InspectionLogService) {}
 
   ngOnInit(): void {
     this.getInspectionLogs();
@@ -74,7 +72,6 @@ export class InspectionLogTableComponent implements OnInit {
     this.generatePager(idSorted, 1);
   }
 
-
   onChangePage(pageOfItems: Array<any>) {
     // update current page of items
     this.pageOfItems = pageOfItems;
@@ -85,16 +82,6 @@ export class InspectionLogTableComponent implements OnInit {
       this.inspectionLogs = data;
       this.setPage(1);
     });
-  }
-
-  setCurrentViewLog(inspectionLog: InspectionLog): void {
-    console.log(inspectionLog);
-    this.currentViewLog = inspectionLog;
-    this.toggleShowDetails();
-  }
-
-  toggleShowDetails() {
-    this.showDetails = this.showDetails == true ? false : true;
   }
 
   delete(id: number): void {

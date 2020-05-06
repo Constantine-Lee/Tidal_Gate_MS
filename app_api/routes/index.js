@@ -10,6 +10,7 @@ const auth = jwt({
 })
 
 const ctrlAuth = require('../controllers/authentication');
+const ctrlUser = require('../controllers/user');
 const ctrlInspect = require('../controllers/inspectionLog');
 const ctrlMaintain = require('../controllers/maintenanceLog');
 const ctrlGate = require('../controllers/gate');
@@ -22,24 +23,28 @@ const storage = multer.diskStorage({
         const fileExtName = path.extname(file.originalname);
         console.log(fileExtName);
         const timestamp = Date.now();
+                
         cb(null, `gate-${timestamp}${fileExtName}`);
     }
 })
 
 const upload = multer({ storage: storage ,
     fileFilter: function (req, file, cb) {
-        if (file.mimetype !== 'image/png') {
-            console.log(file.mimetype);
+        const ext = path.extname(file.originalname);
+        console.log(ext);
+        if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {            
             req.fileValidationError = 'goes wrong on the mimetype';
             return cb(null, false);
         }
         console.log("success");
-        cb(null, false);
+        cb(null, true);
     }
 })
 
 router.post('/register', ctrlAuth.register);
 router.post('/login', ctrlAuth.login);
+router.get('/users', ctrlUser.getUsers);
+router.delete('/users/:userID', ctrlUser.deleteUser);
 
 router
     .route('/inspectionLogs/:inspectionLogID')

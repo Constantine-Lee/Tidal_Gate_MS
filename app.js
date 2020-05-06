@@ -22,11 +22,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'app_public', 'build')));
+//Serves all the request which includes /images in the url from Images folder
+app.use('/api/images', express.static(__dirname + '/images'));
 app.use(passport.initialize());
 
-app.use('/api', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');  
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   next();
 });
 
@@ -58,6 +61,8 @@ app.use(function(err, req, res) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 app.listen(3000, () => console.log(`listening at http://localhost:3000`))
 

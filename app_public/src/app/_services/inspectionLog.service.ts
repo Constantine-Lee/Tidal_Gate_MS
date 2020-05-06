@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { User } from '../_models/user';
-import { Observable } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError, map, tap, retry } from 'rxjs/operators';
 import { InspectionLog } from '../_models/inspectionLog';
 import { QuestionBase } from '.././question/questionBase';
 
@@ -18,28 +18,27 @@ const httpOptions = {
 export class InspectionLogService {
     constructor(private http: HttpClient) { }
 
-    addInspectionLog(questions: any): Observable<any>{
-        return this.http.post<any>(`${environment.apiUrl}/inspectionlog`, questions, httpOptions).pipe(
-            tap((answer: any) => console.log(answer))
-        );
+    addInspectionLog(inspectionLog: InspectionLog): Observable<InspectionLog>{
+        return this.http.post<InspectionLog>(`${environment.apiUrl}/inspectionLogs`, inspectionLog, httpOptions);
     }
 
-    getInspectionLogs(): Observable<any>{
-       return this.http.get<any>(`${environment.apiUrl}/inspectionlog`);
+    getInspectionLogs(): Observable<InspectionLog[]>{
+       return this.http.get<InspectionLog[]>(`${environment.apiUrl}/inspectionLogs`);
     }
+
+    async getInspectionLogByID(id: string): Promise<InspectionLog>{
+      return await this.http.get<InspectionLog>(`${environment.apiUrl}/inspectionLogs/${id}`).toPromise();
+   }
 
     deleteInspectionLog(id : number){
-        const url = `${environment.apiUrl}/inspectionlog/${id}`;
-        console.log(url);
-        return this.http.delete<any>(url, httpOptions).pipe(
-          tap(_ => console.log(`deleted inspection log id=${id}`))
-        );
+        const url = `${environment.apiUrl}/inspectionLogs/${id}`;
+        return this.http.delete<InspectionLog>(url, httpOptions);
     }
 
-    updateInspectionLog(inspectionLog: InspectionLog): Observable<any>{
-        const url = `${environment.apiUrl}/inspectionlog/${inspectionLog._id}`;
-        return this.http.put(url, inspectionLog, httpOptions).pipe(
-            tap((answer: any) => console.log(answer))
-          );
+    updateInspectionLog(inspectionLog: InspectionLog): Observable<InspectionLog>{
+        const url = `${environment.apiUrl}/inspectionLogs/${inspectionLog._id}`;
+        return this.http.put<InspectionLog>(url, inspectionLog, httpOptions);
     }
+
+
 }

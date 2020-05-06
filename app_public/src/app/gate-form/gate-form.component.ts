@@ -48,6 +48,7 @@ export class GateFormComponent implements OnInit {
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
+    formData.append('profilePhoto', this.previewUrl);
     this.gateService.addGate(formData).subscribe(res => this.goBack(), err => console.log(err));
   }
 

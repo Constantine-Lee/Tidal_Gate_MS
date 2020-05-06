@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 import { Location } from '@angular/common';
 import { MaintenanceLog } from '../_models/maintenanceLog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-maintenance-log-form',
@@ -14,27 +15,25 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 })
 export class MaintenanceLogFormComponent implements OnInit {
   questions: QuestionBase<string>[] = [];
-  form: FormGroup; 
+  form: FormGroup;
 
-  constructor(private service: MaintenanceLogQuestionService, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService, private location: Location) {
-    this.questions = service.getQuestions();
-  }
+  constructor(private service: MaintenanceLogQuestionService, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService, private router: Router) {
 
-  goBack(): void {
-    this.location.back();
   }
 
   ngOnInit(): void {
+    this.questions = this.service.getQuestions();
     this.form = this.qcs.toFormGroup(this.questions);
   }
 
   onSubmit(): void {
-    let formValue = this.form.getRawValue();
-    this.questions.map(question => question.value = formValue[question.key]);    
-    
-    let newMaintenanceLog = new MaintenanceLog({gate:formValue['Gate Name *'], date_maintenance:formValue['Maintenance Date *'], action_taken:formValue['Action Taken *'], action_needed:formValue['Action Needed *'], question:JSON.stringify(this.questions)});
+    const formValue = this.form.getRawValue();
+    this.questions.map(question => question.value = formValue[question.key]);
 
-    this.maintenanceLogService.addMaintenanceLog(newMaintenanceLog).subscribe(res => this.goBack(), err => console.log(err));
+    const newMaintenanceLog = new MaintenanceLog({ gate: formValue['Gate Name *'], date_maintenance: formValue['Maintenance Date *'], action_taken: formValue['Action Taken *'], action_needed: formValue['Action Needed *'], question: JSON.stringify(this.questions) });
+
+    this.maintenanceLogService.addMaintenanceLog(newMaintenanceLog)
+    .subscribe(_ => this.router.navigate(['/maintenanceLog']));
   }
 }
 

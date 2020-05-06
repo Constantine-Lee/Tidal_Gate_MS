@@ -23,8 +23,6 @@ export class GateTableComponent implements OnInit {
   logIdAscending: boolean = true;
   pager: any = {};
 
-  currentViewGate: Gate;
-
   currentUser: User;
 
   constructor(private gateService: GateService, private authenticationService: AuthenticationService) {
@@ -57,8 +55,7 @@ export class GateTableComponent implements OnInit {
   }
 
   setPage(page: number) {
-    let arrayFilter = this.gates;
-    console.log(this.searchTerm);
+    let arrayFilter = this.gates;    
     if (this.searchTerm!="") {
       arrayFilter = this.gates
         .filter(i => 
@@ -92,20 +89,10 @@ export class GateTableComponent implements OnInit {
     });
   }
 
-  setCurrentViewLog(gate: Gate): void {    
-    this.currentViewGate = gate;
-    this.toggleShowDetails();    
-   // this.maintenanceLogService.setMaintenanceLog(maintenanceLog);    
-  }
-
-  toggleShowDetails(){
-    this.showDetails = this.showDetails == true ? false : true;
-  }
-
   delete(id: number): void {    
     this.gates = this.gates.filter(l => l._id !== id);
     this.setPage(1);
-    //this.gateService.deleteGate(id).subscribe();    
+    this.gateService.deleteGate(id).subscribe();    
   }
   
   get isAdmin() {

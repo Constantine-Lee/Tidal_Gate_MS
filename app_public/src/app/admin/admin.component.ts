@@ -14,7 +14,8 @@ export class AdminComponent implements OnInit {
     submitted = false;
     returnUrl: string;
     error = '';    
-
+    searchTerm: string = "";
+    
     constructor(private userService: UserService, private formBuilder: FormBuilder,) { }
 
     // convenience getter for easy access to form fields
@@ -34,4 +35,9 @@ export class AdminComponent implements OnInit {
             console.log(this.users);
         });
     }
+
+    delete(id: number): void {    
+        this.users = this.users.filter(l => l._id !== id);
+        this.userService.deleteUser(id).subscribe();    
+      }
 }

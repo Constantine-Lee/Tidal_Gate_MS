@@ -3,7 +3,8 @@ import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
 import { InspectionLogQuestionService } from '../_services/inspectionLogQuestion.service';
-
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { Location } from '@angular/common';
 import { InspectionLog } from '../_models/inspectionLog';
@@ -13,41 +14,48 @@ import { InspectionLog } from '../_models/inspectionLog';
   templateUrl: './update-inspection-log.component.html'
 })
 export class UpdateInspectionLogComponent implements OnInit {
-  @Input() inspectionLog: InspectionLog;
-  questions: QuestionBase<string>[] = [];
+  inspectionLog: InspectionLog;
+  questions: QuestionBase<string>[] = [];  
   form: FormGroup;
+  receive: boolean;
+  
 
-  constructor(private qcs: QuestionControlService, private inspectionLogService: InspectionLogService, private location: Location) {
-
-  }
-
-  goBack(): void {
-    this.location.back();
+  constructor(private route: ActivatedRoute,
+    private router: Router, private inspectionLogService: InspectionLogService, private qcs: QuestionControlService, ) {
   }
 
   ngOnInit(): void {
-    console.log(this.inspectionLog.question);
-    this.questions = JSON.parse(this.inspectionLog.question);
-    console.log(this.questions);
-    this.form = this.qcs.toFormGroup(this.questions);
+    this.route.paramMap.pipe(
+      switchMap((params: ParamMap) =>
+        this.getInspectionLogByID(params.get('inspectionLogID')))
+    ).subscribe();    
   }
 
   ngOnDestroy(): void {
     console.log("Update Component Destroy");
   }
 
+  async getInspectionLogByID(id: string) {
+    await this.inspectionLogService.getInspectionLogByID(id)
+        .then(inspectionLog => this.inspectionLog = inspectionLog); 
+    this.questions = JSON.parse(this.inspectionLog.question);
+    this.form = this.qcs.toFormGroup(this.questions);
+    this.receive = true;
+  }
+
   onSubmit(): void {
-    let formValue = this.form.getRawValue();
-    console.log(formValue);
+    const formValue = this.form.getRawValue();
     this.questions.map(question => question.value = formValue[question.key]);
-    let newInspectionLog = new InspectionLog({
+    const newInspectionLog = new InspectionLog({
       _id: this.inspectionLog._id,
       timestamp: this.inspectionLog.timestamp,
       gate: formValue['Gate Name *'],
-      date_inspection: formValue['Maintenance Date *'],      
+      date_inspection: formValue['Maintenance Date *'],
       question: JSON.stringify(this.questions)
     });
 
-    this.inspectionLogService.updateInspectionLog(newInspectionLog).subscribe(res => { this.goBack(); }, err => console.log(err));
+    this.inspectionLogService.updateInspectionLog(newInspectionLog).subscribe(_=> {
+      this.router.navigate(['/inspectionLog']);
+    });
   }
 }

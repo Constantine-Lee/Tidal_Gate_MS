@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MaintenanceLog } from '../_models/maintenanceLog';
 import { QuestionBase } from '.././question/questionBase';
+import { InspectionLog } from '../_models/inspectionLog';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -14,36 +15,29 @@ const httpOptions = {
     })
   };
 
-var RmaintenanceLog: any;
-
 @Injectable({ providedIn: 'root' })
 export class MaintenanceLogService {
     constructor(private http: HttpClient) { }
 
-    addMaintenanceLog(questions: any): Observable<any>{
-        return this.http.post<any>(`${environment.apiUrl}/maintenancelog/maintenancelog`, questions, httpOptions).pipe(
-            tap((answer: any) => console.log(answer))
-        );
+    addMaintenanceLog(questions: MaintenanceLog): Observable<MaintenanceLog>{
+        return this.http.post<MaintenanceLog>(`${environment.apiUrl}/maintenanceLogs`, questions, httpOptions);
     }
 
-    getMaintenanceLogs(): Observable<any>{
-       return this.http.get<any>(`${environment.apiUrl}/maintenancelog/maintenancelogs`);
+    getMaintenanceLogs(): Observable<MaintenanceLog[]>{
+       return this.http.get<MaintenanceLog[]>(`${environment.apiUrl}/maintenanceLogs`);
     }
+
+    async getMaintenanceLogByID(id: string): Promise<MaintenanceLog>{
+      return await this.http.get<MaintenanceLog>(`${environment.apiUrl}/maintenanceLogs/${id}`).toPromise();
+   }
 
     deleteMaintenanceLog(id : number){
-        const url = `${environment.apiUrl}/maintenancelog/delete?logId=${id}`;
-        console.log(url);
-        return this.http.delete<any>(url, httpOptions).pipe(
-          tap(_ => console.log(`deleted hero id=${id}`))
-        );
+        const url = `${environment.apiUrl}/maintenanceLogs/${id}`;        
+        return this.http.delete<MaintenanceLog>(url, httpOptions);
     }
 
-    updateMaintenanceLog(maintenanceLog: MaintenanceLog): Observable<any>{
-        const url = `${environment.apiUrl}/maintenancelog/edit?logId=${maintenanceLog._id}`;
-        console.log(url);
-        console.log(maintenanceLog);
-        return this.http.put(url, maintenanceLog, httpOptions).pipe(
-            tap((answer: any) => console.log(answer))
-          );
+    updateMaintenanceLog(maintenanceLog: MaintenanceLog): Observable<MaintenanceLog>{
+        const url = `${environment.apiUrl}/maintenanceLogs/${maintenanceLog._id}`;
+        return this.http.put<MaintenanceLog>(url, maintenanceLog, httpOptions);
     }
 }

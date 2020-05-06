@@ -7,31 +7,41 @@ import { MaintenanceLogQuestionService } from '../_services/maintenanceLogQuesti
 import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 import { Location } from '@angular/common';
 import { MaintenanceLog } from '../_models/maintenanceLog';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-update-maintenance-log',
   templateUrl: './update-maintenance-log.component.html'
 })
 export class UpdateMaintenanceLogComponent implements OnInit {
-  @Input() maintenanceLog: MaintenanceLog;
+  maintenanceLog: MaintenanceLog;
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
+  receive: boolean;
 
-  constructor(private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService, private location: Location) {
+  constructor(private route: ActivatedRoute,
+    private router: Router, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService) {
     
   }
 
-  goBack(): void {
-    this.location.back();
-  }
-
   ngOnInit(): void {
-    this.questions = JSON.parse(this.maintenanceLog.question);    
-    this.form = this.qcs.toFormGroup(this.questions);    
+    this.route.paramMap.pipe(
+      switchMap((params: ParamMap) =>
+        this.getMaintenanceLogByID(params.get('maintenanceLogID')))
+    ).subscribe();       
   }
 
   ngOnDestroy(): void {
     console.log("Update Component Destroy");
+  }
+
+  async getMaintenanceLogByID(id: string) {
+    await this.maintenanceLogService.getMaintenanceLogByID(id)
+        .then(maintenanceLog => this.maintenanceLog = maintenanceLog);     
+    this.questions = JSON.parse(this.maintenanceLog.question);
+    this.form = this.qcs.toFormGroup(JSON.parse(this.maintenanceLog.question));
+    this.receive = true;
   }
 
   onSubmit(): void {
@@ -49,6 +59,6 @@ export class UpdateMaintenanceLogComponent implements OnInit {
     this.maintenanceLog.date_maintenance = formValue['Maintenance Date *'];
     this.maintenanceLog.question = JSON.stringify(this.questions);
 
-    this.maintenanceLogService.updateMaintenanceLog(newMaintenanceLog).subscribe(res=> { this.goBack(); }, err => console.log(err));    
+    this.maintenanceLogService.updateMaintenanceLog(newMaintenanceLog).subscribe(_=> { this.router.navigate(['/maintenanceLog']); });    
   }
 }

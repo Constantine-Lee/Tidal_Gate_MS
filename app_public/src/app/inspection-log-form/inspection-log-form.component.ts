@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { Location } from '@angular/common';
 import { InspectionLog } from '../_models/inspectionLog';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-inspection-log-form',
@@ -14,27 +15,22 @@ import { InspectionLog } from '../_models/inspectionLog';
 })
 export class InspectionLogFormComponent implements OnInit {
   questions: QuestionBase<string>[] = [];
-  form: FormGroup; 
+  form: FormGroup;
 
-  constructor(private service: InspectionLogQuestionService, private qcs: QuestionControlService, private inspectionLogService:InspectionLogService, private location: Location) {
-    this.questions = service.getQuestions();
-  }
-
-  goBack(): void {
-    this.location.back();
+  constructor(private service: InspectionLogQuestionService, private qcs: QuestionControlService, private inspectionLogService: InspectionLogService, private router: Router) {
   }
 
   ngOnInit(): void {
+    this.questions = this.service.getQuestions();
     this.form = this.qcs.toFormGroup(this.questions);
   }
 
   onSubmit(): void {
-    let formValue = this.form.getRawValue();
-    this.questions.map(question => question.value = formValue[question.key]);    
+    const formValue = this.form.getRawValue();
+    this.questions.map(question => question.value = formValue[question.key]);
     
-    let newInspectionLog = new InspectionLog({gate:formValue['Lokasi *'], date_inspection:formValue['Tarikh*'], question:JSON.stringify(this.questions)});
+    const newInspectionLog = new InspectionLog({ gate: formValue['Lokasi *'], date_inspection: formValue['Tarikh*'], question: JSON.stringify(this.questions) });
 
-    console.log(newInspectionLog);
-    this.inspectionLogService.addInspectionLog(newInspectionLog).subscribe(res => console.log(res), err => console.log(err));
+    this.inspectionLogService.addInspectionLog(newInspectionLog).subscribe(_ =>this.router.navigate(['/inspectionLog']));
   }
 }

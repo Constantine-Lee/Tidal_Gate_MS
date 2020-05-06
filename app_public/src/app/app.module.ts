@@ -16,13 +16,14 @@ import { GateFormComponent } from './gate-form/gate-form.component';
 
 import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
-import { UserProfileComponent } from './user-profile/user.profile.component';
+import { UserProfileComponent } from './home/user.profile.component';
 
 // used to create fake backend
 import { fakeBackendProvider } from './_helpers/fake-backend';
 
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
+import { LogInterceptor } from './_helpers/log.interceptor';
 import { AdminComponent } from './admin/admin.component';
 import { UpdateMaintenanceLogComponent } from './update-maintenance-log/update-maintenance-log.component';
 
@@ -32,6 +33,12 @@ import { UpdateGateComponent } from './update-gate/update-gate.component';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
+
+export const httpInterceptorProviders = [
+  { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
+  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, 
+]; 
 
 @NgModule({
   declarations: [
@@ -61,9 +68,7 @@ import { UpdateInspectionLogComponent } from './update-inspection-log/update-ins
     FormsModule
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-
+    httpInterceptorProviders  
     // provider used to create fake backend
     //fakeBackendProvider
 ],

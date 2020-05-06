@@ -8,9 +8,9 @@ import { Role } from '../_models/role';
 import { MaintenanceLog } from '../_models/maintenanceLog';
 
 const users: User[] = [
-    { id: 1, username: 'admin', password: 'admin', firstName: 'Admin', lastName: 'User', role: Role.Admin },
-    { id: 2, username: 'user', password: 'user', firstName: 'Normal', lastName: 'User', role: Role.User },
-    { id: 3, username: 'test', password: 'test', firstName: 'test', lastName: 'User', role: Role.User }
+    { _id: 1, username: 'admin', password: 'admin', firstName: 'Admin', lastName: 'User', role: Role.Admin },
+    { _id: 2, username: 'user', password: 'user', firstName: 'Normal', lastName: 'User', role: Role.User },
+    { _id: 3, username: 'test', password: 'test', firstName: 'test', lastName: 'User', role: Role.User }
 ];
 
 var maintenanceLogs = [
@@ -66,12 +66,12 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             const user = users.find(x => x.username === username && x.password === password);
             if (!user) return error('Username or password is incorrect');
             return ok({
-                id: user.id,
+                id: user._id,
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: user.role,
-                token: `fake-jwt-token.${user.id}`
+                token: `fake-jwt-token.${user._id}`
             });
         }
 
@@ -84,9 +84,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             if (!isLoggedIn()) return unauthorized();
 
             // only admins can access other user records
-            if (!isAdmin() && currentUser().id !== idFromUrl()) return unauthorized();
+            if (!isAdmin() && currentUser()._id !== idFromUrl()) return unauthorized();
 
-            const user = users.find(x => x.id === idFromUrl());
+            const user = users.find(x => x._id === idFromUrl());
             return ok(user);
         }
 
@@ -116,7 +116,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         function currentUser() {
             if (!isLoggedIn()) return;
             const id = parseInt(headers.get('Authorization').split('.')[1]);
-            return users.find(x => x.id === id);
+            return users.find(x => x._id === id);
         }
 
         function idFromUrl() {

@@ -6,7 +6,7 @@ import { MaintenanceLogTableComponent } from './maintenance-log-table/maintenanc
 import { GateTableComponent } from './gate-table/gate-table.component';
 import { GateFormComponent } from './gate-form/gate-form.component';
 
-import { UserProfileComponent } from './user-profile/user.profile.component';
+import { UserProfileComponent } from './home/user.profile.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_helpers/auth.guard';
 import { AdminComponent } from './admin/admin.component';
@@ -16,41 +16,26 @@ import { UpdateMaintenanceLogComponent } from './update-maintenance-log/update-m
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
+import { UpdateGateComponent } from './update-gate/update-gate.component';
 
 const routes: Routes = [
-  {
-    path: '', component: UserProfileComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'home', component: UserProfileComponent,
-    canActivate: [AuthGuard]
-  },
+  { path: '', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
-  {
-    path: 'gate', component: GateTableComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'maintenanceLog', component: MaintenanceLogTableComponent,
-    canActivate: [AuthGuard] 
-  },
-  { path: 'addMaintenanceLog', component: MaintenanceLogFormComponent, canActivate: [AuthGuard] },
-  { path: 'updateMaintenanceLog', component: UpdateMaintenanceLogComponent, canActivate: [AuthGuard] },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
+
+  { path: 'gate', component: GateTableComponent, canActivate: [AuthGuard] },
+  { path: 'addGate', component: GateFormComponent, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },  
+  { path: 'updateGate/:gateID', component: UpdateGateComponent, canActivate: [AuthGuard] },
+
+  { path: 'maintenanceLog', component: MaintenanceLogTableComponent, canActivate: [AuthGuard] },
+  { path: 'addMaintenanceLog', component: MaintenanceLogFormComponent, canActivate: [AuthGuard] },  
+  { path: 'updateMaintenanceLog/:maintenanceLogID', component: UpdateMaintenanceLogComponent, canActivate: [AuthGuard] },
 
   { path: 'inspectionLog', component: InspectionLogTableComponent, canActivate: [AuthGuard] },
-  { path: 'addInspectionLog', component: InspectionLogFormComponent, canActivate: [AuthGuard] },
-  { path: 'updateInspectionLog', component: UpdateInspectionLogComponent, canActivate: [AuthGuard] },
-  {
-    path: 'admin',
-    component: AdminComponent,
-    canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
-  {
-    path: 'addGate', component: GateFormComponent, canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
-  },
+  { path: 'addInspectionLog', component: InspectionLogFormComponent, canActivate: [AuthGuard] },  
+  { path: 'updateInspectionLog/:inspectionLogID', component: UpdateInspectionLogComponent},
+
   { path: '**', redirectTo: '' }
 ]
 

@@ -1,22 +1,31 @@
-<div class="container ">
-    <form (ngSubmit)="onSubmit()" [formGroup]="form">
+<div>
+    <nav aria-label="breadcrumb ">
+        <ol class="breadcrumb ">
+            <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
+            <li class="breadcrumb-item"><a routerLink="/gate">Gate</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Update</li>
+        </ol>
+    </nav>
+    <div *ngIf="receive" class="container ">
+        <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
-        <div class="bg-light mt-4 mb-3">
-            <div class="col-sm-4 mx-auto p-0 ">
-                <img class="  img-thumbnail" [src]="previewUrl" />
-            </div>
-            <div class="input-group justify-content-center mb-3">
-                <div class="custom-file col-sm-4">
-                    <input type="file" name="image" (change)="fileProgress($event)" id="inputGroupFile02"
-                        accept="image/png, image/jpeg">
-                    <label class="custom-file-label bg-light" for="inputGroupFile02">{{fileInput}}</label>
+            <div class="bg-light mt-4 mb-3">
+                <div class="col-sm-4 mx-auto p-0 ">
+                    <img class="img-thumbnail" [src]="previewUrl" />
+                </div>
+                <div class="input-group justify-content-center mb-3">
+                    <div class="custom-file col-sm-4">
+                        <input type="file" name="image" (change)="fileProgress($event)" id="inputGroupFile02"
+                            accept="image/png, image/jpeg">
+                        <label class="custom-file-label bg-light" for="inputGroupFile02">{{fileInput}}</label>
+                    </div>
+                </div>
+
+                <div *ngFor="let question of questions">
+                    <app-form-question [question]="question" [form]="form"></app-form-question>
                 </div>
             </div>
-
-            <div *ngFor="let question of questions">
-                <app-form-question [question]="question" [form]="form"></app-form-question>
-            </div>
-        </div>
-        <button *ngIf="isAdmin" type="submit" class="btn-success btn-lg btn-block mb-4 mt-4">Update</button>
-    </form>
+            <button *ngIf="isAdmin" type="submit" class="btn-success btn-lg btn-block mb-4 mt-4">Update</button>
+        </form>
+    </div>
 </div>

@@ -13,6 +13,7 @@
                     <img class="mx-auto col-sm-12 mt-2 mb-2" src="../../assets/images/sarawakLogo.svg" height="125" />
                 </div>
                 <form class="" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
                     <div class="form-group mt-4 mb-3">
                         <label for="username">Username</label>
                         <input type="text" formControlName="username" class="form-control"
@@ -35,7 +36,7 @@
                             Sign In
                         </button>
                     </div>
-                    <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+                    
                 </form>
             </div>
         </div>

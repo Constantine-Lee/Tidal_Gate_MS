@@ -9,10 +9,15 @@ export class UserService {
     constructor(private http: HttpClient) { }
 
     getAll() {
-        return this.http.get<User[]>(`${environment.apiUrl}/user`);
+        return this.http.get<User[]>(`${environment.apiUrl}/users`);
     }
 
     getById(id: number) {
         return this.http.get<User>(`${environment.apiUrl}/users/${id}`);
     }
+
+    deleteUser(id: number) {
+        const url = `${environment.apiUrl}/users/${id}`;
+        return this.http.delete<User>(url);
+      }
 }

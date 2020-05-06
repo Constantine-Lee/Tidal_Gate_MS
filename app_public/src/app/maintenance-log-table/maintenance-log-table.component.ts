@@ -91,15 +91,6 @@ export class MaintenanceLogTableComponent implements OnInit {
     });
   }
 
-  setCurrentViewLog(maintenanceLog: MaintenanceLog): void {    
-    this.currentViewLog = maintenanceLog;
-    this.toggleShowDetails();   
-  }
-
-  toggleShowDetails(){
-    this.showDetails = this.showDetails == true ? false : true;
-  }
-
   delete(id: number): void {    
     this.maintenanceLogs = this.maintenanceLogs.filter(l => l._id !== id);
     this.setPage(1);

@@ -13,7 +13,7 @@ export class QuestionControlService {
 
   toFormGroup(questions: QuestionBase<string>[] ) {
     let group: any = {};
-    console.log(questions);
+    //console.log(questions);
     questions.forEach(question => {
       group[question.key] = question.required ? new FormControl(question.value || '', Validators.required)
                                               : new FormControl(question.value || '');

@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Gate = mongoose.model('Gate');
+const multer = require('multer')
+const path = require('path');
 
 const getGates = async (req, res) => {
     console.log('Get Gates. ');
@@ -14,15 +16,17 @@ const getGates = async (req, res) => {
 };
 
 const addGate = async (req, res) => {
+    const filename = req.file.filename;
     console.log('Post a Gate: ' + JSON.stringify(req.body));
     if(req.fileValidationError == 'goes wrong on the mimetype'){
         res.status(415).json('goes wrong on the mimetype');
+        return;
     }
     // a document instance
     const gate = new Gate({
         timestamp: Date.now(),
         name: req.body.name,
-        profilePhoto: req.body.profilePhoto,
+        profilePhoto: filename,
         question: req.body.question
      });
     // save model to database
