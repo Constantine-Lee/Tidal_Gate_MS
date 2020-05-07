@@ -66,7 +66,8 @@ export class UpdateGateComponent implements OnInit {
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
-    this.gateService.addGate(formData).subscribe(_ => this.router.navigate(['/inspectionLog']));
+    formData.append('profilePhoto', this.previewUrl);
+    this.gateService.addGate(formData).subscribe(_ => this.router.navigate(['/gate']));
   }
 
   fileProgress(fileInput: any) {

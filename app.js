@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api', apiRouter);
-app.get(/(\/about)|(\/location\/[a-z0-9]{24})/, function(req, res) {
+app.get(/(\/home)|(\/login)|(\/admin)|(\/gate)|(\/addGate)|(\/updateGate\/[a-z0-9]{24})|(\/maintenanceLog)|(\/addMaintenanceLog)|(\/updateMaintenanceLog\/[a-z0-9]{24})|(\/inspectionLog)|(\/addInspectionLog)|(\/updateInspectionLog\/[a-z0-9]{24})/, function(req, res) {
   res.sendFile(path.join(__dirname, 'app_public', 'build', 'index.html'));
 });
 

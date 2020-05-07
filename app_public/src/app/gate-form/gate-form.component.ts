@@ -10,6 +10,7 @@ import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { User } from '../_models/user';
 import { Role } from '../_models/role';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -26,17 +27,13 @@ export class GateFormComponent implements OnInit {
   form: FormGroup;
   currentUser: User;
   
-  constructor(service: GateQuestionService, private qcs: QuestionControlService, private imageService: ImageService, private gateService: GateService, private location: Location, private authenticationService: AuthenticationService) {
+  constructor(private router: Router, service: GateQuestionService, private qcs: QuestionControlService, private gateService: GateService, private authenticationService: AuthenticationService) {
     this.questions = service.getGates();
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
   ngOnInit(): void {
     this.form = this.qcs.toFormGroup(this.questions);
-  }
-
-  goBack(): void {
-    this.location.back();
   }
 
   onSubmit() {
@@ -49,7 +46,7 @@ export class GateFormComponent implements OnInit {
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
     formData.append('profilePhoto', this.previewUrl);
-    this.gateService.addGate(formData).subscribe(res => this.goBack(), err => console.log(err));
+    this.gateService.addGate(formData).subscribe(_ => this.router.navigate(['/gate']));
   }
 
   fileProgress(fileInput: any) {
