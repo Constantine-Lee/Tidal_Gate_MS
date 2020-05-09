@@ -4,23 +4,30 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../_services/authentication.service';
+import { fadeInAnimation } from '../_animations';
 
-@Component({ templateUrl: 'login.component.html' })
+@Component({
+    templateUrl: 'login.component.html',
+
+    // make fade in animation available to this component
+    animations: [fadeInAnimation]
+})
 export class LoginComponent implements OnInit {
     loginForm: FormGroup;
     loading = false;
     submitted = false;
     returnUrl: string;
     error = '';
+    receive: boolean;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService
-    ) { 
+    ) {
         // redirect to home if already logged in
-        if (this.authenticationService.currentUserValue) { 
+        if (this.authenticationService.currentUserValue) {
             this.router.navigate(['/']);
         }
     }
@@ -33,12 +40,14 @@ export class LoginComponent implements OnInit {
 
         // get return url from route parameters or default to '/'
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        this.receive = true;
     }
 
     // convenience getter for easy access to form fields
-    get f() { 
-        
-        return this.loginForm.controls; }
+    get f() {
+
+        return this.loginForm.controls;
+    }
 
     onSubmit() {
         this.submitted = true;

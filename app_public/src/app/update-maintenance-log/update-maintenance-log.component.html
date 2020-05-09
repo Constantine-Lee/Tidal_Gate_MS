@@ -6,7 +6,7 @@
             <li class="breadcrumb-item active" aria-current="page">Update</li>
         </ol>
     </nav>
-    <div class="container ">
+    <div @fadeInAnimation *ngIf="receive" class="container ">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
             <div class="mt-4 mb-2 ">
                 <div *ngFor="let question of questions">

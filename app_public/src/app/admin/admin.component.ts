@@ -4,8 +4,12 @@ import { first } from 'rxjs/operators';
 import { User } from '../_models/user';
 import { UserService } from '../_services/user.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { fadeInAnimation } from '../_animations';
 
-@Component({ templateUrl: 'admin.component.html' })
+@Component({ templateUrl: 'admin.component.html',
+    
+// make fade in animation available to this component
+animations: [fadeInAnimation] })
 export class AdminComponent implements OnInit {
     loading = false;
     users: User[] = [];
@@ -16,6 +20,8 @@ export class AdminComponent implements OnInit {
     error = '';    
     searchTerm: string = "";
     
+    receive: boolean;
+
     constructor(private userService: UserService, private formBuilder: FormBuilder,) { }
 
     // convenience getter for easy access to form fields
@@ -34,6 +40,7 @@ export class AdminComponent implements OnInit {
             this.users = users.filter(user => user.role == 'User');
             console.log(this.users);
         });
+        this.receive = true;
     }
 
     delete(id: number): void {    

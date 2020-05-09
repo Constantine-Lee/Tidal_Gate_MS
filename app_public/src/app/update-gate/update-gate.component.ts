@@ -13,10 +13,14 @@ import { User } from '../_models/user';
 import { Role } from '../_models/role';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { fadeInAnimation } from '../_animations';
 
 @Component({
   selector: 'app-update-gate',
-  templateUrl: './update-gate.component.html'
+  templateUrl: './update-gate.component.html',
+
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class UpdateGateComponent implements OnInit {
   gate: Gate;
@@ -44,7 +48,7 @@ export class UpdateGateComponent implements OnInit {
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
         this.getGateByID(params.get('gateID')))
-    ).subscribe();    
+    ).subscribe();
   }
 
   async getGateByID(id: string) {

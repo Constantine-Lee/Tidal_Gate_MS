@@ -2,10 +2,14 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import paginate = require('jw-paginate');
+import { fadeInAnimation } from '../_animations';
 
 @Component({
   selector: 'app-inspection-log-table',
-  templateUrl: './inspection-log-table.component.html'
+  templateUrl: './inspection-log-table.component.html',
+    
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class InspectionLogTableComponent implements OnInit {
   inspectionLogs: Array<InspectionLog>;
@@ -19,6 +23,7 @@ export class InspectionLogTableComponent implements OnInit {
 
   logIdAscending: boolean = true;
   pager: any = {};
+  receive: boolean;
 
   constructor(private insepctionLogService: InspectionLogService) {}
 
@@ -29,6 +34,7 @@ export class InspectionLogTableComponent implements OnInit {
     if (this.inspectionLogs && this.inspectionLogs.length) {
       this.setPage(this.initialPage);
     }
+    this.receive = true;
   }
 
   ngOnChanges(changes: SimpleChanges) {

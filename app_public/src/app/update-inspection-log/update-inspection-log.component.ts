@@ -8,17 +8,21 @@ import { switchMap } from 'rxjs/operators';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { Location } from '@angular/common';
 import { InspectionLog } from '../_models/inspectionLog';
+import { fadeInAnimation } from '../_animations';
 
 @Component({
   selector: 'app-update-inspection-log',
-  templateUrl: './update-inspection-log.component.html'
+  templateUrl: './update-inspection-log.component.html',
+
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class UpdateInspectionLogComponent implements OnInit {
   inspectionLog: InspectionLog;
-  questions: QuestionBase<string>[] = [];  
+  questions: QuestionBase<string>[] = [];
   form: FormGroup;
   receive: boolean;
-  
+
 
   constructor(private route: ActivatedRoute,
     private router: Router, private inspectionLogService: InspectionLogService, private qcs: QuestionControlService, ) {
@@ -28,7 +32,7 @@ export class UpdateInspectionLogComponent implements OnInit {
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
         this.getInspectionLogByID(params.get('inspectionLogID')))
-    ).subscribe();    
+    ).subscribe();
   }
 
   ngOnDestroy(): void {
@@ -37,7 +41,7 @@ export class UpdateInspectionLogComponent implements OnInit {
 
   async getInspectionLogByID(id: string) {
     await this.inspectionLogService.getInspectionLogByID(id)
-        .then(inspectionLog => this.inspectionLog = inspectionLog); 
+      .then(inspectionLog => this.inspectionLog = inspectionLog);
     this.questions = JSON.parse(this.inspectionLog.question);
     this.form = this.qcs.toFormGroup(this.questions);
     this.receive = true;
@@ -54,7 +58,7 @@ export class UpdateInspectionLogComponent implements OnInit {
       question: JSON.stringify(this.questions)
     });
 
-    this.inspectionLogService.updateInspectionLog(newInspectionLog).subscribe(_=> {
+    this.inspectionLogService.updateInspectionLog(newInspectionLog).subscribe(_ => {
       this.router.navigate(['/inspectionLog']);
     });
   }

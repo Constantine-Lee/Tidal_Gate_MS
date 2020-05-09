@@ -11,11 +11,15 @@ import { AuthenticationService } from '../_services/authentication.service';
 import { User } from '../_models/user';
 import { Role } from '../_models/role';
 import { ActivatedRoute, Router } from '@angular/router';
+import { fadeInAnimation } from '../_animations';
 
 
 @Component({
   selector: 'app-gate-form',
-  templateUrl: './gate-form.component.html'
+  templateUrl: './gate-form.component.html',
+    
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class GateFormComponent implements OnInit {
   fileData: File = null;
@@ -26,6 +30,7 @@ export class GateFormComponent implements OnInit {
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   currentUser: User;
+  receive: boolean;
   
   constructor(private router: Router, service: GateQuestionService, private qcs: QuestionControlService, private gateService: GateService, private authenticationService: AuthenticationService) {
     this.questions = service.getGates();
@@ -34,6 +39,7 @@ export class GateFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.qcs.toFormGroup(this.questions);
+    this.receive = true;
   }
 
   onSubmit() {

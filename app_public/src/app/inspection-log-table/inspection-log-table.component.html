@@ -6,7 +6,7 @@
             </li>
         </ol>
     </nav>
-    <div class="container mt-4">
+    <div @fadeInAnimation *ngIf="receive" class="container mt-4">
 
         <div *ngIf="!showDetails">
             <div class="d-flex flex-row-reverse">

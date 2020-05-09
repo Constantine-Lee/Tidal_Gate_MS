@@ -34,6 +34,8 @@ import { InspectionLogFormComponent } from './inspection-log-form/inspection-log
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
@@ -59,13 +61,15 @@ export const httpInterceptorProviders = [
     InspectionLogFormComponent,
     InspectionLogTableComponent,
     UpdateInspectionLogComponent
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule
   ],
   providers: [
     httpInterceptorProviders  

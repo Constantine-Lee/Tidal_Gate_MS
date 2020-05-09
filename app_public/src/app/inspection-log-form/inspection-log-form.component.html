@@ -7,14 +7,14 @@
         </ol>
     </nav>
 
-    <div class="container ">
+    <div  @fadeInAnimation *ngIf="receive" class="container ">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
             <div class=" mt-4 mb-2 ">
                 <div *ngFor="let question of questions">
                     <app-form-question [question]="question" [form]="form"></app-form-question>
                 </div>
             </div>
-            <button type="submit" class="btn-success btn-lg btn-block mb-4 mt-4">Submit</button>
+            <button type="submit" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4">Submit</button>
         </form>
     </div>
 </div>

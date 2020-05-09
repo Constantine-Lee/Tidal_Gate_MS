@@ -6,7 +6,7 @@
             <li class="breadcrumb-item active" aria-current="page">Add</li>
         </ol>
     </nav>
-    <div class="container ">
+    <div @fadeInAnimation *ngIf="receive" class="container ">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
             <div class="bg-light mt-4 mb-3">

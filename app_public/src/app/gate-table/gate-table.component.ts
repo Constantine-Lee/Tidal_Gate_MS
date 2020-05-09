@@ -5,10 +5,14 @@ import { AuthenticationService } from '.././_services/authentication.service';
 import { Gate } from '../_models/gate';
 import paginate = require('jw-paginate');
 import { GateService } from '../_services/gate.service';
+import { fadeInAnimation } from '../_animations';
 
 @Component({
   selector: 'app-gate-table',
-  templateUrl: './gate-table.component.html'
+  templateUrl: './gate-table.component.html',
+    
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class GateTableComponent implements OnInit {
   gates: Array<Gate>;
@@ -24,7 +28,8 @@ export class GateTableComponent implements OnInit {
   pager: any = {};
 
   currentUser: User;
-
+  receive: boolean;
+  
   constructor(private gateService: GateService, private authenticationService: AuthenticationService) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
@@ -36,6 +41,7 @@ export class GateTableComponent implements OnInit {
     if (this.gates && this.gates.length) {
       this.setPage(this.initialPage);
     }
+    this.receive = true;
   }
 
   ngOnChanges(changes: SimpleChanges) {

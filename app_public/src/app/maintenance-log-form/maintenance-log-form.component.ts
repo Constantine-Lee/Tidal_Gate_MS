@@ -8,15 +8,20 @@ import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 import { Location } from '@angular/common';
 import { MaintenanceLog } from '../_models/maintenanceLog';
 import { Router } from '@angular/router';
+import { fadeInAnimation } from '../_animations';
 
 @Component({
   selector: 'app-maintenance-log-form',
   templateUrl: './maintenance-log-form.component.html',
+
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class MaintenanceLogFormComponent implements OnInit {
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
-
+  receive: boolean;
+  
   constructor(private service: MaintenanceLogQuestionService, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService, private router: Router) {
 
   }
@@ -24,6 +29,7 @@ export class MaintenanceLogFormComponent implements OnInit {
   ngOnInit(): void {
     this.questions = this.service.getQuestions();
     this.form = this.qcs.toFormGroup(this.questions);
+    this.receive = true;
   }
 
   onSubmit(): void {
@@ -33,7 +39,7 @@ export class MaintenanceLogFormComponent implements OnInit {
     const newMaintenanceLog = new MaintenanceLog({ gate: formValue['Gate Name *'], date_maintenance: formValue['Maintenance Date *'], action_taken: formValue['Action Taken *'], action_needed: formValue['Action Needed *'], question: JSON.stringify(this.questions) });
 
     this.maintenanceLogService.addMaintenanceLog(newMaintenanceLog)
-    .subscribe(_ => this.router.navigate(['/maintenanceLog']));
+      .subscribe(_ => this.router.navigate(['/maintenanceLog']));
   }
 }
 

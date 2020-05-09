@@ -9,10 +9,14 @@ import { Location } from '@angular/common';
 import { MaintenanceLog } from '../_models/maintenanceLog';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { fadeInAnimation } from '../_animations';
 
 @Component({
   selector: 'app-update-maintenance-log',
-  templateUrl: './update-maintenance-log.component.html'
+  templateUrl: './update-maintenance-log.component.html',
+    
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class UpdateMaintenanceLogComponent implements OnInit {
   maintenanceLog: MaintenanceLog;

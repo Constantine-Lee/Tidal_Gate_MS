@@ -8,14 +8,20 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { Location } from '@angular/common';
 import { InspectionLog } from '../_models/inspectionLog';
 import { Router, ActivatedRoute } from '@angular/router';
+// import fade in animation
+import { fadeInAnimation } from '../_animations/index';
 
 @Component({
   selector: 'app-inspection-log-form',
-  templateUrl: './inspection-log-form.component.html'
+  templateUrl: './inspection-log-form.component.html',
+    
+    // make fade in animation available to this component
+    animations: [fadeInAnimation]
 })
 export class InspectionLogFormComponent implements OnInit {
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
+  receive: boolean;
 
   constructor(private service: InspectionLogQuestionService, private qcs: QuestionControlService, private inspectionLogService: InspectionLogService, private router: Router) {
   }
@@ -23,6 +29,7 @@ export class InspectionLogFormComponent implements OnInit {
   ngOnInit(): void {
     this.questions = this.service.getQuestions();
     this.form = this.qcs.toFormGroup(this.questions);
+    this.receive = true;
   }
 
   onSubmit(): void {

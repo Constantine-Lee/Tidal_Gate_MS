@@ -4,10 +4,14 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import paginate = require('jw-paginate');
 import { map } from 'rxjs/operators';
 import { generate } from 'rxjs';
+import { fadeInAnimation } from '../_animations';
 
 @Component({
   selector: 'app-maintenance-log-table',
-  templateUrl: './maintenance-log-table.component.html'
+  templateUrl: './maintenance-log-table.component.html',
+
+  // make fade in animation available to this component
+  animations: [fadeInAnimation]
 })
 export class MaintenanceLogTableComponent implements OnInit {
   maintenanceLogs: Array<MaintenanceLog>;
@@ -23,6 +27,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   pager: any = {};
 
   currentViewLog: MaintenanceLog;
+  receive: boolean;
 
   constructor(private maintenanceLogService: MaintenanceLogService) { }
 
@@ -33,6 +38,7 @@ export class MaintenanceLogTableComponent implements OnInit {
     if (this.maintenanceLogs && this.maintenanceLogs.length) {
       this.setPage(this.initialPage);
     }
+    this.receive = true;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -42,7 +48,7 @@ export class MaintenanceLogTableComponent implements OnInit {
     }
   }
 
-  generatePager(array: Array<MaintenanceLog>, page: number){
+  generatePager(array: Array<MaintenanceLog>, page: number) {
     // get new pager object for specified page
     this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
     // get new page of items from items array
@@ -54,25 +60,25 @@ export class MaintenanceLogTableComponent implements OnInit {
   setPage(page: number) {
     let arrayFilter = this.maintenanceLogs;
     console.log(this.searchTerm);
-    if (this.searchTerm!="") {
+    if (this.searchTerm != "") {
       arrayFilter = this.maintenanceLogs
-        .filter(i => 
-          i._id.toString().includes(this.searchTerm)||
-          i.gate.includes(this.searchTerm)||
-          i.date_maintenance.includes(this.searchTerm)||
-          i.action_taken.includes(this.searchTerm)||
+        .filter(i =>
+          i._id.toString().includes(this.searchTerm) ||
+          i.gate.includes(this.searchTerm) ||
+          i.date_maintenance.includes(this.searchTerm) ||
+          i.action_taken.includes(this.searchTerm) ||
           i.action_needed.includes(this.searchTerm));
     }
     this.generatePager(arrayFilter, page);
   }
 
-  sortLogId(){
-    let idSorted: Array<MaintenanceLog> = [];    
-    if(this.logIdAscending == true){      
-      idSorted = this.maintenanceLogs.slice().sort((a, b) => b._id-a._id);
-    } 
+  sortLogId() {
+    let idSorted: Array<MaintenanceLog> = [];
+    if (this.logIdAscending == true) {
+      idSorted = this.maintenanceLogs.slice().sort((a, b) => b._id - a._id);
+    }
     else {
-      idSorted = this.maintenanceLogs.slice().sort((a, b) => a._id-b._id);
+      idSorted = this.maintenanceLogs.slice().sort((a, b) => a._id - b._id);
     }
     this.logIdAscending = !this.logIdAscending;
     this.generatePager(idSorted, 1);
@@ -86,14 +92,14 @@ export class MaintenanceLogTableComponent implements OnInit {
 
   getMaintenanceLogs() {
     this.maintenanceLogService.getMaintenanceLogs().subscribe(data => {
-    this.maintenanceLogs = data;
-      this.setPage(1);      
+      this.maintenanceLogs = data;
+      this.setPage(1);
     });
   }
 
-  delete(id: number): void {    
+  delete(id: number): void {
     this.maintenanceLogs = this.maintenanceLogs.filter(l => l._id !== id);
     this.setPage(1);
-    this.maintenanceLogService.deleteMaintenanceLog(id).subscribe();    
+    this.maintenanceLogService.deleteMaintenanceLog(id).subscribe();
   }
 }
