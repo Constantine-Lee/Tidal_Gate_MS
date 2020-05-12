@@ -1,5 +1,6 @@
 export class MaintenanceLog {
     _id: number;
+    id: number;
     timestamp: number;
     gate: String;
     date_maintenance: String;

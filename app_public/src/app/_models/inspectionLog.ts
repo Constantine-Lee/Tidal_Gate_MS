@@ -1,5 +1,6 @@
 export class InspectionLog {
     _id: number;
+    id: number;
     timestamp: number;
     gate: String;
     date_inspection: String;

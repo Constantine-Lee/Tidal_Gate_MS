@@ -63,7 +63,7 @@ export class MaintenanceLogTableComponent implements OnInit {
     if (this.searchTerm != "") {
       arrayFilter = this.maintenanceLogs
         .filter(i =>
-          i._id.toString().includes(this.searchTerm) ||
+          i.id.toString().includes(this.searchTerm) ||
           i.gate.includes(this.searchTerm) ||
           i.date_maintenance.includes(this.searchTerm) ||
           i.action_taken.includes(this.searchTerm) ||
@@ -75,10 +75,10 @@ export class MaintenanceLogTableComponent implements OnInit {
   sortLogId() {
     let idSorted: Array<MaintenanceLog> = [];
     if (this.logIdAscending == true) {
-      idSorted = this.maintenanceLogs.slice().sort((a, b) => b._id - a._id);
+      idSorted = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);
     }
     else {
-      idSorted = this.maintenanceLogs.slice().sort((a, b) => a._id - b._id);
+      idSorted = this.maintenanceLogs.slice().sort((a, b) => a.id - b.id);
     }
     this.logIdAscending = !this.logIdAscending;
     this.generatePager(idSorted, 1);

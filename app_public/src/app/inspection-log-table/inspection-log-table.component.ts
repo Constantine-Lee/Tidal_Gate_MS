@@ -59,7 +59,7 @@ export class InspectionLogTableComponent implements OnInit {
     if (this.searchTerm != "") {
       arrayFilter = this.inspectionLogs
         .filter(i =>
-          i._id.toString().includes(this.searchTerm) ||
+          i.id.toString().includes(this.searchTerm) ||
           i.gate.includes(this.searchTerm) ||
           i.date_inspection.includes(this.searchTerm));
     }
@@ -69,10 +69,10 @@ export class InspectionLogTableComponent implements OnInit {
   sortLogId() {
     let idSorted: Array<InspectionLog> = [];
     if (this.logIdAscending == true) {
-      idSorted = this.inspectionLogs.slice().sort((a, b) => b._id - a._id);
+      idSorted = this.inspectionLogs.slice().sort((a, b) => b.id - a.id);
     }
     else {
-      idSorted = this.inspectionLogs.slice().sort((a, b) => a._id - b._id);
+      idSorted = this.inspectionLogs.slice().sort((a, b) => a.id - b.id);
     }
     this.logIdAscending = !this.logIdAscending;
     this.generatePager(idSorted, 1);

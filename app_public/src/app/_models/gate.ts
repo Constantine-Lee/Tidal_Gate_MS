@@ -1,5 +1,6 @@
 export class Gate {
     _id: number;
+    id: number;
     name: string;
     profilePhoto: string;
     timestamp: number;       
