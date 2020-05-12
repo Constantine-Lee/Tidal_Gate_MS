@@ -26,8 +26,8 @@
                             <th scope="col"><a (click)="sortLogId()"><h5>ID<i class="fa fa-fw fa-sort"></i></h5></a></th>
                             <th scope="col"><h5>Gate</h5></th>
                             <th scope="col"><a><h5>Date<i class="fa fa-fw fa-sort"></i></h5></a></th>
-                            <th scope="col"><h5>Action Taken</h5></th>
-                            <th scope="col"><h5>Action Needed</h5></th>
+                            <th scope="col" class="d-none d-sm-table-cell"><h5>Action Taken</h5></th>
+                            <th scope="col" class="d-none d-sm-table-cell"><h5>Action Needed</h5></th>
                             <th scope="col"><h5>Action</h5></th>
                         </tr>
                     </thead>
@@ -58,9 +58,9 @@
                             </td>
                             <td class="align-middle">{{maintenanceLog.gate}}</td>
                             <td class="text-truncate align-middle">{{maintenanceLog.date_maintenance}}</td>
-                            <td class="text-truncate align-middle" style="max-width: 75px;">
+                            <td class="text-truncate align-middle d-none d-sm-table-cell" style="max-width: 75px;">
                                 {{maintenanceLog.action_taken}}</td>
-                            <td class="text-truncate align-middle" style="max-width: 75px;">
+                            <td class="text-truncate align-middle d-none d-sm-table-cell" style="max-width: 75px;">
                                 {{maintenanceLog.action_needed}}</td>
                             <td>
                                 <div class="d-flex justify-content-center">
