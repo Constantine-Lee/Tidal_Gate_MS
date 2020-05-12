@@ -61,3 +61,4 @@ require('./gate');
 require('./user');
 require('./inspectionLog');
 require('./maintenanceLog');
+require('./counter');

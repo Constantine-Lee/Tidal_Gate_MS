@@ -7,14 +7,46 @@
         </ol>
     </nav>
 
-    <div  @fadeInAnimation *ngIf="receive" class="container ">
+    <div @fadeInAnimation *ngIf="receive" class="container ">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
             <div class=" mt-4 mb-2 ">
                 <div *ngFor="let question of questions">
                     <app-form-question [question]="question" [form]="form"></app-form-question>
                 </div>
             </div>
-            <button type="submit" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4">Submit</button>
+            <div class="d-flex justify-content-center align-items-center container ">
+                <button type="button" [disabled]="loading" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4"
+                    data-toggle="modal" data-target="#exampleModal"><span *ngIf="loading"
+                        class="spinner-border text-info spinner-border-sm mr-1 mb-1"></span>Submit</button>
+            </div>
+            <!-- Modal -->
+            <div class="modal" id="exampleModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4>Confirm Add an Inspection Log ?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                            <button type="button" (click)="onSubmit()" class="btn btn-outline-primary"
+                                data-dismiss="modal">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal" id="errorModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text-danger">
+                            <h4>{{error}}</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>

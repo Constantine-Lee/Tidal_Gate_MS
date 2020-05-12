@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
-import { MaintenanceLogQuestionService } from '../_services/maintenanceLogQuestion.service';
+import { MaintenanceLogQuestionService } from '../question/maintenanceLogQuestion.service';
 
 import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 import { Location } from '@angular/common';

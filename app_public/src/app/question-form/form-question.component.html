@@ -1,0 +1,29 @@
+<div [formGroup]="form">
+    <div [ngSwitch]="question.controlType">
+        <div class="alert alert-info mb-1 mt-2 " *ngSwitchCase="'groupLabel'">
+            {{question.label}}
+        </div>
+        <div class="container form-row mb-1 mt-2 pr-4 pl-4 " *ngSwitchCase="'textbox'">
+            <label [attr.for]="question.key" class="col-form-label col-sm-6 ">{{question.label}}
+            </label>
+            <input [ngClass]="{ 'is-invalid': !isValid}" [formControlName]="question.key" [id]="question.key"
+                [type]="question.type" class="col-sm-6 form-control bg-light" placeholder="Your answer">
+        </div>
+        <div class="container form-row mb-1 mt-2 pr-4 pl-4" *ngSwitchCase="'dropdown'">
+            <label [attr.for]="question.key" class="col-form-label col-sm-6">{{question.label}}
+            </label>
+            <select [ngClass]="{ 'is-invalid': !isValid}" class="custom-select col-sm-6 bg-light" [id]="question.key" [formControlName]="question.key">
+                <option *ngFor="let opt of question.options" [value]="opt.value">{{opt.value}}</option>
+            </select>
+        </div>
+        <div class="container form-row mt-2 mx-auto" *ngSwitchCase="'fullTextbox'">
+            <textarea [formControlName]="question.key" [id]="question.key" class="form-control bg-light"
+                placeholder="Your answer"></textarea>
+        </div>
+    </div>
+    <div class="container form-row mb-1 mt-0 pr-4 pl-4">
+        <label [attr.for]="question.key" class="col-sm-6 m-0 p-0">
+        </label>
+        <label class="text-danger col-sm-6 bg-light font-weight-lighter m-0 p-0" *ngIf="!isValid" style="font-size: 0.7rem">This field is required</label>
+    </div>
+</div>

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { DropdownQuestion } from '../question/questionDropdown';
-import { QuestionBase } from '../question/questionBase';
-import { TextboxQuestion } from '../question/questionTextbox';
-import { GroupLabelQuestion } from '../question/questionGroupLabel';
+import { DropdownQuestion } from './questionDropdown';
+import { QuestionBase } from './questionBase';
+import { TextboxQuestion } from './questionTextbox';
+import { GroupLabelQuestion } from './questionGroupLabel';
 
 const zero = 0; 
 const first = 1;
@@ -41,9 +41,18 @@ export class MaintenanceLogQuestionService {
                 key: 'Gate Name *',
                 label: 'Gate Name *',
                 options: [
-                    { key: 'srw001', value: 'Siol Kanan' },
-                    { key: 'srw002', value: 'Ketup' },
-                    { key: 'srw003', value: 'Moyan Ulu East' },
+                    { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
+                    { key: 'srw002 Ketup', value: 'Ketup' },
+                    { key: 'srw003 Moyan Ulu East', value: 'Moyan Ulu East' },
+                    { key: 'srw004 Serpan Ulu', value: 'Serpan Ulu' },
+                    { key: 'srw005 Asajaya Ulu', value: 'Asajaya Ulu' },
+                    { key: 'srw006 Sampun Gerunggang', value: 'Sampun Gerunggang' },
+                    { key: 'srw007 Moyan Ulu (West)', value: 'Moyan Ulu (West)' },
+                    { key: 'srw008 Beliong', value: 'Beliong' },
+                    { key: 'srw009 Meranti', value: 'Meranti' },
+                    { key: 'srw010 Sampat', value: 'Sampat' },
+                    { key: 'srw011 Sampun Kelili', value: 'Sampun Kelili' },
+                    { key: 'srw012 Segali', value: 'Segali' },
                 ],
                 order: zero
             }),

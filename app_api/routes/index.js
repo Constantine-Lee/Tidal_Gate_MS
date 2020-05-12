@@ -14,6 +14,8 @@ const ctrlUser = require('../controllers/user');
 const ctrlInspect = require('../controllers/inspectionLog');
 const ctrlMaintain = require('../controllers/maintenanceLog');
 const ctrlGate = require('../controllers/gate');
+const ctrlCounter = require('../controllers/counter');
+
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -45,6 +47,17 @@ router.post('/register', ctrlAuth.register);
 router.post('/login', ctrlAuth.login);
 router.get('/users', ctrlUser.getUsers);
 router.delete('/users/:userID', ctrlUser.deleteUser);
+
+router
+    .route('/counters')
+    .get(ctrlCounter.getCounters)
+    .post(ctrlCounter.addCounter)
+
+router
+    .route('/counters/:counterID')
+    .get(ctrlCounter.getCounter)
+    .put(ctrlCounter.editCounter)
+    .delete(ctrlCounter.deleteCounter)
 
 router
     .route('/inspectionLogs/:inspectionLogID')

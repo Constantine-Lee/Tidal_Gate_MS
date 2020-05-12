@@ -7,7 +7,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { MaintenanceLogFormComponent } from './maintenance-log-form/maintenance-log-form.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { FormQuestionComponent } from './form-question/form-question.component';
+import { FormQuestionComponent } from './question-form/form-question.component';
 
 import { FooterComponent } from './footer/footer.component';
 import { MaintenanceLogTableComponent } from './maintenance-log-table/maintenance-log-table.component';

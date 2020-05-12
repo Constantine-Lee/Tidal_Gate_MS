@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
-import { QuestionBase } from '../question/questionBase';
-import { TextboxQuestion } from '../question/questionTextbox';
-import { GroupLabelQuestion } from '../question/questionGroupLabel';
-import { FullTextboxQuestion } from '../question/fullQuestionTextbox';
+import { QuestionBase } from './questionBase';
+import { TextboxQuestion } from './questionTextbox';
+import { GroupLabelQuestion } from './questionGroupLabel';
+import { FullTextboxQuestion } from './fullQuestionTextbox';
 
 const zero = 0; 
 const first = 1;
@@ -39,14 +39,14 @@ export class GateQuestionService {
                 key: 'Gate Name',
                 label: 'Gate Name',
                 value: '',
-                required: false,
+                required: true,
                 order: zero
             }),
             new TextboxQuestion({
                 key: 'Gate ID',
                 label: 'Gate ID',
                 value: '',
-                required: false,
+                required: true,
                 order: zero
             }),
             new TextboxQuestion({

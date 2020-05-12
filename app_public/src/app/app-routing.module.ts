@@ -17,6 +17,7 @@ import { InspectionLogTableComponent } from './inspection-log-table/inspection-l
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
 import { UpdateGateComponent } from './update-gate/update-gate.component';
+import { CanDeactivateGuard }    from './_helpers/can-deactivate.guard';
 
 const routes: Routes = [
   { path: '', component: UserProfileComponent, canActivate: [AuthGuard] },
@@ -29,7 +30,7 @@ const routes: Routes = [
   { path: 'updateGate/:gateID', component: UpdateGateComponent, canActivate: [AuthGuard] },
 
   { path: 'maintenanceLog', component: MaintenanceLogTableComponent, canActivate: [AuthGuard] },
-  { path: 'addMaintenanceLog', component: MaintenanceLogFormComponent, canActivate: [AuthGuard] },  
+  { path: 'addMaintenanceLog', component: MaintenanceLogFormComponent, canActivate: [AuthGuard], canDeactivate: [CanDeactivateGuard] },  
   { path: 'updateMaintenanceLog/:maintenanceLogID', component: UpdateMaintenanceLogComponent, canActivate: [AuthGuard] },
 
   { path: 'inspectionLog', component: InspectionLogTableComponent, canActivate: [AuthGuard] },

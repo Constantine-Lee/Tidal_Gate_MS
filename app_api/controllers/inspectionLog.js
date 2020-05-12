@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const InspectionLog = mongoose.model('InspectionLog');
+const counter = require('./counter');
 
 const getInspectionLogs = async (req, res) => {
     console.log('Get InspectionLogs. ');
@@ -14,18 +15,18 @@ const getInspectionLogs = async (req, res) => {
 };
 
 const addInspectionLog = async (req, res) => {
-    console.log('Post a InspectionLog: ' + JSON.stringify(req.body));
+    console.log('Post a InspectionLog: ' + JSON.stringify(req.body).substring(0,150));
     // a document instance
-    const inspectionLog = new InspectionLog({
+    const inspectionLog = new InspectionLog({        
         timestamp: Date.now(),
         gate: req.body.gate,
         date_inspection: req.body.date_inspection,
         question: req.body.question
     });
     // save model to database
-    try {
+    try {        
         const saved = await inspectionLog.save();
-        console.log('Saved a InspectionLog: ' + JSON.stringify(inspectionLog));
+        console.log('Saved a InspectionLog: ' + JSON.stringify(inspectionLog).substring(0,150));
         res.status(200).json(saved);
     } catch (err) {
         console.log('Failed to save a InspectionLog: ' + err);

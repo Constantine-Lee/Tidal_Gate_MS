@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
+const counter = require('./counter');
 
 const gateSchema = new mongoose.Schema({
+  id: Number, 
   name: {
     type: String,
     required: true
@@ -8,6 +10,16 @@ const gateSchema = new mongoose.Schema({
   profilePhoto: String,
   timestamp: Number,
   question: String
+});
+
+gateSchema.pre('save', function(next) {
+  var doc = this;
+  counter.findByIdAndUpdate({_id: 'gate'}, {$inc: { seq: 1} }, function(error, counter)   {
+      if(error)
+          return next(error);
+      doc.id = counter.seq;
+      next();
+  });
 });
 
 mongoose.model('Gate', gateSchema);
