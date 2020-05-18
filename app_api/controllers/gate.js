@@ -7,8 +7,12 @@ const getGates = async (req, res) => {
     console.log('Get Gates. ');
     try {
         const results = await Gate.find().exec();
-        console.log('Fetched Gates.');
-        res.status(200).json(results);
+        const gates = results.map(gate => {            
+            let {_id, id, name} = gate;
+            return {_id, id, name};
+        });
+        console.log('Fetched Gates: ' + JSON.stringify(gates));
+        res.status(200).json(gates);
     } catch (err) {
         console.log('Failed to fetch Gates: ' + err);
         res.status(404).json(err);
@@ -57,6 +61,9 @@ const editGate = async (req, res) => {
     try {
         const result = await Gate.findById(req.params.gateID).exec();
 
+        console.log(req.body);
+        console.log(result.timestamp);
+        console.log(req.body.timestamp);
         if(result.timestamp != req.body.timestamp){
             throw new Error("The log had been edited by others.");
         }

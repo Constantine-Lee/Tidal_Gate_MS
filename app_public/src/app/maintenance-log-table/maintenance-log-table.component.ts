@@ -59,7 +59,7 @@ export class MaintenanceLogTableComponent implements OnInit {
 
   setPage(page: number) {
     let arrayFilter = this.maintenanceLogs;
-    console.log(this.searchTerm);
+    
     if (this.searchTerm != "") {
       arrayFilter = this.maintenanceLogs
         .filter(i =>

@@ -14,6 +14,7 @@ import { Role } from '../_models/role';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { fadeInAnimation } from '../_animations';
+declare var $: any;
 
 @Component({
   selector: 'app-update-gate',
@@ -33,45 +34,56 @@ export class UpdateGateComponent implements OnInit {
   form: FormGroup;
   currentUser: User;
   receive: boolean;
+  loading = false;
+  error: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private route: ActivatedRoute,
     private router: Router, private qcs: QuestionControlService, private gateService: GateService, private authenticationService: AuthenticationService) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
-  get isAdmin() {
-    console.log(this.currentUser && this.currentUser.role === Role.Admin);
+  get isAdmin() {    
     return this.currentUser && this.currentUser.role === Role.Admin;
   }
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
-        this.getGateByID(params.get('gateID')))
+        this.getGateByID(params.get('gateID'))
+      )
     ).subscribe();
   }
 
   async getGateByID(id: string) {
+    
     await this.gateService.getGateByID(id)
       .then(gate => this.gate = gate);
     this.questions = JSON.parse(this.gate.question);
     this.form = this.qcs.toFormGroup(this.questions);
-    this.previewUrl = `${environment.apiUrl}/images/${this.gate.profilePhoto}`;
-    console.log(this.previewUrl);
+    this.previewUrl = this.gate.profilePhoto;    
     this.receive = true;
   }
 
   onSubmit() {
     const formData = new FormData();
-
     let formValue = this.form.getRawValue();
     this.questions.map(question => question.value = formValue[question.key]);
-
+    
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
     formData.append('profilePhoto', this.previewUrl);
-    this.gateService.addGate(formData).subscribe(_ => this.router.navigate(['/gate']));
+    formData.append('timestamp', this.gate.timestamp.toString());
+
+    this.gateService.updateGate(formData, this.gate._id).subscribe(_ => this.router.navigate(['/gate']),
+    err => {
+      console.log(err);
+      if (err != undefined) {
+        this.error = err;
+      }
+      this.loading = false;
+      $('#errorModal').modal('show');
+    });
   }
 
   fileProgress(fileInput: any) {

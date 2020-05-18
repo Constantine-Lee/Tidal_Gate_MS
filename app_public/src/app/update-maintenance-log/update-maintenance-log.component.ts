@@ -10,6 +10,7 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { fadeInAnimation } from '../_animations';
+declare var $: any;
 
 @Component({
   selector: 'app-update-maintenance-log',
@@ -23,10 +24,11 @@ export class UpdateMaintenanceLogComponent implements OnInit {
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   receive: boolean;
+  loading = false;
+  error: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private route: ActivatedRoute,
     private router: Router, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService) {
-    
   }
 
   ngOnInit(): void {
@@ -37,22 +39,31 @@ export class UpdateMaintenanceLogComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    console.log("Update Component Destroy");
+    //console.log("Update Component Destroy");
   }
 
   async getMaintenanceLogByID(id: string) {
     await this.maintenanceLogService.getMaintenanceLogByID(id)
         .then(maintenanceLog => this.maintenanceLog = maintenanceLog);     
     this.questions = JSON.parse(this.maintenanceLog.question);
+
+    /*
+    console.log(this.questions);
+    let gateName = this.questions.find(obj => {
+      return obj.key == 'Gate Name *';
+    })
+    console.log(gateName);
+    */
+
     this.form = this.qcs.toFormGroup(JSON.parse(this.maintenanceLog.question));
     this.receive = true;
   }
 
   onSubmit(): void {
-    let formValue = this.form.getRawValue();
-    console.log(formValue);
+    const formValue = this.form.getRawValue();
+    
     this.questions.map(question => question.value = formValue[question.key]); 
-    let newMaintenanceLog = new MaintenanceLog({
+    const newMaintenanceLog = new MaintenanceLog({
       _id: this.maintenanceLog._id,
       timestamp: this.maintenanceLog.timestamp,
       gate:formValue['Gate Name *'], 
@@ -63,6 +74,14 @@ export class UpdateMaintenanceLogComponent implements OnInit {
     this.maintenanceLog.date_maintenance = formValue['Maintenance Date *'];
     this.maintenanceLog.question = JSON.stringify(this.questions);
 
-    this.maintenanceLogService.updateMaintenanceLog(newMaintenanceLog).subscribe(_=> { this.router.navigate(['/maintenanceLog']); });    
+    this.maintenanceLogService.updateMaintenanceLog(newMaintenanceLog).subscribe(_ => this.router.navigate(['/maintenanceLog']),
+    err => {
+      console.log(err);
+      if (err != undefined) {
+        this.error = err;
+      }
+      this.loading = false;
+      $('#errorModal').modal('show');
+    });    
   }
 }

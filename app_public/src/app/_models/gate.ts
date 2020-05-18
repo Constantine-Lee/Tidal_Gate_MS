@@ -1,5 +1,5 @@
 export class Gate {
-    _id: number;
+    _id: string;
     id: number;
     name: string;
     profilePhoto: string;
@@ -8,7 +8,7 @@ export class Gate {
     options: { key: string, value: string }[];
 
     constructor(options: {
-        _id?: number,
+        _id?: string,
         name?: string,
         profilePhoto?: string,
         timestamp?: number,

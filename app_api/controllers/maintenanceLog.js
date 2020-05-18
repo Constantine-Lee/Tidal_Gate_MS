@@ -5,8 +5,12 @@ const getMaintenanceLogs = async (req, res) => {
     console.log('Get MaintenanceLogs. ');
     try {
         const results = await MaintenanceLog.find().exec();
-        console.log('Fetched MaintenanceLogs.');
-        res.status(200).json(results);
+        const maintenanceLogs = results.map(log => {            
+            let {_id, id, gate, date_maintenance, action_needed, action_taken} = log;
+            return {_id, id, gate, date_maintenance, action_needed, action_taken};
+        });
+        console.log('Fetched MaintenanceLogs. ' + JSON.stringify(maintenanceLogs));
+        res.status(200).json(maintenanceLogs);
     } catch (err) {
         console.log('Failed to fetch MaintenanceLogs: ' + err);
         res.status(404).json(err);

@@ -14,7 +14,41 @@
                 </div>
 
             </div>
-            <button type="submit" class="btn-success btn-lg btn-block mb-4">Update</button>
+
+
+            <div class="d-flex justify-content-center align-items-center container ">
+                <button type="button" [disabled]="loading" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4"
+                    data-toggle="modal" data-target="#exampleModal"><span *ngIf="loading"
+                        class="spinner-border text-info spinner-border-sm mr-1 mb-1"></span>Update</button>
+            </div>
+            <!-- Modal -->
+            <div class="modal" id="exampleModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <h4>Confirm Update ?</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Cancel</button>
+                            <button type="button" (click)="onSubmit()" class="btn btn-outline-primary"
+                                data-dismiss="modal">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal" id="errorModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body text-danger">
+                            <h4>{{error}}</h4>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-danger" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 </div>

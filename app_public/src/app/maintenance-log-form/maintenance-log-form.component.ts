@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
@@ -10,21 +10,69 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
+
+import * as CustomEditor from '../../assets/build/ckeditor.js';
+import * as SecondEditor from '../../assets/build/ckeditor.js';
+
+import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+
 declare var $: any;
 
 @Component({
   selector: 'app-maintenance-log-form',
   templateUrl: './maintenance-log-form.component.html',
+  styleUrls: ['./maintenance-log-form.css'],
 
   // make fade in animation available to this component
   animations: [fadeInAnimation]
 })
-export class MaintenanceLogFormComponent implements OnInit {
+export class MaintenanceLogFormComponent implements OnInit, AfterViewInit {
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   receive: boolean;
   loading = false;
   error: string = 'Unknown Error Occurs... Operation Failed.';
+  config = {
+    toolbar: {
+      items: [
+        'bold',
+        'fontSize',
+        'highlight',
+        'alignment',
+        'bulletedList',
+        '|',
+        'imageUpload',
+        'undo',
+        'redo'
+      ]
+    },
+    language: 'en',
+    image: {
+      toolbar: [ 'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full'],
+
+            styles: [
+                // This option is equal to a situation where no style is applied.
+                'full',
+
+                // This represents an image aligned to the left.
+                'alignLeft'
+            ]
+    },
+    licenseKey: '',
+  };
+
+  public Editor = CustomEditor;
+  public SecondEditor = CustomEditor;
+  public model = {
+    editorData: '<p></p><br/><p></p>'
+};
+  public secondData = '<p> fs</p><br/><p> </p>';
+
+  public onChange({ editor }: ChangeEvent) {
+    
+    const data = editor.getData();
+    console.log(data);
+  }
 
   constructor(private service: MaintenanceLogQuestionService, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService, private router: Router, private dialogService: DialogService) {
   }
@@ -44,8 +92,21 @@ export class MaintenanceLogFormComponent implements OnInit {
     // observable which resolves to true or false when the user decides
     //return this.dialogService.confirm('Discard changes?');
   }
+  @ViewChild('editor') editorComponent: CKEditorComponent;
 
+    public getEditor() {
+        // Warning: This may return "undefined" if the editor is hidden behind the `*ngIf` directive or
+        // if the editor is not fully initialised yet.
+        return this.editorComponent.editorInstance;
+    }
+
+  ngAfterViewInit(){
+    const data = this.editorComponent;
+    console.log(data);
+  }
   onSubmit(): void {
+    const data = this.Editor.getData;
+    console.log(data);
     // stop here if form is invalid
     if (this.form.invalid) {
       return;

@@ -9,6 +9,7 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { Location } from '@angular/common';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
+declare var $: any;
 
 @Component({
   selector: 'app-update-inspection-log',
@@ -22,7 +23,8 @@ export class UpdateInspectionLogComponent implements OnInit {
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   receive: boolean;
-
+  loading = false;
+  error: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private route: ActivatedRoute,
     private router: Router, private inspectionLogService: InspectionLogService, private qcs: QuestionControlService, ) {
@@ -48,6 +50,12 @@ export class UpdateInspectionLogComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // stop here if form is invalid
+    if (this.form.invalid) {
+      return;
+    }
+    this.loading = true;
+
     const formValue = this.form.getRawValue();
     this.questions.map(question => question.value = formValue[question.key]);
     const newInspectionLog = new InspectionLog({
@@ -58,8 +66,14 @@ export class UpdateInspectionLogComponent implements OnInit {
       question: JSON.stringify(this.questions)
     });
 
-    this.inspectionLogService.updateInspectionLog(newInspectionLog).subscribe(_ => {
-      this.router.navigate(['/inspectionLog']);
+    this.inspectionLogService.updateInspectionLog(newInspectionLog).subscribe(_ => this.router.navigate(['/inspectionLog']),
+    err => {
+      console.log(err);
+      if (err != undefined) {
+        this.error = err;
+      }
+      this.loading = false;
+      $('#errorModal').modal('show');
     });
   }
 }

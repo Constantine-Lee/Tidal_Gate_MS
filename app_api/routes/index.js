@@ -84,7 +84,7 @@ router
 router
     .route('/gates/:gateID')
     .get(ctrlGate.getGate)
-    .put(ctrlGate.editGate)
+    .put(upload.single('image'),ctrlGate.editGate)
     .delete(ctrlGate.deleteGate)
 
 router

@@ -26,6 +26,10 @@ export class GateService {
     return this.http.get<Gate[]>(`${environment.apiUrl}/gates`);
   }
 
+  async getGatesPromise(): Promise<Gate[]> {
+    return await this.http.get<Gate[]>(`${environment.apiUrl}/gates`).toPromise();
+  }
+
   async getGateByID(id: string): Promise<Gate> {
     return await this.http.get<Gate>(`${environment.apiUrl}/gates/${id}`).toPromise();
   }
@@ -34,13 +38,15 @@ export class GateService {
     return this.http.get<any>(`${environment.apiUrl}/gates/images/${url}`, httpOptions);
   }
 
-  deleteGate(id: number) {
+  deleteGate(id: string) {
     const url = `${environment.apiUrl}/gates/${id}`;
     return this.http.delete<Gate>(url);
   }
 
-  updateGate(gate: FormData): Observable<any>{
-    const url = `${environment.apiUrl}/gates/${gate['_id']}`;
+  updateGate(gate: FormData, _id: string): Observable<any>{
+    console.log(gate);
+    const url = `${environment.apiUrl}/gates/${_id}`;
+    console.log(url);
     return this.http.put<any>(url, gate);
 }
 }

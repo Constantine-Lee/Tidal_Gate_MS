@@ -50,11 +50,10 @@ export class GateFormComponent implements OnInit {
       return;
     }
     this.loading = true;
-
     const formData = new FormData();
-    let formValue = this.form.getRawValue();
-    this.questions.map(question => question.value = formValue[question.key]);
-
+    const formValue = this.form.getRawValue();
+        
+    this.questions.map(question => question.value = formValue[question.key]);    
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
@@ -91,8 +90,7 @@ export class GateFormComponent implements OnInit {
     }
   }
 
-  get isAdmin() {
-    console.log(this.currentUser && this.currentUser.role === Role.Admin);
+  get isAdmin() {    
     return this.currentUser && this.currentUser.role === Role.Admin;
   }
 }

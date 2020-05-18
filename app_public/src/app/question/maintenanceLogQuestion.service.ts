@@ -4,6 +4,7 @@ import { DropdownQuestion } from './questionDropdown';
 import { QuestionBase } from './questionBase';
 import { TextboxQuestion } from './questionTextbox';
 import { GroupLabelQuestion } from './questionGroupLabel';
+import { GateService } from '../_services/gate.service';
 
 const zero = 0; 
 const first = 1;
@@ -25,9 +26,41 @@ const thirteenth = 13;
     }
 )
 export class MaintenanceLogQuestionService {
+
+
+    gateSelection: { key:string, value:string }[] = [];
+
+    constructor(private gateService: GateService){}    
+
+    async getGates(){     
+        this.gateSelection = [];
+        await this.gateService.getGatesPromise().then(gates => {
+            gates.forEach(gate => {
+                this.gateSelection.push({ key: gate.name, value: gate.name })
+            })            
+            console.log(this.gateSelection);
+        });  
+    }    
     
+    /*[
+        { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
+        { key: 'srw002 Ketup', value: 'Ketup' },
+        { key: 'srw003 Moyan Ulu East', value: 'Moyan Ulu East' },
+        { key: 'srw004 Serpan Ulu', value: 'Serpan Ulu' },
+        { key: 'srw005 Asajaya Ulu', value: 'Asajaya Ulu' },
+        { key: 'srw006 Sampun Gerunggang', value: 'Sampun Gerunggang' },
+        { key: 'srw007 Moyan Ulu (West)', value: 'Moyan Ulu (West)' },
+        { key: 'srw008 Beliong', value: 'Beliong' },
+        { key: 'srw009 Meranti', value: 'Meranti' },
+        { key: 'srw010 Sampat', value: 'Sampat' },
+        { key: 'srw011 Sampun Kelili', value: 'Sampun Kelili' },
+        { key: 'srw012 Segali', value: 'Segali' },
+    ];*/
+
     // TODO: get from a remote source of question metadata
     getQuestions() {
+
+        this.getGates();
 
         let questions: QuestionBase<string>[] = [
             new GroupLabelQuestion({
@@ -40,20 +73,7 @@ export class MaintenanceLogQuestionService {
             new DropdownQuestion({
                 key: 'Gate Name *',
                 label: 'Gate Name *',
-                options: [
-                    { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
-                    { key: 'srw002 Ketup', value: 'Ketup' },
-                    { key: 'srw003 Moyan Ulu East', value: 'Moyan Ulu East' },
-                    { key: 'srw004 Serpan Ulu', value: 'Serpan Ulu' },
-                    { key: 'srw005 Asajaya Ulu', value: 'Asajaya Ulu' },
-                    { key: 'srw006 Sampun Gerunggang', value: 'Sampun Gerunggang' },
-                    { key: 'srw007 Moyan Ulu (West)', value: 'Moyan Ulu (West)' },
-                    { key: 'srw008 Beliong', value: 'Beliong' },
-                    { key: 'srw009 Meranti', value: 'Meranti' },
-                    { key: 'srw010 Sampat', value: 'Sampat' },
-                    { key: 'srw011 Sampun Kelili', value: 'Sampun Kelili' },
-                    { key: 'srw012 Segali', value: 'Segali' },
-                ],
+                options: this.gateSelection,
                 order: zero
             }),
             new TextboxQuestion({

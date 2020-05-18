@@ -95,14 +95,13 @@ export class GateTableComponent implements OnInit {
     });
   }
 
-  delete(id: number): void {    
+  delete(id: string): void {    
     this.gates = this.gates.filter(l => l._id !== id);
     this.setPage(1);
     this.gateService.deleteGate(id).subscribe();    
   }
   
-  get isAdmin() {
-    console.log(this.currentUser && this.currentUser.role === Role.Admin);
+  get isAdmin() {    
     return this.currentUser && this.currentUser.role === Role.Admin;
   }
 }
