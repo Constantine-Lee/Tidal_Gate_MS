@@ -45,6 +45,7 @@ export class UpdateInspectionLogComponent implements OnInit {
     await this.inspectionLogService.getInspectionLogByID(id)
       .then(inspectionLog => this.inspectionLog = inspectionLog);
     this.questions = JSON.parse(this.inspectionLog.question);
+    
     this.form = this.qcs.toFormGroup(this.questions);
     this.receive = true;
   }

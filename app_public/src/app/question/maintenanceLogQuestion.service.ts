@@ -5,6 +5,8 @@ import { QuestionBase } from './questionBase';
 import { TextboxQuestion } from './questionTextbox';
 import { GroupLabelQuestion } from './questionGroupLabel';
 import { GateService } from '../_services/gate.service';
+import { CheckBoxQuestion } from './questionCheckBox';
+import { RTXQuestion } from './questionRTX';
 
 const zero = 0; 
 const first = 1;
@@ -20,13 +22,14 @@ const tenth = 10;
 const eleventh = 11;
 const twelfth = 12;
 const thirteenth = 13;
+const fourteenth = 14;
+
 @Injectable(
     {
         providedIn:'root',        
     }
 )
 export class MaintenanceLogQuestionService {
-
 
     gateSelection: { key:string, value:string }[] = [];
 
@@ -38,7 +41,7 @@ export class MaintenanceLogQuestionService {
             gates.forEach(gate => {
                 this.gateSelection.push({ key: gate.name, value: gate.name })
             })            
-            console.log(this.gateSelection);
+            //console.log(this.gateSelection);
         });  
     }    
     
@@ -573,6 +576,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: thirteenth
             }), 
+            /*
             new TextboxQuestion({
                 key: 'Action Taken *',
                 label: 'Action Taken *',
@@ -625,6 +629,22 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: thirteenth
             }),
+            */
+            new CheckBoxQuestion({
+                key: 'Action Taken',
+                label: 'Action Taken',
+                checkboxes: [
+                    { key: 'Maintenance', label: 'Maintenance', value: false },
+                    { key: 'Visit', label: 'Visit', value: false },
+                    { key: 'Inspection', label: 'Inspection', value: false },
+                    { key: 'Commisioning', label: 'Commisioning', value: false },
+                    { key: 'No Action', label: 'No Action', value: false },
+                ],
+                order: fourteenth
+            }),
+            new RTXQuestion({
+                
+            })
         ];
 
         return questions.sort((a, b) => a.order - b.order);

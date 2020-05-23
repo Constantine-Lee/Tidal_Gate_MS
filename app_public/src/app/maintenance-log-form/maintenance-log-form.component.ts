@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
 import { MaintenanceLogQuestionService } from '../question/maintenanceLogQuestion.service';
@@ -21,12 +21,13 @@ declare var $: any;
 @Component({
   selector: 'app-maintenance-log-form',
   templateUrl: './maintenance-log-form.component.html',
-  styleUrls: ['./maintenance-log-form.css'],
 
   // make fade in animation available to this component
   animations: [fadeInAnimation]
 })
 export class MaintenanceLogFormComponent implements OnInit, AfterViewInit {
+  get getCheckBoxFormArray() { return this.form.get('Action Taken')['controls']; }
+  rtx = new FormControl('<p></p><br/><p></p>');
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   receive: boolean;
@@ -48,30 +49,28 @@ export class MaintenanceLogFormComponent implements OnInit, AfterViewInit {
     },
     language: 'en',
     image: {
-      toolbar: [ 'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full'],
+      toolbar: ['imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full'],
 
-            styles: [
-                // This option is equal to a situation where no style is applied.
-                'full',
+      styles: [
+        // This option is equal to a situation where no style is applied.
+        'full',
 
-                // This represents an image aligned to the left.
-                'alignLeft'
-            ]
+        // This represents an image aligned to the left.
+        'alignLeft'
+      ]
     },
     licenseKey: '',
   };
 
   public Editor = CustomEditor;
-  public SecondEditor = CustomEditor;
+
   public model = {
     editorData: '<p></p><br/><p></p>'
-};
-  public secondData = '<p> fs</p><br/><p> </p>';
+  };
+
 
   public onChange({ editor }: ChangeEvent) {
-    
     const data = editor.getData();
-    console.log(data);
   }
 
   constructor(private service: MaintenanceLogQuestionService, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService, private router: Router, private dialogService: DialogService) {
@@ -79,6 +78,7 @@ export class MaintenanceLogFormComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.questions = this.service.getQuestions();
+    //console.log(this.questions);
     this.form = this.qcs.toFormGroup(this.questions);
     this.receive = true;
   }
@@ -94,28 +94,44 @@ export class MaintenanceLogFormComponent implements OnInit, AfterViewInit {
   }
   @ViewChild('editor') editorComponent: CKEditorComponent;
 
-    public getEditor() {
-        // Warning: This may return "undefined" if the editor is hidden behind the `*ngIf` directive or
-        // if the editor is not fully initialised yet.
-        return this.editorComponent.editorInstance;
-    }
-
-  ngAfterViewInit(){
-    const data = this.editorComponent;
-    console.log(data);
+  public getEditor() {
+    // Warning: This may return "undefined" if the editor is hidden behind the `*ngIf` directive or
+    // if the editor is not fully initialised yet.
+    return this.editorComponent.editorInstance;
   }
+
+  ngAfterViewInit() {
+    const data = this.editorComponent;
+
+  }
+
   onSubmit(): void {
     const data = this.Editor.getData;
-    console.log(data);
+    let arrActionTaken: any[] = [];
+
     // stop here if form is invalid
     if (this.form.invalid) {
       return;
     }
     this.loading = true;
     const formValue = this.form.getRawValue();
-    this.questions.map(question => question.value = formValue[question.key]);
 
-    const newMaintenanceLog = new MaintenanceLog({ gate: formValue['Gate Name *'], date_maintenance: formValue['Maintenance Date *'], action_taken: formValue['Action Taken *'], action_needed: formValue['Action Needed *'], question: JSON.stringify(this.questions) });
+    console.log(this.rtx.value);
+    this.questions.map(question => {
+      if (question.controlType == 'checkbox') {
+        question.checkboxes.map((checkbox, i) => {
+          checkbox.value = formValue[question.key][i];
+          if (checkbox.value) { arrActionTaken.push(checkbox.label) };
+        })
+      }
+      question.value = formValue[question.key]
+    });
+
+    const sActionTaken = arrActionTaken.reduce((first, second) => first + ', ' + second);
+    //console.log(sActionTaken);
+    //console.log(this.questions);
+
+    const newMaintenanceLog = new MaintenanceLog({ gate: formValue['Gate Name *'], date_maintenance: formValue['Maintenance Date *'], action_taken: sActionTaken, action_needed: formValue['Action Needed *'], question: JSON.stringify(this.questions) });
 
     this.maintenanceLogService.addMaintenanceLog(newMaintenanceLog)
       .subscribe(_ => this.router.navigate(['/maintenanceLog']),

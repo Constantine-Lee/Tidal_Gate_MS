@@ -44,9 +44,10 @@ export class UpdateMaintenanceLogComponent implements OnInit {
 
   async getMaintenanceLogByID(id: string) {
     await this.maintenanceLogService.getMaintenanceLogByID(id)
-        .then(maintenanceLog => this.maintenanceLog = maintenanceLog);     
+        .then(maintenanceLog => this.maintenanceLog = maintenanceLog);   
+        console.log(this.maintenanceLog.question);  
     this.questions = JSON.parse(this.maintenanceLog.question);
-
+    
     /*
     console.log(this.questions);
     let gateName = this.questions.find(obj => {

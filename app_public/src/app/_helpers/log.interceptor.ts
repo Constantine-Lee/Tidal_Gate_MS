@@ -24,7 +24,8 @@ export class LogInterceptor implements HttpInterceptor {
                 const headers = JSON.stringify(req.headers);
                 const body = JSON.stringify({ ...req.body });
                 const message = req.method + " " + req.urlWithParams + " " + status
-                    + " in " + elapsedTime + "ms" + " headers: " + headers + " body: " + body;
+                    + " in " + elapsedTime + "ms" + " headers: " + headers ;
+                    //+ " body: " + body;
                 this.logDetails(message);
             })
         );

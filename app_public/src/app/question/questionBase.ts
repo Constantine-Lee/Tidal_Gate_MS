@@ -7,7 +7,8 @@ export class QuestionBase<T> {
     controlType: string;
     type: string;
     options: {key: string, value: string}[];
-  
+    checkboxes: {key: string, label: string, value: boolean}[];
+
     constructor(options: {
         value?: T,
         key?: string,
@@ -15,7 +16,8 @@ export class QuestionBase<T> {
         required?: boolean,
         order?: number,
         controlType?: string,
-        type?: string
+        type?: string,
+        checkboxes?: {key: string, label: string, value: boolean}[]
       } = {}) {
       this.value = options.value;
       this.key = options.key || '';
@@ -23,6 +25,7 @@ export class QuestionBase<T> {
       this.required = !!options.required;
       this.order = options.order === undefined ? 1 : options.order;
       this.controlType = options.controlType || '';
-      this.type = options.type || '';
+      this.type = options.type || ''; 
+      this.checkboxes = options.checkboxes || [];
     }
   }

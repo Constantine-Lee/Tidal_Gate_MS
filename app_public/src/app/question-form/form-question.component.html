@@ -1,10 +1,12 @@
 <div [formGroup]="form">
     <div [ngSwitch]="question.controlType">
 
+        <!--Label-->
         <div class="alert alert-info mb-1 mt-2 " *ngSwitchCase="'groupLabel'">
             {{question.label}}
         </div>
 
+        <!--TextBox-->
         <div class="container form-row mb-1 mt-2 pr-4 pl-4 " *ngSwitchCase="'textbox'">
             <label [attr.for]="question.key" class="col-form-label col-sm-6 ">{{question.label}}
             </label>
@@ -12,23 +14,56 @@
                 [type]="question.type" class="col-sm-6 form-control bg-light" placeholder="Your answer">
         </div>
 
+        <!--DropDown-->
         <div class="container form-row mb-1 mt-2 pr-4 pl-4" *ngSwitchCase="'dropdown'">
             <label [attr.for]="question.key" class="col-form-label col-sm-6">{{question.label}}
             </label>
-            <select [ngClass]="{ 'is-invalid': !isValid}" class="custom-select col-sm-6 bg-light" [id]="question.key" [formControlName]="question.key">
+            <select [ngClass]="{ 'is-invalid': !isValid}" class="custom-select col-sm-6 bg-light" [id]="question.key"
+                [formControlName]="question.key">
                 <option *ngFor="let opt of question.options" [value]="opt.value">{{opt.value}}</option>
             </select>
         </div>
 
+        <!--CheckBox-->
+        <div [formArrayName]="question.key" *ngSwitchCase="'checkbox'">
+            <div  class="container form-row mb-0 mt-2 pr-4 pl-4 justify-content-center">
+                <label  class="col-form-label">
+                    <h5 class="m-0"><strong> {{question.label}} </strong></h5>
+                </label>               
+            </div>
+            <hr class="mb-0 mt-0" style="border:1px solid black" />
+            <div class="container form-row mb-2 mt-2 pr-4 pl-4 ">
+                <div *ngFor="let checkbox of question.checkboxes; let i=index" class="form-check form-check-inline col-sm-3 col-md-3 col-lg-2" >                    
+                    <input [ngClass]="{ 'is-invalid': !isValid}" [formControlName]="i" [id]="checkbox.key" class="form-check-input" type="checkbox">
+                    <label class="form-check-label" [for]="checkbox.key" > {{checkbox.label}} </label>
+                </div>                
+            </div>
+        </div>
+
+        <!--RTX-->
+        <div class="container pr-4 pl-3 mt-2" *ngSwitchCase="'RTX'">
+            <ckeditor #editor [editor]="Editor" class=" bg-light" [formControlName]="question.key" [data]="model.editorData" [config]="config"
+                (change)="onChange($event)"></ckeditor>
+        </div>
+
+        <!--FullTextBox-->
         <div class="container form-row mt-2 mx-auto" *ngSwitchCase="'fullTextbox'">
             <textarea [formControlName]="question.key" [id]="question.key" class="form-control bg-light"
                 placeholder="Your answer"></textarea>
         </div>
     </div>
-    
-    <div class="container form-row mb-1 mt-0 pr-4 pl-4">
+
+    <!--Error-->
+    <div *ngIf="!isCheckBox" class="container form-row mb-1 mt-0 pr-4 pl-4">
         <label [attr.for]="question.key" class="col-sm-6 m-0 p-0">
         </label>
-        <label class="text-danger col-sm-6 bg-light font-weight-lighter m-0 p-0" *ngIf="!isValid" style="font-size: 0.7rem">This field is required</label>
+        <label class="text-danger col-sm-6 bg-light font-weight-lighter m-0 p-0" *ngIf="!isValid"
+            style="font-size: 0.7rem">This field is required</label>
+    </div>
+
+    <!--CheckBox Error-->
+    <div *ngIf="isCheckBox" class="container form-row mb-1 mt-0 pr-4 pl-4">
+        <label class="text-danger col-sm-6 bg-light font-weight-lighter m-0 p-0" *ngIf="!isValid"
+            style="font-size: 0.7rem">Choose at least one selection.</label>
     </div>
 </div>
