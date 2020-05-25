@@ -5,52 +5,50 @@ const path = require('path');
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error')
 
-const getGates = async (req, res) => {
+const getGates = async (req, res, next) => {
     winston.info('Function=getGates');
-    winston.silly('Request Headers=' + JSON.stringify(req.headers) + ' Request Body=' + JSON.stringify(req.body));
-
     try {
-        const results = await Gate.find().exec();        
-        winston.silly('results='+JSON.stringify(results));
+        const gatesRaw = await Gate.find().exec();
+        winston.silly('gatesRaw=' + JSON.stringify(gatesRaw));
 
-        const gates = results.map(gate => {
+        const gatesOpt = gatesRaw.map(gate => {
             let { _id, id, name } = gate;
             return { _id, id, name };
         });
-        winston.verbose('gates=' + JSON.stringify(gates));
+        winston.verbose('gatesOpt=' + JSON.stringify(gatesOpt));
 
-        res.status(200).json(gates);
+        res.status(200).json(gatesOpt);
     } catch (err) {
-        winston.error('Fetch gates error='+err);
-        err = new Error('Failed to fetch Gates.');
+        winston.error('Get Gates Error=' + err);
+        err = new ErrorHandler(404, 'Failed to get Gates.');
         return next(err);
     }
 };
 
 const addGate = async (req, res, next) => {
-    winston.silly('Function=addGate Request Headers=' + JSON.stringify(req.headers) + ' Request Body=' + JSON.stringify(req.body));
+    winston.info('Function=addGate');
     let filename;
     try {
         filename = req.file.filename;
-        winston.verbose('Filename/req.file.filename: '+filename);
+        winston.verbose('Filename/req.file.filename: ' + filename);
     } catch (err) {
         winston.error('Filename error=' + err);
         err = new ErrorHandler(500, "Please upload an Image.");
-        
+
         return next(err);
     }
-    
+
     try {
         winston.verbose('Req.fileValidationError: ' + req.fileValidationError);
-        if (req.fileValidationError == 'goes wrong on the mimetype') {            
+        if (req.fileValidationError == true) {
             throw new ErrorHandler(500, "Wrong Image Format.");
         }
-    } catch (err) {   
-        winston.error('File Type Error=' + err);     
-        next(err);
+    } catch (err) {
+        winston.error('File Type Error=' + err);
+        return next(err);
     }
 
-    try {        
+    try {
         // a document instance
         const gate = new Gate({
             timestamp: Date.now(),
@@ -58,66 +56,83 @@ const addGate = async (req, res, next) => {
             profilePhoto: process.env.imgFolderUrl + filename,
             question: req.body.question
         });
-        winston.verbose('gate.timestamp='+gate.timestamp+' gate.name='+gate.name+' process.env.imgFolderUrl='+process.env.imgFolderUrl+' profilePhoto='+gate.profilePhoto);
-        winston.silly('gate.question='+gate.question);
+        winston.silly('gate=' + gate);
+        winston.verbose('gate.timestamp=' + gate.timestamp + ' gate.name=' + gate.name + ' process.env.imgFolderUrl=' + process.env.imgFolderUrl + ' profilePhoto=' + gate.profilePhoto);
         // save model to database
-        const saved = await gate.save();
-        winston.debug('Saved Gate='+saved);
-        res.status(200).json(saved);
+        const savedGate = await gate.save();
+        winston.debug('Saved Gate=' + savedGate);
+        res.status(200).json(savedGate);
     } catch (err) {
-        winston.error('Save Gate Error='+err);
-        next(err);
+        winston.error('Save Gate Error=' + err);
+        err = new ErrorHandler(500, 'Failed to Save Gate.');
+        return next(err);
     }
 
 };
 
-const getGate = async (req, res) => {
-    console.log('Get a Gate: ' + JSON.stringify(req.params.gateID));
+const getGate = async (req, res, next) => {
+    winston.info('Function=getGate req.params.gateID=' + req.params.gateID);
     try {
-        const result = await Gate.findById(req.params.gateID).exec();
-        console.log('Fetched a Gate: ' + JSON.stringify(result));
-        res.status(200).json(result);
+        const gate = await Gate.findById(req.params.gateID).exec();
+        winston.debug('Fetched a Gate=' + gate);
+        res.status(200).json(gate);
     } catch (err) {
-        console.log('Failed to fetch a Gate: ' + err);
-        res.status(404).json(err);
+        winston.error('Get Gate Error=' + err);
+        err = new ErrorHandler(500, 'Failed to get Gate=' + req.params.gateID);
+        return next(err);
     }
 };
 
-const editGate = async (req, res) => {
-    console.log('Edit a Gate: ' + JSON.stringify(req.params.gateID));
-    try {
-        const result = await Gate.findById(req.params.gateID).exec();
+const editGate = async (req, res, next) => {
+    winston.info('Function=editGate req.params.gateID=' + req.params.gateID);
 
-        console.log(req.body);
-        console.log(result.timestamp);
-        console.log(req.body.timestamp);
-        if (result.timestamp != req.body.timestamp) {
-            throw new Error("The log had been edited by others.");
+    try {
+        const gate = await Gate.findById(req.params.gateID).exec();
+        //debug gate
+        winston.debug('Fetched a Gate to Edit=' + gate);
+        //info req.body.timestamp | gate.timestamp
+        winston.info('req.body.timestamp=' + req.body.timestamp + ' gate.timestamp=' + gate.timestamp);
+
+        if (gate.timestamp != req.body.timestamp) {
+            throw new ErrorHandler(404, "The Gate had been edited by others.");
         }
+    } catch (err) {
+        winston.error('Edit Gate Error=' + err);        
+        return next(err);
+    }
 
-        const edited = await Gate.updateOne({ _id: req.params.gateID }, {
+    try {
+        const editedGate = await Gate.updateOne({ _id: req.params.gateID }, {
             timestamp: Date.now(),
             name: req.body.name,
             profilePhoto: req.body.profilePhoto,
             question: req.body.question
         });
-        console.log('Edited a Gate: ');
-        res.status(200).json(edited);
-    } catch (err) {
-        console.log('Failed to edit a Gate: ' + err);
-        res.status(404).json(err);
+        //silly gate
+        winston.silly('Edited Gate='+editedGate);
+        //verbose timestamp | name | profilePhoto
+        winston.verbose('timestamp=' + editedGate.timestamp + ' name=' + editedGate.name + ' profilePhoto=' + editedGate.profilePhoto);
+        res.status(200).json(editedGate);
+    }
+    catch (err) {
+        winston.error('Edit Gate Error=' + err);
+        err = new ErrorHandler(500, 'Failed to edit the gate.');
+        return next(err);
     }
 };
 
-const deleteGate = async (req, res) => {
-    console.log('Delete a Gate: ' + JSON.stringify(req.params.gateID));
+const deleteGate = async (req, res, next) => {
+    const gateID = req.params.gateID;
+    winston.info('Function=deleteGate req.params.gateID=' + gateID);
+
     try {
-        const result = await Gate.deleteOne({ _id: req.params.gateID }).exec();
-        console.log('Deleted a Gate: ' + JSON.stringify(result));
-        res.status(200).json(result);
+        const deleteResult = await Gate.deleteOne({ _id: gateID }).exec();
+        winston.info('Deleted Gate=' + gateID);
+        res.status(200).json(deleteResult);
     } catch (err) {
-        console.log('Failed to delete a Gate: ' + err);
-        res.status(404).json(err);
+        winston.error('Delete Gate Error=' + err);
+        err = new ErrorHandler(500, 'Failed to delete the Gate='+gateID);
+        return next(err);
     }
 };
 

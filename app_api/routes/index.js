@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('express-jwt');
 const multer = require('multer')
 const path = require('path');
+const winston = require('../config/winston');
 
 const auth = jwt({
     secret: process.env.JWT_SECRET,
@@ -21,24 +22,34 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './images')
     },
-    filename: function (req, file, cb) {
+    filename: function (req, file, cb) {        
+        winston.info('storage filename Function.');
+
+        //verbose
         const fileExtName = path.extname(file.originalname);
-        console.log(fileExtName);
+        winston.verbose('fileExtName='+fileExtName);
+
+        //verbose
         const timestamp = Date.now();
-                
-        cb(null, `gate-${timestamp}${fileExtName}`);
+        winston.verbose('timestamp='+timestamp);
+        
+        const fileName = 'gate-'+timestamp+fileExtName;
+        winston.verbose('fileName='+fileName);
+        cb(null, fileName);
     }
 })
 
 const upload = multer({ storage: storage ,
     fileFilter: function (req, file, cb) {
-        const ext = path.extname(file.originalname);
-        console.log(ext);
-        if(ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {            
-            req.fileValidationError = 'goes wrong on the mimetype';
+        winston.info('fileFilter Function.')
+
+        const fileExtName = path.extname(file.originalname);
+        winston.verbose('fileExtName='+fileExtName);
+
+        if(fileExtName !== '.png' && fileExtName !== '.jpg' && fileExtName !== '.jpeg') {            
+            req.fileValidationError = true;            
             return cb(null, false);
-        }
-        console.log("success");
+        }        
         cb(null, true);
     }
 })

@@ -15,18 +15,18 @@ const apiRouter = require('./app_api/routes/index');
 
 const app = express();
 
+app.use(morgan('combined', { stream: winston.stream }));
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'pug');
 
-app.use(morgan('combined', { stream: winston.stream }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'app_public', 'build')));
-//Serves all the request which includes /images in the url from Images folder
-app.use('/api/images', express.static(__dirname + '/images'));
+
 app.use(passport.initialize());
 
 app.use((req, res, next) => {
@@ -36,7 +36,11 @@ app.use((req, res, next) => {
   next();
 });
 
+//Serves all the request which includes /images in the url from Images folder
+app.use('/api/images', express.static(__dirname + '/images'));
+
 app.use('/api', apiRouter);
+
 app.get(/(\/home)|(\/login)|(\/admin)|(\/gate)|(\/addGate)|(\/updateGate\/[a-z0-9]{24})|(\/maintenanceLog)|(\/addMaintenanceLog)|(\/updateMaintenanceLog\/[a-z0-9]{24})|(\/inspectionLog)|(\/addInspectionLog)|(\/updateInspectionLog\/[a-z0-9]{24})/, function (req, res) {
   res.sendFile(path.join(__dirname, 'app_public', 'build', 'index.html'));
 });
@@ -57,7 +61,7 @@ app.use(function(req, res, next) {
 */
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use( (err, req, res, next) => {
   console.log('2'+err.error);
   // set locals, only providing error in development
   res.locals.message = err.message;
@@ -71,6 +75,7 @@ app.use(function (err, req, res, next) {
   //res.status(err.status || 500).json(err.message);
   
 });
+
 
 app.listen(3000, () => console.log(`listening at http://localhost:3000`))
 

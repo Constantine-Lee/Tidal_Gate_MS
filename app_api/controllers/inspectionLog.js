@@ -1,84 +1,115 @@
 const mongoose = require('mongoose');
 const InspectionLog = mongoose.model('InspectionLog');
-const counter = require('./counter');
+const winston = require('../config/winston');
+const { ErrorHandler } = require('../models/error')
 
-const getInspectionLogs = async (req, res) => {
-    console.log('Get InspectionLogs. ');
+const getInspectionLogs = async (req, res, next) => {
+    winston.info('Function=getInspectionLogs');
     try {
-        const results = await InspectionLog.find().exec();
-        console.log('Fetched InspectionLogs.');
-        res.status(200).json(results);
+        const inspectionLogsRaw = await InspectionLog.find().exec();
+        winston.silly('inspectionLogsRaw=' + JSON.stringify(inspectionLogsRaw));
+
+        const inspectionLogsOpt = inspectionLogsRaw.map(log => {
+            let { _id, id, gate, date_inspection } = log;
+            return { _id, id, gate, date_inspection };
+        });
+        winston.verbose('inspectionLogsOpt=' + JSON.stringify(inspectionLogsOpt));
+
+        res.status(200).json(inspectionLogsOpt);
     } catch (err) {
-        console.log('Failed to fetch InspectionLogs: ' + err);
-        res.status(404).json(err);
+        winston.error('Get Inspection Logs Error=' + err);
+        err = new ErrorHandler(404, 'Failed to get Inspection Logs.');
+        return next(err);
     }
 };
 
-const addInspectionLog = async (req, res) => {
-    console.log('Post a InspectionLog: ' + JSON.stringify(req.body).substring(0,150));
-    // a document instance
-    const inspectionLog = new InspectionLog({        
-        timestamp: Date.now(),
-        gate: req.body.gate,
-        date_inspection: req.body.date_inspection,
-        question: req.body.question
-    });
-    // save model to database
-    try {        
-        const saved = await inspectionLog.save();
-        console.log('Saved a InspectionLog: ' + JSON.stringify(inspectionLog).substring(0,150));
-        res.status(200).json(saved);
-    } catch (err) {
-        console.log('Failed to save a InspectionLog: ' + err);
-        res.status(404).json(err);
-    }
-};
+const addInspectionLog = async (req, res, next) => {
+    winston.info('Function=addInspectionLog');
 
-const getInspectionLog = async (req, res) => { 
-    console.log('Get a InspectionLog: ' + JSON.stringify(req.params.inspectionLogID));
     try {
-        const result = await InspectionLog.findById(req.params.inspectionLogID).exec();
-        console.log('Fetched a InspectionLog: ' + JSON.stringify(result));
-        res.status(200).json(result);
-    } catch (err) {
-        console.log('Failed to fetch a InspectionLog: ' + err);
-        res.status(404).json(err);
-    }    
-};
-
-const editInspectionLog = async (req, res) => { 
-    console.log('Edit a InspectionLog: ' + JSON.stringify(req.params.inspectionLogID));
-    try {
-        const result = await InspectionLog.findById(req.params.inspectionLogID).exec();
-
-        if(result.timestamp != req.body.timestamp){
-            throw new Error("The log had been edited by others.");
-        }
-
-        const edited = await InspectionLog.updateOne({_id: req.params.inspectionLogID}, { 
+        const inspectionLog = new InspectionLog({
             timestamp: Date.now(),
             gate: req.body.gate,
             date_inspection: req.body.date_inspection,
             question: req.body.question
-        });        
-        console.log('Edited a InspectionLog: ' + JSON.stringify(edited));
-        res.status(200).json(edited);
+        });
+        winston.silly('inspectionLog=' + JSON.stringify(inspectionLog));
+        winston.verbose('timestamp=' + inspectionLog.timestamp + ' gate=' + inspectionLog.gate + ' date_inspection=' + inspectionLog.date_inspection);
+
+        const savedInspectionLog = await inspectionLog.save();
+        winston.debug('Saved a InspectionLog=' + inspectionLog);
+        res.status(200).json(savedInspectionLog);
     } catch (err) {
-        console.log('Failed to edit a InspectionLog: ' + err);
-        res.status(404).json(err);
-    }    
+        winston.error('Save Inspection Log Error=' + err);
+        err = new ErrorHandler(500, 'Failed to Save Inspection Log.');
+        return next(err);
+    }
 };
 
-const deleteInspectionLog = async (req, res) => { 
-    console.log('Delete a InspectionLog: ' + JSON.stringify(req.params.inspectionLogID));
+const getInspectionLog = async (req, res, next) => {
+    const inspectionLogID = req.params.inspectionLogID;
+    winston.info('Function=getInspectionLog req.params.inspectionLogID=' + inspectionLogID);
     try {
-        const result = await InspectionLog.deleteOne({_id:req.params.inspectionLogID}).exec();
-        console.log('Deleted a InspectionLog: ' + JSON.stringify(result));
-        res.status(200).json(result);
+        const inspectionLog = await InspectionLog.findById(inspectionLogID).exec();
+        winston.debug('Fetched an Inspection Log from database=' + JSON.stringify(inspectionLog));
+        res.status(200).json(inspectionLog);
     } catch (err) {
-        console.log('Failed to delete a InspectionLog: ' + err);
-        res.status(404).json(err);
-    }    
+        winston.error('Get Inspection Log Error=' + err);
+        err = new ErrorHandler(500, 'Failed to get Inspection Log=' + inspectionLogID);
+        return next(err);
+    }
+};
+
+const editInspectionLog = async (req, res) => {
+    const inspectionLogID = req.params.inspectionLogID;
+    winston.info('Function=editInspectionLog req.params.inspectionLogID=' + inspectionLogID);
+    try {
+        const inspectionLog = await InspectionLog.findById(inspectionLogID).exec();
+        winston.debug('Fetched a InspectionLog from database to Edit=' + inspectionLogID);
+        winston.info('req.body.timestamp=' + req.body.timestamp + ' inspectionLog.timestamp=' + inspectionLog.timestamp);
+
+        if (inspectionLog.timestamp != req.body.timestamp) {
+            throw new ErrorHandler(404, "The Inspection Log had been edited by others.");
+        }
+    } catch (err) {
+        winston.error('Edit Inspection Log Error=' + err);
+        return next(err);
+    }
+
+    try {
+        const editedInspectionLog = await InspectionLog.updateOne({ _id: inspectionLogID }, {
+            timestamp: Date.now(),
+            gate: req.body.gate,
+            date_inspection: req.body.date_inspection,
+            question: req.body.question
+        });
+        //silly inspectionLog
+        winston.silly('Edited Inspection Log='+editedInspectionLog);
+        //verbose timestamp | gate | date_inspection
+        winston.verbose('timestamp='+editedInspectionLog.timestamp+' gate='+editedInspectionLog.name+' date_inspection='+editedInspectionLog.date_inspection);
+
+        res.status(200).json(editedInspectionLog);
+    }
+    catch (err) {
+        winston.error('Edit Inspection Log Error='+err);
+        err = new ErrorHandler(500, 'Failed to edit the Inspection Log: '+inspectionLogID);
+        return next(err);
+    }
+};
+
+const deleteInspectionLog = async (req, res) => {
+    const inspectionLogID = req.params.inspectionLog;
+    winston.info('Function=deleteInspectionLog req.params.inspectionLogID='+inspectionLogID);
+
+    try {
+        const deleteResult = await InspectionLog.deleteOne({ _id: req.params.inspectionLogID }).exec();
+        winston.info('Deleted Inspection Log='+inspectionLogID);
+        res.status(200).json(deleteResult);
+    } catch (err) {
+        winston.error('Delete Inspection Log Error='+err);
+        err = new ErrorHandler(500, 'Failed to delete the Inspection Log='+inspectionLogID);
+        return next(err);
+    }
 };
 
 module.exports = {

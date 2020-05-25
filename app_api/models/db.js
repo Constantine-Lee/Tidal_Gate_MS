@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
-let dbURI = `mongodb://localhost/fyp`;
 const readLine = require('readline');
+
+mongoose.set('useFindAndModify', false);
+
+let dbURI = `mongodb://localhost/fyp`;
+
 
 if (process.env.NODE_ENV === 'production') {  
   dbURI = process.env.MONGODB_URI; }
