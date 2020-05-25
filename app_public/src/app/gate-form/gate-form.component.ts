@@ -57,15 +57,15 @@ export class GateFormComponent implements OnInit {
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
-    formData.append('profilePhoto', this.previewUrl);
 
     this.gateService.addGate(formData).subscribe(_ => this.router.navigate(['/gate']),
       err => {
+        this.loading = false;
         console.log(err);
         if (err != undefined) {
-          this.error = err;
+          this.error = err.error;
         }
-        this.loading = false;
+       
         $('#errorModal').modal('show');
       });
   }

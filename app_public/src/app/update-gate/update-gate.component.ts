@@ -42,7 +42,7 @@ export class UpdateGateComponent implements OnInit {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
-  get isAdmin() {    
+  get isAdmin() {
     return this.currentUser && this.currentUser.role === Role.Admin;
   }
 
@@ -55,20 +55,25 @@ export class UpdateGateComponent implements OnInit {
   }
 
   async getGateByID(id: string) {
-    
+
     await this.gateService.getGateByID(id)
       .then(gate => this.gate = gate);
     this.questions = JSON.parse(this.gate.question);
     this.form = this.qcs.toFormGroup(this.questions);
-    this.previewUrl = this.gate.profilePhoto;    
+    this.previewUrl = this.gate.profilePhoto;
     this.receive = true;
   }
 
   onSubmit() {
+    // stop here if form is invalid
+    if (this.form.invalid) {
+      return;
+    }
+    this.loading = true;
     const formData = new FormData();
     let formValue = this.form.getRawValue();
     this.questions.map(question => question.value = formValue[question.key]);
-    
+
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
@@ -76,14 +81,14 @@ export class UpdateGateComponent implements OnInit {
     formData.append('timestamp', this.gate.timestamp.toString());
 
     this.gateService.updateGate(formData, this.gate._id).subscribe(_ => this.router.navigate(['/gate']),
-    err => {
-      console.log(err);
-      if (err != undefined) {
-        this.error = err;
-      }
-      this.loading = false;
-      $('#errorModal').modal('show');
-    });
+      err => {
+        console.log(err);
+        if (err != undefined) {
+          this.error = err;
+        }
+        this.loading = false;
+        $('#errorModal').modal('show');
+      });
   }
 
   fileProgress(fileInput: any) {

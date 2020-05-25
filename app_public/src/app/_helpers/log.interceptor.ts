@@ -19,6 +19,7 @@ export class LogInterceptor implements HttpInterceptor {
                 error => status = 'failed'
             ),
             finalize(() => {
+                console.log(req);
                 const elapsedTime = Date.now() - startTime;
                 const keys = req.headers.keys();
                 const headers = JSON.stringify(req.headers);

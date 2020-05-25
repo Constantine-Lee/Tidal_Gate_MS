@@ -8,7 +8,7 @@ import { GateService } from '../_services/gate.service';
 import { CheckBoxQuestion } from './questionCheckBox';
 import { RTXQuestion } from './questionRTX';
 
-const zero = 0; 
+const zero = 0;
 const first = 1;
 const second = 2;
 const third = 3;
@@ -23,28 +23,29 @@ const eleventh = 11;
 const twelfth = 12;
 const thirteenth = 13;
 const fourteenth = 14;
+const fifteenth = 15;
 
 @Injectable(
     {
-        providedIn:'root',        
+        providedIn: 'root',
     }
 )
 export class MaintenanceLogQuestionService {
 
-    gateSelection: { key:string, value:string }[] = [];
+    gateSelection: { key: string, value: string }[] = [];
 
-    constructor(private gateService: GateService){}    
+    constructor(private gateService: GateService) { }
 
-    async getGates(){     
+    async getGates() {
         this.gateSelection = [];
         await this.gateService.getGatesPromise().then(gates => {
             gates.forEach(gate => {
                 this.gateSelection.push({ key: gate.name, value: gate.name })
-            })            
+            })
             //console.log(this.gateSelection);
-        });  
-    }    
-    
+        });
+    }
+
     /*[
         { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
         { key: 'srw002 Ketup', value: 'Ketup' },
@@ -116,7 +117,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: first
             }),
-            
+
             new DropdownQuestion({
                 key: 'RCCB auto re-close function verification.',
                 label: 'RCCB auto re-close function verification.',
@@ -186,7 +187,7 @@ export class MaintenanceLogQuestionService {
                 value: '',
                 required: false,
                 order: third
-            }),            
+            }),
             new DropdownQuestion({
                 key: 'Solar Main Power Supply Voltage Testing',
                 label: 'Solar Main Power Supply Voltage Testing',
@@ -247,7 +248,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: fourth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'UPS Backup Time Verification',
                 label: 'UPS Backup Time Verification',
@@ -264,7 +265,7 @@ export class MaintenanceLogQuestionService {
                 value: '',
                 required: false,
                 order: fourth
-            }), 
+            }),
             new GroupLabelQuestion({
                 key: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',
                 label: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',
@@ -321,14 +322,14 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: fifth
-            }),      
+            }),
             new GroupLabelQuestion({
                 key: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',
                 label: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',
                 value: '',
                 required: false,
                 order: sixth
-            }),  
+            }),
             new TextboxQuestion({
                 key: 'Upstream Water Level Measurement',
                 label: 'Upstream Water Level Measurement',
@@ -352,7 +353,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: sixth
-            }),   
+            }),
             new DropdownQuestion({
                 key: 'Verify Downstream Sensor Reading is same as Real Water Level',
                 label: 'Verify Downstream Sensor Reading is same as Real Water Level',
@@ -362,14 +363,14 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: sixth
-            }), 
+            }),
             new GroupLabelQuestion({
                 key: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',
                 label: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',
                 value: '',
                 required: false,
                 order: seventh
-            }),   
+            }),
             new DropdownQuestion({
                 key: 'Different Level User Login Verification',
                 label: 'Different Level User Login Verification',
@@ -379,7 +380,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: seventh
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Button Function Verification',
                 label: 'Button Function Verification',
@@ -389,7 +390,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: seventh
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Gate Info Page Verification',
                 label: 'Gate Info Page Verification',
@@ -399,14 +400,14 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: seventh
-            }), 
+            }),
             new GroupLabelQuestion({
                 key: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',
                 label: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',
                 value: '',
                 required: false,
                 order: eighth
-            }),   
+            }),
             new DropdownQuestion({
                 key: 'Local Emergency Alert System Verification',
                 label: 'Local Emergency Alert System Verification',
@@ -416,7 +417,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: eighth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Emergency SMS Alert Verification',
                 label: 'Emergency SMS Alert Verification',
@@ -426,7 +427,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: eighth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Gate Info Request Center',
                 label: 'Gate Info Request Center',
@@ -436,7 +437,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: eighth
-            }), 
+            }),
             new TextboxQuestion({
                 key: 'Gate Info Request Center:',
                 label: 'Gate Info Request Center:',
@@ -450,7 +451,7 @@ export class MaintenanceLogQuestionService {
                 value: '',
                 required: false,
                 order: ninth
-            }),   
+            }),
             new DropdownQuestion({
                 key: 'Actuator Local/Remote Signal Test',
                 label: 'Actuator Local/Remote Signal Test',
@@ -460,7 +461,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: ninth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Gate Local (Actuator) Control Test',
                 label: 'Gate Local (Actuator) Control Test',
@@ -470,7 +471,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: ninth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Replace 9V Battery for Rotork Actuator',
                 label: 'Replace 9V Battery for Rotork Actuator',
@@ -480,7 +481,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: ninth
-            }), 
+            }),
             new TextboxQuestion({
                 key: 'State the number of 9V batteries replaced:',
                 label: 'State the number of 9V batteries replaced:',
@@ -494,7 +495,7 @@ export class MaintenanceLogQuestionService {
                 value: '',
                 required: false,
                 order: tenth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'PTZ Camera Verification',
                 label: 'PTZ Camera Verification',
@@ -504,7 +505,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: tenth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'PTZ Camera Verification',
                 label: 'PTZ Camera Verification',
@@ -514,14 +515,14 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: tenth
-            }), 
+            }),
             new GroupLabelQuestion({
                 key: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',
                 label: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',
                 value: '',
                 required: false,
                 order: eleventh
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Rain gauge functioning test. Due to the collected 0.5mm rainwater. ',
                 label: 'Rain gauge functioning test. Due to the collected 0.5mm rainwater. ',
@@ -531,14 +532,14 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: eleventh
-            }), 
+            }),
             new GroupLabelQuestion({
                 key: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',
                 label: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',
                 value: '',
                 required: false,
                 order: twelfth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Control Panel Cleaning ',
                 label: 'Control Panel Cleaning ',
@@ -548,7 +549,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: twelfth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Control Panel Maintenance',
                 label: 'Control Panel Maintenance',
@@ -558,7 +559,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'NA', value: 'NA' },
                 ],
                 order: twelfth
-            }), 
+            }),
             new DropdownQuestion({
                 key: 'Control Panel Components Checking',
                 label: 'Control Panel Components Checking',
@@ -569,31 +570,54 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: twelfth
             }),
+            
             new GroupLabelQuestion({
-                key: 'TCG SCADA and Automation System Maintenance Report',
-                label: 'TCG SCADA and Automation System Maintenance Report',
+                key: 'SUMMARY',
+                label: 'SUMMARY',
                 value: '',
                 required: false,
                 order: thirteenth
             }), 
-            /*
-            new TextboxQuestion({
-                key: 'Action Taken *',
-                label: 'Action Taken *',
-                value: '',
+            new CheckBoxQuestion({
+                key: 'Action_Taken',
+                label: 'Action Taken',
+                checkboxes: [
+                    { key: 'AT_Maintenance', label: 'Maintenance', value: false },
+                    { key: 'AT_Visit', label: 'Visit', value: false },
+                    { key: 'AT_Inspection', label: 'Inspection', value: false },
+                    { key: 'AT_Commisioning', label: 'Commisioning', value: false },
+                    { key: 'AT_No Action', label: 'No Action', value: false }
+                ],
+                order: thirteenth
+            }),
+            new RTXQuestion({
+                key: 'RTX_Action_Taken',
+                value: '<p></p><br><p></p>',
                 required: false,
                 order: thirteenth
             }),
-            new TextboxQuestion({
-                key: 'Action Needed *',
-                label: 'Action Needed *',
-                value: '',
+            new CheckBoxQuestion({
+                key: 'Action_Needed',
+                label: 'Action Needed',
+                checkboxes: [
+                    { key: 'AN_Maintenance', label: 'Maintenance', value: false },
+                    { key: 'AN_Visit', label: 'Visit', value: false },
+                    { key: 'AN_Inspection', label: 'Inspection', value: false },
+                    { key: 'AN_Commisioning', label: 'Commisioning', value: false },
+                    { key: 'AN_No Action', label: 'No Action', value: false }
+                ],
+                order: thirteenth
+            }),
+            new RTXQuestion({
+                key: 'RTX_Action_Needed',
+                value: '<p></p><br><p></p>',
                 required: false,
                 order: thirteenth
             }),
             new DropdownQuestion({
                 key: 'State if you have completed the protocol *',
                 label: 'State if you have completed the protocol *',
+                value: 'C',
                 options: [
                     { key: 'c', value: 'C' },
                     { key: 'NC', value: 'NC' },
@@ -609,42 +633,26 @@ export class MaintenanceLogQuestionService {
                 order: thirteenth
             }),
             new TextboxQuestion({
-                key: 'Witnessed by ',
-                label: 'Witnessed by ',
+                key: 'Witnessed by',
+                label: 'Witnessed by',
                 value: '',
                 required: false,
                 order: thirteenth
             }),
             new TextboxQuestion({
-                key: 'Reviewed by ',
-                label: 'Reviewed by ',
+                key: 'Reviewed by',
+                label: 'Reviewed by',
                 value: '',
                 required: false,
                 order: thirteenth
             }),
             new TextboxQuestion({
-                key: 'Approved by ',
-                label: 'Approved by ',
+                key: 'Approved by',
+                label: 'Approved by',
                 value: '',
                 required: false,
                 order: thirteenth
             }),
-            */
-            new CheckBoxQuestion({
-                key: 'Action Taken',
-                label: 'Action Taken',
-                checkboxes: [
-                    { key: 'Maintenance', label: 'Maintenance', value: false },
-                    { key: 'Visit', label: 'Visit', value: false },
-                    { key: 'Inspection', label: 'Inspection', value: false },
-                    { key: 'Commisioning', label: 'Commisioning', value: false },
-                    { key: 'No Action', label: 'No Action', value: false },
-                ],
-                order: fourteenth
-            }),
-            new RTXQuestion({
-                
-            })
         ];
 
         return questions.sort((a, b) => a.order - b.order);

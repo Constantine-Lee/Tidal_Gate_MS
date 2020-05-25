@@ -16,15 +16,16 @@ export class QuestionControlService {
     let group: any = {};
     //console.log(questions);
 
-
     questions.forEach(question => {
-
+      
+      // checkbox control
       if (question.controlType == 'checkbox') {
         let fG = question.checkboxes.map((checkbox) => 
         new FormControl(checkbox.value)
       )     
         group[question.key] = new FormArray(fG,this.minSelectedCheckboxes(1));
       }
+      // other control
       else {
         group[question.key] = question.required ? new FormControl(question.value || '', Validators.required)
         : new FormControl(question.value || '');
@@ -35,6 +36,7 @@ export class QuestionControlService {
     return new FormGroup(group);
   }
 
+  // validator for checkboxes
   minSelectedCheckboxes(min = 1) {
     const validator: ValidatorFn = (formArray: FormArray) => {
       const totalSelected = formArray.controls

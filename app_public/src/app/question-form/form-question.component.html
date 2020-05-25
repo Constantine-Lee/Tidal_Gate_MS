@@ -26,12 +26,12 @@
 
         <!--CheckBox-->
         <div [formArrayName]="question.key" *ngSwitchCase="'checkbox'">
-            <div  class="container form-row mb-0 mt-2 pr-4 pl-4 justify-content-center">
+            <div  class="container form-row mb-0 mt-2 pr-4 pl-4 ">
                 <label  class="col-form-label">
-                    <h5 class="m-0"><strong> {{question.label}} </strong></h5>
+                    <h5 class="m-0">{{question.label}}</h5>
                 </label>               
             </div>
-            <hr class="mb-0 mt-0" style="border:1px solid black" />
+            <hr class="mb-0 mt-0 ml-3 mr-3 pl-4 pr-4" />
             <div class="container form-row mb-2 mt-2 pr-4 pl-4 ">
                 <div *ngFor="let checkbox of question.checkboxes; let i=index" class="form-check form-check-inline col-sm-3 col-md-3 col-lg-2" >                    
                     <input [ngClass]="{ 'is-invalid': !isValid}" [formControlName]="i" [id]="checkbox.key" class="form-check-input" type="checkbox">
@@ -42,7 +42,7 @@
 
         <!--RTX-->
         <div class="container pr-4 pl-3 mt-2" *ngSwitchCase="'RTX'">
-            <ckeditor #editor [editor]="Editor" class=" bg-light" [formControlName]="question.key" [data]="model.editorData" [config]="config"
+            <ckeditor #editor [editor]="Editor" class=" bg-light" [formControlName]="question.key" [config]="config"
                 (change)="onChange($event)"></ckeditor>
         </div>
 
