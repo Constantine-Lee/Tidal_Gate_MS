@@ -55,7 +55,7 @@ const getInspectionLog = async (req, res, next) => {
         res.status(200).json(inspectionLog);
     } catch (err) {
         winston.error('Get Inspection Log Error=' + err);
-        err = new ErrorHandler(500, 'Failed to get Inspection Log=' + inspectionLogID);
+        err = new ErrorHandler(404, 'Failed to get Inspection Log=' + inspectionLogID);
         return next(err);
     }
 };

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const MaintenanceLog = mongoose.model('MaintenanceLog');
 const winston = require('../config/winston');
-const { ErrorHandler } = require('../models/error')
+const { ErrorHandler } = require('../models/error');
 
 const getMaintenanceLogs = async (req, res, next) => {
     winston.info('Function=getMaintenanceLogs');
@@ -35,14 +35,14 @@ const addMaintenanceLog = async (req, res, next) => {
             action_needed: req.body.action_needed,
             question: req.body.question
         });
-        winston.silly('maintenanceLog=' + JSON.stringify(maintenanceLog));
+        winston.silly('create a maintenanceLog=' + JSON.stringify(maintenanceLog));
         winston.verbose('timestamp=' + maintenanceLog.timestamp + ' gate=' + maintenanceLog.gate + ' date_maintenance=' + maintenanceLog.date_maintenance + ' action_taken=' + maintenanceLog.action_taken + ' action_needed=' + maintenanceLog.action_needed);
 
         const savedMaintenanceLog = await maintenanceLog.save();
-        winston.debug('Saved a MaintenanceLog=' + maintenanceLog);
+        winston.debug('savedMaintenanceLog=' + maintenanceLog);
         res.status(200).json(savedMaintenanceLog);
     } catch (err) {
-        winston.error('Save Maintenance Log Error='+err);
+        winston.error('Add Maintenance Log Error='+err);
         err = new ErrorHandler(500, 'Failed to Save Maintenance Log.');
         return next(err);
     }
@@ -57,7 +57,7 @@ const getMaintenanceLog = async (req, res, next) => {
         res.status(200).json(maintenanceLog);
     } catch (err) {
         winston.error('Get MaintenanceLog Error=' + err);
-        err = new ErrorHandler(500, 'Failed to get MaintenanceLog=' + maintenanceLogID);
+        err = new ErrorHandler(404, 'Failed to get MaintenanceLog=' + maintenanceLogID);
         return next(err);
     }
 };
@@ -112,7 +112,7 @@ const deleteMaintenanceLog = async (req, res, next) => {
         res.status(200).json(deleteResult);
     } catch (err) {
         winston.error('Delete Maintenance Log Error='+err);
-        err = new ErrorHandler(500, 'Failed to delete the Maintenance Log='+maintenanceLogID);
+        err = new ErrorHandler(500, 'Failed to delete Maintenance Log: '+maintenanceLogID);
         return next(err);
     }
 };

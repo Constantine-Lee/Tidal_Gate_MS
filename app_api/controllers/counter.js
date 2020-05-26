@@ -1,73 +1,86 @@
 const mongoose = require('mongoose');
 const Counter = mongoose.model('Counter');
+const winston = require('../config/winston');
+const { ErrorHandler } = require('../models/error')
 
-const getCounters = async (req, res) => {
-    console.log('Get Counters. ');
+const getCounters = async (req, res, next) => {
+    winston.info('Function=getCounters');
     try {
-        const results = await Counter.find().exec();
-        console.log('Fetched Counters.');
-        res.status(200).json(results);
+        const counters = await Counter.find().exec();
+        winston.info('counters=' + JSON.stringify(counters));
+        res.status(200).json(counters);
     } catch (err) {
-        console.log('Failed to fetch Counters: ' + err);
-        res.status(404).json(err);
+        winston.error('Get Counters Error=' + err);
+        err = new ErrorHandler(404, 'Failed to get Counters.');
+        return next(err);
     }
 };
 
-const addCounter = async (req, res) => {
-    console.log('Post a Counter: ' + JSON.stringify(req.body).substring(0,150));
-    // a document instance
-    const counter = new Counter({
-        _id: req.body.name,
-        seq: req.body.seq
-    });
-    // save model to database
-    try {        
-        const saved = await counter.save();
-        console.log('Saved a Counter: ' + JSON.stringify(counter).substring(0,150));
-        res.status(200).json(saved);
-    } catch (err) {
-        console.log('Failed to save a Counter: ' + err);
-        res.status(404).json(err);
-    }
-};
+const addCounter = async (req, res, next) => {
+    winston.info('Function=addCounter');
 
-const getCounter = async (req, res) => { 
-    console.log('Get a Counter: ' + JSON.stringify(req.params.counterID));
     try {
-        const result = await Counter.findById(req.params.counterID).exec();
-        console.log('Fetched a Counter: ' + JSON.stringify(result));
-        res.status(200).json(result);
-    } catch (err) {
-        console.log('Failed to fetch a Counter: ' + err);
-        res.status(404).json(err);
-    }    
-};
-
-const editCounter = async (req, res) => { 
-    console.log('Edit a Counter: ' + JSON.stringify(req.params.counterID));
-    try {
-        const edited = await Counter.updateOne({_id: req.params.counterID}, { 
+        const counter = new Counter({
             _id: req.body.name,
             seq: req.body.seq
-        });        
-        console.log('Edited a Counter: ' + JSON.stringify(edited));
-        res.status(200).json(edited);
+        });
+        winston.verbose('create a counter='+JSON.stringify(counter));
+
+        const savedCounter = await counter.save();
+        winston.verbose('savedCounter='+savedCounter);        
+        res.status(200).json(savedCounter);
     } catch (err) {
-        console.log('Failed to edit a Counter: ' + err);
-        res.status(404).json(err);
-    }    
+        winston.error('Add Counter Error='+err);
+        err = new ErrorHandler(500, 'Failed to Save Counter.');
+        return next(err);
+    }
 };
 
-const deleteCounter = async (req, res) => { 
-    console.log('Delete a Counter: ' + JSON.stringify(req.params.counterID));
+const getCounter = async (req, res, next) => {
+    const counterID = req.params.counterID;
+    winston.info('Function=getCounter req.params.counterID='+counterID);
     try {
-        const result = await Counter.deleteOne({_id:req.params.counterID}).exec();
-        console.log('Deleted a Counter: ' + JSON.stringify(result));
-        res.status(200).json(result);
+        const counter = await Counter.findById(req.params.counterID).exec();
+        winston.verbose('Fetched a Counter from database='+JSON.stringify(counter));
+        res.status(200).json(counter);
     } catch (err) {
-        console.log('Failed to delete a Counter: ' + err);
-        res.status(404).json(err);
-    }    
+        winston.error('Get Counter Error='+ err);
+        err = new ErrorHandler(500, 'Failed to get Counter='+counterID);
+        return next(err);
+    }
+};
+
+const editCounter = async (req, res, next) => {
+    const counterID = req.params.counterID;
+    winston.info('Function=editCounter req.params.counterID='+counterID);
+    try {
+        const editedCounter = await Counter.updateOne({ _id: req.params.counterID }, {
+            _id: req.body.name,
+            seq: req.body.seq
+        });
+        //silly counter
+        winston.verbose('Edited Counter='+editedCounter);
+        res.status(200).json(editedCounter);
+    } catch (err) {
+        winston.error('Edit Counter Error='+err);
+        err = new ErrorHandler(500, 'Failed to edit the Counter: '+counterID);
+        return next(err);
+    }
+};
+
+const deleteCounter = async (req, res) => {
+    const counterID = req.params.counterID;
+    winston.info('Function=deleteCounter req.params.counterID='+counterID);
+
+    try {
+        const deleteResult = await Counter.deleteOne({ _id: req.params.counterID }).exec();
+        winston.info('Deleted Counter='+counterID);
+        res.status(200).json(deleteResult);
+    } catch (err) {
+        winston.error('Delete Counter Error='+err);
+        err = new ErrorHandler(500, 'Failed to delete the Counter: '+counterID);
+        return next(err);
+    }
 };
 
 module.exports = {

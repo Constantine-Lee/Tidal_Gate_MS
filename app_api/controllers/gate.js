@@ -67,7 +67,6 @@ const addGate = async (req, res, next) => {
         err = new ErrorHandler(500, 'Failed to Save Gate.');
         return next(err);
     }
-
 };
 
 const getGate = async (req, res, next) => {
@@ -78,7 +77,7 @@ const getGate = async (req, res, next) => {
         res.status(200).json(gate);
     } catch (err) {
         winston.error('Get Gate Error=' + err);
-        err = new ErrorHandler(500, 'Failed to get Gate=' + req.params.gateID);
+        err = new ErrorHandler(404, 'Failed to get Gate=' + req.params.gateID);
         return next(err);
     }
 };
