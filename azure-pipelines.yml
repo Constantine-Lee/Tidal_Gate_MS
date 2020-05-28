@@ -30,6 +30,12 @@ steps:
     ng test 
   displayName: 'Angular Test'
 
+task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: '**/TEST-RESULTS.xml'
+
 - script: |
     cd app_public
     ng build --prod --output-path build
