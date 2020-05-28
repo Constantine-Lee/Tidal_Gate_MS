@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'vs2017-win2016'
+  vmImage: 'ubuntu-latest'
 
 steps:
 - task: NodeTool@0
@@ -22,10 +22,15 @@ steps:
 - script: |
     npm install -g @angular/cli    
     cd app_public
-    npm install   
-    ng test 
+    npm install       
   displayName: 'Angular packages installation'
 
+- script: |      
+    cd app_public       
+    ng test 
+  displayName: 'Angular Test'
+
 - script: |
+    cd app_public
     ng build --prod --output-path build
   displayName: 'Angular Build into build directory'
