@@ -3,14 +3,13 @@ import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
 import { GateQuestionService } from '../question/gateQuestion.service';
-import { ImageService } from '../image-service.service';
 import { Gate } from '../_models/gate';
 import { Location } from '@angular/common';
 import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { User } from '../_models/user';
 import { Role } from '../_models/role';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 declare var $: any;
 

@@ -2,10 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
-import { GateQuestionService } from '../question/gateQuestion.service';
-
 import { Gate } from '../_models/gate';
-import { Location } from '@angular/common';
 import { GateService } from '../_services/gate.service';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from '../_services/authentication.service';

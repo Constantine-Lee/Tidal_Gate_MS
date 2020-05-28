@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-
-import { Router } from '@angular/router';
 import { AuthenticationService } from './_services/authentication.service';
 import { User } from './_models/user';
-import { fadeInAnimation } from './_animations';
 
 @Component({
   selector: 'app-root',
@@ -15,8 +12,7 @@ export class AppComponent {
   currentUser: User;
   title = 'prod-ready';
 
-  constructor(
-    private router: Router,
+  constructor(    
     private authenticationService: AuthenticationService
 ) {
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);

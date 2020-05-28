@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
 import { NGXLogger } from 'ngx-logger';
-import { MapOperator } from 'rxjs/internal/operators/map';
 
 //for modal
 declare var $: any;

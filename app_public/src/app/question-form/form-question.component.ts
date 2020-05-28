@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup} from '@angular/forms';
 import { QuestionBase } from '../question/questionBase';
 import * as CustomEditor from '../../assets/build/ckeditor.js';
-import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
+import { ChangeEvent} from '@ckeditor/ckeditor5-angular/ckeditor.component';
 
 @Component({
   selector: 'app-form-question',

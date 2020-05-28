@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { first } from 'rxjs/operators';
-
 import { User } from '../_models/user';
-
 import { UserService } from '../_services/user.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { fadeInAnimation } from '../_animations';
@@ -19,8 +16,7 @@ export class UserProfileComponent {
     userFromApi: User;
     receive: boolean;
     
-    constructor(
-        private userService: UserService,
+    constructor(        
         private authenticationService: AuthenticationService
     ) {
         this.currentUser = this.authenticationService.currentUserValue;
@@ -28,10 +24,6 @@ export class UserProfileComponent {
 
     ngOnInit() {
         this.loading = true;
-        /*this.userService.getById(this.currentUser.id).pipe(first()).subscribe(user => {
-            this.loading = false;
-            this.userFromApi = user;
-        });*/
         this.receive = true;
     }
 }
