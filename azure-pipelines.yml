@@ -22,7 +22,8 @@ steps:
 - script: |
     npm install -g @angular/cli    
     cd app_public
-    npm install    
+    npm install   
+    ng test 
   displayName: 'Angular packages installation'
 
 - script: |
