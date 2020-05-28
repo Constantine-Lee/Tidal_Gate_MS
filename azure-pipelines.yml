@@ -30,7 +30,7 @@ steps:
     ng test 
   displayName: 'Angular Test'
 
-task: PublishTestResults@2
+- task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
@@ -40,3 +40,6 @@ task: PublishTestResults@2
     cd app_public
     ng build --prod --output-path build
   displayName: 'Angular Build into build directory'
+
+
+  
