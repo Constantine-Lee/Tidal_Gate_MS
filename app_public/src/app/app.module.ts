@@ -38,6 +38,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { environment } from 'src/environments/environment';
+
 export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
@@ -72,7 +75,13 @@ export const httpInterceptorProviders = [
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    CKEditorModule
+    CKEditorModule,
+    LoggerModule.forRoot({
+      serverLoggingUrl: `${environment.apiUrl}/logs`,
+      level: environment.logLevel,
+      serverLogLevel: environment.serverLogLevel,
+      disableConsoleLogging: false
+    })
   ],
   providers: [
     httpInterceptorProviders  
