@@ -25,6 +25,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   maxPages = 10;
 
   idIsAscending: boolean = true;
+  dateIsAscending: boolean = true;
   pager: any = {};
 
   currentViewLog: MaintenanceLog;
@@ -105,14 +106,13 @@ export class MaintenanceLogTableComponent implements OnInit {
     this.pageOfItems = pageOfItems;
   }
 
-  sortLogID() {
-    this.logger.log("Function: sortLogID");
+  sortID() {
+    this.logger.log("Function: sortLogID()");
 
     let arrSortedID: Array<MaintenanceLog> = [];
     if (this.idIsAscending == true) {
       this.logger.info("this.idIsAscending == true");
-      arrSortedID = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);
-      
+      arrSortedID = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);      
     }
     else {
       this.logger.info("this.idIsAscending == false");
@@ -121,6 +121,23 @@ export class MaintenanceLogTableComponent implements OnInit {
     this.idIsAscending = !this.idIsAscending;        
     this.logger.info("arrSortedID: "+arrSortedID);
     this.generatePager(arrSortedID, 1);
+  }
+
+  sortDate(){
+    this.logger.log("Function: sortDate()");
+
+    let arrSortedDate: Array<MaintenanceLog> = [];
+    if (this.dateIsAscending == true){
+      this.logger.info("this.dateIsAscending == true");
+      arrSortedDate = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);
+    }
+    else {
+      this.logger.info("this.dateIsAscending == false");
+      arrSortedDate = this.maintenanceLogs.slice().sort((a, b) => a.id - b.id);
+    }
+    this.dateIsAscending = !this.dateIsAscending;
+    this.logger.info("arrSortedDate: "+arrSortedDate);
+    this.generatePager(arrSortedDate, 1);
   }
 
   delete(id: number): void {

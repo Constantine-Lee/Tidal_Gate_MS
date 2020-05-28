@@ -7,6 +7,7 @@ import { GroupLabelQuestion } from './questionGroupLabel';
 import { GateService } from '../_services/gate.service';
 import { CheckBoxQuestion } from './questionCheckBox';
 import { RTXQuestion } from './questionRTX';
+import { DateQuestion } from './questionDate';
 
 const zero = 0;
 const first = 1;
@@ -35,6 +36,31 @@ export class MaintenanceLogQuestionService {
     gateSelection: { key: string, value: string }[] = [];
 
     constructor(private gateService: GateService) { }
+
+    getTodayDate(): string {
+        let today = new Date();
+        let dd ;
+        let mm ; //January is 0!
+        let yyyy = today.getFullYear().toString();
+
+        if (today.getDate() < 10) {
+            dd = '0' + today.getDate().toString();
+        }
+        else { 
+            dd = today.getDate().toString();
+        }
+
+        if (today.getMonth() + 1 < 10) {
+            mm = '0' + (today.getMonth() + 1).toString();
+        }
+        else {
+            mm = today.getMonth();
+        }
+
+        let date = yyyy + '-' + mm + '-' + dd
+        console.log(date)
+        return date;
+    }
 
     async getGates() {
         this.gateSelection = [];
@@ -75,16 +101,18 @@ export class MaintenanceLogQuestionService {
                 order: zero
             }),
             new DropdownQuestion({
-                key: 'Gate Name *',
-                label: 'Gate Name *',
+                key: 'Gate Name',
+                label: 'Gate Name',
                 options: this.gateSelection,
+                required: true,
                 order: zero
             }),
             new TextboxQuestion({
-                key: 'Maintenance Date *',
-                label: 'Maintenance Date *',
-                value: '02/02/2020',
-                required: false,
+                key: 'Maintenance Date',
+                label: 'Maintenance Date',
+                required: true,
+                value: this.getTodayDate(),
+                type: 'Date',
                 order: zero
             }),
             new GroupLabelQuestion({
@@ -570,14 +598,14 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: twelfth
             }),
-            
+
             new GroupLabelQuestion({
                 key: 'SUMMARY',
                 label: 'SUMMARY',
                 value: '',
                 required: false,
                 order: thirteenth
-            }), 
+            }),
             new CheckBoxQuestion({
                 key: 'Action_Taken',
                 label: 'Action Taken',

@@ -50,14 +50,12 @@ export class MaintenanceLogFormComponent implements OnInit {
 
   onSubmit(): void {
     this.logger.log("Function: onSubmit()");
-    let arrActionTaken: string[] = [];
-    let arrActionNeeded: string[] = [];
 
     let map = new Map();
-    map.set('Action_Taken', arrActionTaken);
-    map.set('Action_Needed', arrActionNeeded);
-    
-   
+    map.set('Action_Taken', []);
+    map.set('Action_Needed', []);
+
+
 
     // stop here if form is invalid
     if (this.form.invalid) {
@@ -73,10 +71,11 @@ export class MaintenanceLogFormComponent implements OnInit {
 
     // update the questions based on form control value
     for (let question of this.questions) {
-      if(question.checkboxes!=undefined){
+      if (question.checkboxes != undefined) {
         question.checkboxes.forEach((checkbox, i) => {
           checkbox.value = formValue[question.key][i];
           if (checkbox.value) {
+            //push the checked into corresponding array
             map.get(question.key).push(checkbox.label)
           };
         });
@@ -88,12 +87,18 @@ export class MaintenanceLogFormComponent implements OnInit {
       this.logger.debug("question: " + JSON.stringify(question));
     }
 
-    // creat string
-    const sActionTaken = arrActionTaken.reduce((first, second) => first + ', ' + second);
-    const sActionNeeded = arrActionNeeded.reduce((first, second) => first + ', ' + second);
+    // create string by reduce function act on the elements in the array
+    const sActionTaken = map.get('Action_Taken').reduce((first, second) => first + ', ' + second);
+    const sActionNeeded = map.get('Action_Needed').reduce((first, second) => first + ', ' + second);
 
     // create a new log
-    const newMaintenanceLog = new MaintenanceLog({ gate: formValue['Gate Name *'], date_maintenance: formValue['Maintenance Date *'], action_taken: sActionTaken, action_needed: sActionNeeded, question: JSON.stringify(this.questions) });
+    const newMaintenanceLog = new MaintenanceLog({
+      gate: formValue['Gate Name'],
+      date_maintenance: formValue['Maintenance Date'],
+      action_taken: sActionTaken,
+      action_needed: sActionNeeded,
+      question: JSON.stringify(this.questions)
+    });
 
     // call service to add Maintenance Log, route to Table or show error modal
     this.maintenanceLogService.addMaintenanceLog(newMaintenanceLog)
