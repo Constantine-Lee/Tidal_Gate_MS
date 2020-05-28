@@ -111,7 +111,7 @@ export class MaintenanceLogQuestionService {
                 key: 'Maintenance Date',
                 label: 'Maintenance Date',
                 required: true,
-                value: this.getTodayDate(),
+                value: '2020-07-01',
                 type: 'Date',
                 order: zero
             }),
