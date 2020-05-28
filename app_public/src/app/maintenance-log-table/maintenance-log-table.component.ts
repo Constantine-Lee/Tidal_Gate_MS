@@ -5,6 +5,7 @@ import paginate = require('jw-paginate');
 import { map } from 'rxjs/operators';
 import { generate } from 'rxjs';
 import { fadeInAnimation } from '../_animations';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-maintenance-log-table',
@@ -23,13 +24,14 @@ export class MaintenanceLogTableComponent implements OnInit {
   pageSize = 10;
   maxPages = 10;
 
-  logIdAscending: boolean = true;
+  idIsAscending: boolean = true;
   pager: any = {};
 
   currentViewLog: MaintenanceLog;
   receive: boolean;
 
-  constructor(private maintenanceLogService: MaintenanceLogService) { }
+  constructor(private maintenanceLogService: MaintenanceLogService,
+              private logger: NGXLogger) { }
 
   ngOnInit(): void {
     this.getMaintenanceLogs();
@@ -42,24 +44,31 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.logger.log("Function: ngOnChanges");
+    
     // reset page if items array has changed
     if (changes.maintenanceLogs.currentValue !== changes.maintenanceLogs.previousValue) {
       this.setPage(this.initialPage);
     }
   }
 
-  generatePager(array: Array<MaintenanceLog>, page: number) {
-    // get new pager object for specified page
-    this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
-    // get new page of items from items array
-    let pageOfItems = array.slice(this.pager.startIndex, this.pager.endIndex + 1);
-    // call change page function in parent component
-    this.onChangePage(pageOfItems);
+  getMaintenanceLogs() {
+    this.logger.log("Function: getMaintenanceLogs");
+
+    this.maintenanceLogService.getMaintenanceLogs().subscribe(data => {
+      this.maintenanceLogs = data;
+      this.setPage(1);
+    });
+    this.logger.info("this.maintenanceLogs: "+ this.maintenanceLogs);
   }
 
-  setPage(page: number) {
+  setPage(page: number) {    
+    this.logger.log("Function: setPage");
+
     let arrayFilter = this.maintenanceLogs;
-    
+    this.logger.info("arrayFilter: "+arrayFilter);
+
+    //filer array with results contain search term
     if (this.searchTerm != "") {
       arrayFilter = this.maintenanceLogs
         .filter(i =>
@@ -69,36 +78,58 @@ export class MaintenanceLogTableComponent implements OnInit {
           i.action_taken.includes(this.searchTerm) ||
           i.action_needed.includes(this.searchTerm));
     }
+    this.logger.info("arrayFilter after Filter: "+arrayFilter);
+
     this.generatePager(arrayFilter, page);
   }
 
-  sortLogId() {
-    let idSorted: Array<MaintenanceLog> = [];
-    if (this.logIdAscending == true) {
-      idSorted = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);
-    }
-    else {
-      idSorted = this.maintenanceLogs.slice().sort((a, b) => a.id - b.id);
-    }
-    this.logIdAscending = !this.logIdAscending;
-    this.generatePager(idSorted, 1);
+  generatePager(array: Array<MaintenanceLog>, page: number) {
+    this.logger.log("Function: generatePager");
+
+    // get new pager object for specified page
+    this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
+    this.logger.info("this.pager: "+this.pager);
+
+    // get new page of items from items array
+    let pageOfItems = array.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.logger.info("pageOfItems"+pageOfItems);
+
+    // call change page function in parent component
+    this.onChangePage(pageOfItems);
   }
 
-
   onChangePage(pageOfItems: Array<any>) {
+    this.logger.log("Function: onChangePage");
+
     // update current page of items
     this.pageOfItems = pageOfItems;
   }
 
-  getMaintenanceLogs() {
-    this.maintenanceLogService.getMaintenanceLogs().subscribe(data => {
-      this.maintenanceLogs = data;
-      this.setPage(1);
-    });
+  sortLogID() {
+    this.logger.log("Function: sortLogID");
+
+    let arrSortedID: Array<MaintenanceLog> = [];
+    if (this.idIsAscending == true) {
+      this.logger.info("this.idIsAscending == true");
+      arrSortedID = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);
+      
+    }
+    else {
+      this.logger.info("this.idIsAscending == false");
+      arrSortedID = this.maintenanceLogs.slice().sort((a, b) => a.id - b.id);
+    }
+    this.idIsAscending = !this.idIsAscending;        
+    this.logger.info("arrSortedID: "+arrSortedID);
+    this.generatePager(arrSortedID, 1);
   }
 
   delete(id: number): void {
+    this.logger.log("Function: delete(id: number)");
+
+    this.logger.info("this.maintenanceLogs before Filter: "+this.maintenanceLogs);
     this.maintenanceLogs = this.maintenanceLogs.filter(l => l._id !== id);
+    this.logger.info("this.maintenanceLogs after Filter: "+this.maintenanceLogs);
+    
     this.setPage(1);
     this.maintenanceLogService.deleteMaintenanceLog(id).subscribe();
   }
