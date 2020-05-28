@@ -1,5 +1,5 @@
-import { Component,OnInit} from '@angular/core';
-import { FormGroup} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
 import { MaintenanceLogQuestionService } from '../question/maintenanceLogQuestion.service';
@@ -9,76 +9,106 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
+import { NGXLogger } from 'ngx-logger';
+import { MapOperator } from 'rxjs/internal/operators/map';
+
+//for modal
 declare var $: any;
 
 @Component({
   selector: 'app-maintenance-log-form',
-  templateUrl: './maintenance-log-form.component.html',  
+  templateUrl: './maintenance-log-form.component.html',
   animations: [fadeInAnimation]
 })
 export class MaintenanceLogFormComponent implements OnInit {
-    
-  //fields
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   receive: boolean;
   loading = false;
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
-  //
 
-  constructor(private service: MaintenanceLogQuestionService, private qcs: QuestionControlService, private maintenanceLogService: MaintenanceLogService, private router: Router, private dialogService: DialogService) {
+  constructor(private service: MaintenanceLogQuestionService,
+    private qcs: QuestionControlService,
+    private maintenanceLogService: MaintenanceLogService,
+    private router: Router,
+    private dialogService: DialogService,
+    private logger: NGXLogger) {
   }
 
   //get questions and transform to formGroup, mark the form as receieved
   ngOnInit(): void {
-    this.questions = this.service.getQuestions();    
+    this.questions = this.service.getQuestions();
+    for (let question of this.questions) {
+      this.logger.debug("question: " + JSON.stringify(question));
+    }
+
     this.form = this.qcs.toFormGroup(this.questions);
+    this.logger.info("this.form: " + this.form);
+
     this.receive = true;
   }
 
-  canDeactivate(): Observable<boolean> | boolean {
-    // Allow synchronous navigation (`true`) if no crisis or the crisis is unchanged
-    //if (!this.crisis || this.crisis.name === this.editName) {
-    return true;
-    // }
-    // Otherwise ask the user with the dialog service and return its
-    // observable which resolves to true or false when the user decides
-    //return this.dialogService.confirm('Discard changes?');
-  }
-
   onSubmit(): void {
+    this.logger.log("Function: onSubmit()");
+    let arrActionTaken: string[] = [];
+    let arrActionNeeded: string[] = [];
+
+    let map = new Map();
+    map.set('Action_Taken', arrActionTaken);
+    map.set('Action_Needed', arrActionNeeded);
     
-    let arrActionTaken: any[] = [];
-    let arrActionNeeded: any[] = [];
+   
 
     // stop here if form is invalid
     if (this.form.invalid) {
       this.errorString = 'Please fill in all the required fields.';
       $('#errorModal').modal('show');
-      //this.errorString = 'Unknown Error Occurs... Operation Failed.';
       return;
-    }
-    
+    };
+
     // start spinning on the button 
     this.loading = true;
     const formValue = this.form.getRawValue();
+    this.logger.trace("formValue: " + formValue);
 
     // update the questions based on form control value
-    this.questions.map(question => {
-      if (question.key == 'Action_Taken') {
-        question.checkboxes.map((checkbox, i) => {
+    for (let question of this.questions) {
+      if(question.checkboxes!=undefined){
+        question.checkboxes.forEach((checkbox, i) => {
           checkbox.value = formValue[question.key][i];
-          if (checkbox.value) { arrActionTaken.push(checkbox.label) };
+          if (checkbox.value) {
+            map.get(question.key).push(checkbox.label)
+          };
         });
       }
-      else if (question.key == 'Action_Needed') {
-        question.checkboxes.map((checkbox, i) => {
-          checkbox.value = formValue[question.key][i];
-          if (checkbox.value) { arrActionNeeded.push(checkbox.label) };
-        });
-      }
+      /*
+      switch (question.key) {
+        case 'Action_Taken': {
+          question.checkboxes.forEach((checkbox, i) => {
+            checkbox.value = formValue['Action_Taken'][i];
+            if (checkbox.value) {
+              map.get(question.key).push(checkbox.label)
+            };
+          });
+          break;
+        }
+        case 'Action_Needed': {
+          question.checkboxes.forEach((checkbox, i) => {
+            checkbox.value = formValue['Action_Needed'][i];
+            if (checkbox.value) {
+              map.get(question.key).push(checkbox.label)
+            };
+          });
+          break;
+        }
+        default: break;
+      }*/
       question.value = formValue[question.key]
-    });
+    }
+
+    for (let question of this.questions) {
+      this.logger.debug("question: " + JSON.stringify(question));
+    }
 
     // creat string
     const sActionTaken = arrActionTaken.reduce((first, second) => first + ', ' + second);
@@ -98,9 +128,19 @@ export class MaintenanceLogFormComponent implements OnInit {
           else {
             this.errorString = 'Unknown Error Occurs... Operation Failed.';
           }
-          this.loading = false;          
+          this.loading = false;
           $('#errorModal').modal('show');
         });
+  }
+
+  canDeactivate(): Observable<boolean> | boolean {
+    // Allow synchronous navigation (`true`) if no crisis or the crisis is unchanged
+    //if (!this.crisis || this.crisis.name === this.editName) {
+    return true;
+    // }
+    // Otherwise ask the user with the dialog service and return its
+    // observable which resolves to true or false when the user decides
+    //return this.dialogService.confirm('Discard changes?');
   }
 }
 
