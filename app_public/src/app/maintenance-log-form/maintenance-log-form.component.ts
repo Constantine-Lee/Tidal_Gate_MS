@@ -81,28 +81,6 @@ export class MaintenanceLogFormComponent implements OnInit {
           };
         });
       }
-      /*
-      switch (question.key) {
-        case 'Action_Taken': {
-          question.checkboxes.forEach((checkbox, i) => {
-            checkbox.value = formValue['Action_Taken'][i];
-            if (checkbox.value) {
-              map.get(question.key).push(checkbox.label)
-            };
-          });
-          break;
-        }
-        case 'Action_Needed': {
-          question.checkboxes.forEach((checkbox, i) => {
-            checkbox.value = formValue['Action_Needed'][i];
-            if (checkbox.value) {
-              map.get(question.key).push(checkbox.label)
-            };
-          });
-          break;
-        }
-        default: break;
-      }*/
       question.value = formValue[question.key]
     }
 
