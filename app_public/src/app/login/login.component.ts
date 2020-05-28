@@ -5,10 +5,10 @@ import { first } from 'rxjs/operators';
 
 import { AuthenticationService } from '../_services/authentication.service';
 import { fadeInAnimation } from '../_animations';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
     templateUrl: 'login.component.html',
-
     // make fade in animation available to this component
     animations: [fadeInAnimation]
 })
@@ -19,13 +19,19 @@ export class LoginComponent implements OnInit {
     returnUrl: string;
     error = '';
     receive: boolean;
+    // convenience getter for easy access to form fields
+    get loginFormControls() {
+        return this.loginForm.controls;
+    }
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private authenticationService: AuthenticationService
+        private authenticationService: AuthenticationService,
+        private logger: NGXLogger
     ) {
+        this.logger.info('AuthenticationSerice.currentUserValue: '+this.authenticationService.currentUserValue);
         // redirect to home if already logged in
         if (this.authenticationService.currentUserValue) {
             this.router.navigate(['/']);
@@ -39,35 +45,41 @@ export class LoginComponent implements OnInit {
         });
 
         // get return url from route parameters or default to '/'
+        this.logger.info("this.route.snapshot.queryParams['returnUrl']"+this.route.snapshot.queryParams['returnUrl']);
+        
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.receive = true;
     }
 
-    // convenience getter for easy access to form fields
-    get f() {
 
-        return this.loginForm.controls;
-    }
 
     onSubmit() {
         this.submitted = true;
+
+        this.logger.info("this.loginForm.invalid: "+this.loginForm.invalid);
 
         // stop here if form is invalid
         if (this.loginForm.invalid) {
             return;
         }
 
+        // start loading animation
         this.loading = true;
-        console.log(this.f.username.value);
-        console.log(this.f.password.value);
-        this.authenticationService.login(this.f.username.value, this.f.password.value)
+
+        this.logger.info("this.loginFormControls.username.value: "+this.loginFormControls.username.value);
+        this.logger.info("this.loginFormControls.password.value: "+this.loginFormControls.password.value);
+        this.authenticationService.login(this.loginFormControls.username.value, this.loginFormControls.password.value)
             .subscribe(
-                data => {
+                _ => {
+                    this.logger.info("this.returnUrl: "+this.returnUrl);
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {
-                    console.log(error);
+                    this.logger.error("AuthenticationService Login Error: "+JSON.stringify(error));
+
                     this.error = error.error.message;
+                    this.logger.info("this.error: "+this.error);
+                    
                     this.loading = false;
                 });
     }

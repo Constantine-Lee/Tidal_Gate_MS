@@ -35,25 +35,26 @@ const register = (req, res, next) => {
 
 const login = (req, res, next) => {
   winston.info('Function=login');
-  winston.info('req.body.username='+req.body.username);
-  if (!req.body.username || !req.body.password) {
+  winston.info('req.body.username='+req.body.username);  
+  if (!req.body.username || !req.body.password) {    
     const err = new ErrorHandler(400, "All fields required");
     return next(err); 
   }
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
+  passport.authenticate('local', (err, user, info) => {    
+    if (err) {      
       const error = new ErrorHandler(404, err);
       return next(error);      
       //return res.status(404).json(err);
     }
-    if (user) {
+    if (user) {      
       const token = user.generateJwt(), id = user._id, username = user.username, role = user.role;
       winston.info('Found User: id='+id+' username='+username+' role='+role);  
       res.status(200).json({id, username, role, token});
     } else {      
       res.status(401).json(info);
     }
-  });
+  })
+  (req, res, next);
 };
 
 module.exports = {
