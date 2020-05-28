@@ -15,10 +15,35 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
+- script: |    
+    npm install    
+  displayName: 'NodeJs packages installation'
+
 - script: |
-    npm install -g @angular/cli
-    npm install
+    npm install -g @angular/cli    
     cd app_public
-    npm install
+    npm install    
+  displayName: 'Angular packages installation'
+
+- script: |
+    npx ng test --watch=false --karmaConfig karma.conf.ci.js --code-coverage
+  displayName: 'perform unit tests'    
+
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TESTS-*.xml'
+  displayName: 'publish unit test results'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'publish code coverage report'
+  condition: succeededOrFailed()
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml'
+    failIfCoverageEmpty: true     
+
+- script: |
     ng build --prod --output-path build
-  displayName: 'npm install and build'
+  displayName: 'Angular Build into build directory'
