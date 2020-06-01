@@ -325,6 +325,7 @@ export class GateQuestionService {
                 key: 'SMS Last Setting Date(DD/MM/YYYY)',
                 label: 'SMS Last Setting Date(DD/MM/YYYY)',
                 value: '',
+                type: 'Date',
                 required: false,
                 order: fourth
             }),

@@ -20,4 +20,8 @@ export class UserService {
         const url = `${environment.apiUrl}/users/${id}`;
         return this.http.delete<User>(url);
       }
+
+    addOperator(operator: User){
+        
+    }
 }

@@ -5,24 +5,27 @@ import { User } from '../_models/user';
 import { UserService } from '../_services/user.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { fadeInAnimation } from '../_animations';
+import { Role } from '../_models/role';
 
-@Component({ templateUrl: 'admin.component.html',
-    
-// make fade in animation available to this component
-animations: [fadeInAnimation] })
+@Component({
+    templateUrl: 'admin.component.html',
+
+    // make fade in animation available to this component
+    animations: [fadeInAnimation]
+})
 export class AdminComponent implements OnInit {
     loading = false;
     users: User[] = [];
 
-    loginForm: FormGroup;    
+    loginForm: FormGroup;
     submitted = false;
     returnUrl: string;
-    error = '';    
+    error = '';
     searchTerm: string = "";
-    
+
     receive: boolean;
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder,) { }
+    constructor(private userService: UserService, private formBuilder: FormBuilder, ) { }
 
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }
@@ -36,15 +39,19 @@ export class AdminComponent implements OnInit {
         this.loading = true;
         this.userService.getAll().pipe(first()).subscribe(users => {
             this.loading = false;
-            
+
             this.users = users.filter(user => user.role == 'User');
             console.log(this.users);
         });
         this.receive = true;
     }
 
-    delete(id: number): void {    
+    delete(id: number): void {
         this.users = this.users.filter(l => l._id !== id);
-        this.userService.deleteUser(id).subscribe();    
-      }
+        this.userService.deleteUser(id).subscribe();
+    }
+
+    onSubmit(){
+        //this.userService.addOperator(new User('Han','han',Role.User));
+    }
 }

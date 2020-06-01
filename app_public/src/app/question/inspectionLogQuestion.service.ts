@@ -32,22 +32,22 @@ export class InspectionLogQuestionService {
 
         let questions: QuestionBase<string>[] = [
             new TextboxQuestion({
-                key: 'Nama Penjaga *',
-                label: 'Nama Penjaga *',
+                key: 'Nama Penjaga',
+                label: 'Nama Penjaga',
                 value: '',
-                required: false,
+                required: true,
                 order: zero
             }),
             new TextboxQuestion({
-                key: 'No. Rujukan *',
-                label: 'No. Rujukan *',
+                key: 'No. Rujukan',
+                label: 'No. Rujukan',
                 value: '',
-                required: false,
+                required: true,
                 order: zero
             }),
             new DropdownQuestion({
                 key: 'Lokasi *',
-                label: 'Lokasi *',
+                label: 'Lokasi Pintu Air',
                 options: [
                   { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
                     { key: 'srw002 Ketup', value: 'Ketup' },
@@ -63,22 +63,20 @@ export class InspectionLogQuestionService {
                     { key: 'srw012 Segali', value: 'Segali' },
                 ],
                 order: zero,
-                required: false
+                required: true
             }),
-            new DropdownQuestion({
+            new TextboxQuestion({
                 key: 'Jenis Gearbox',
                 label: 'Jenis Gearbox',
-                options: [
-                    { key: 'AKPA-2A', value: 'AKPA-2A' },
-                    { key: 'other', value: 'other' },
-                ],
+                value: 'AKPA-2A',
+                required: false,
                 order: zero
             }),
             new TextboxQuestion({
                 key: 'Tarikh*',
                 label: 'Tarikh*',
                 value: '',
-                required: false,
+                required: true,
                 order: zero
             }),
             new GroupLabelQuestion({
@@ -550,7 +548,7 @@ export class InspectionLogQuestionService {
                 key: 'Tested By',
                 label: 'Tested By',
                 value: '',
-                required: false,
+                required: true,
                 order: eighth
             }),
             new TextboxQuestion({

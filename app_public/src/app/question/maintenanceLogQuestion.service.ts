@@ -111,7 +111,7 @@ export class MaintenanceLogQuestionService {
                 key: 'Maintenance Date',
                 label: 'Maintenance Date',
                 required: true,
-                value: '2020-07-01',
+                value: this.getTodayDate(),
                 type: 'Date',
                 order: zero
             }),
@@ -643,9 +643,10 @@ export class MaintenanceLogQuestionService {
                 order: thirteenth
             }),
             new DropdownQuestion({
-                key: 'State if you have completed the protocol *',
-                label: 'State if you have completed the protocol *',
+                key: 'State if you have completed the protocol',
+                label: 'State if you have completed the protocol',
                 value: 'C',
+                required: true,
                 options: [
                     { key: 'c', value: 'C' },
                     { key: 'NC', value: 'NC' },
@@ -654,10 +655,10 @@ export class MaintenanceLogQuestionService {
                 order: thirteenth
             }),
             new TextboxQuestion({
-                key: 'Tested by *',
-                label: 'Tested by *',
+                key: 'Tested by',
+                label: 'Tested by',
                 value: '',
-                required: false,
+                required: true,
                 order: thirteenth
             }),
             new TextboxQuestion({
