@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'vs2017-win2016'
+  vmImage: 'ubuntu-latest'
 
 steps:
 - task: NodeTool@0
@@ -22,29 +22,28 @@ steps:
 - script: |
     npm install -g @angular/cli    
     cd app_public
-    npm install   
-    ng test 
+    npm install       
   displayName: 'Angular packages installation'
 
-- script: |
-    ng test
-  displayName: 'perform unit tests'    
-
+- script: |      
+    cd app_public       
+    ng test 
+  displayName: 'Angular Test'
 - task: PublishTestResults@2
-  condition: succeededOrFailed()
+  displayName: 'Publish Test Results **/test-results*.xml **/e2e-results-junit*.xml '
   inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/TESTS-*.xml'
-  displayName: 'publish unit test results'
+    testResultsFiles: |
+     **/test-results*.xml
+     **/e2e-results-junit*.xml
 
-- task: PublishCodeCoverageResults@1
-  displayName: 'publish code coverage report'
+    mergeTestResults: true
+  continueOnError: true
   condition: succeededOrFailed()
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)/coverage/cobertura-coverage.xml'
-    failIfCoverageEmpty: true     
 
 - script: |
+    cd app_public
     ng build --prod --output-path build
   displayName: 'Angular Build into build directory'
+
+
+  
