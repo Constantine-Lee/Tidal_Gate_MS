@@ -22,6 +22,7 @@ export class UserService {
       }
 
     addOperator(operator: User){
-        
+        const url = `${environment.apiUrl}/register`;
+        return this.http.post<User>(url, operator);
     }
 }

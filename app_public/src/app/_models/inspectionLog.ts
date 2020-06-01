@@ -3,14 +3,14 @@ export class InspectionLog {
     id: number;
     timestamp: number;
     gate: String;
-    date_inspection: String;
+    date_inspection: string;
     question: string;  
 
     constructor(options: {
         _id?: number,
         timestamp?: number;
         gate?: String;
-        date_inspection?: String;
+        date_inspection?: string;
         question?: string;
     } = {}) {
         this._id = options._id;

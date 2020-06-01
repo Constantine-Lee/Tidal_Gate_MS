@@ -6,6 +6,11 @@ import { UserService } from '../_services/user.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { fadeInAnimation } from '../_animations';
 import { Role } from '../_models/role';
+import { Router } from '@angular/router';
+import { NGXLogger } from 'ngx-logger';
+
+//for modal
+declare var $: any;
 
 @Component({
     templateUrl: 'admin.component.html',
@@ -25,12 +30,16 @@ export class AdminComponent implements OnInit {
 
     receive: boolean;
 
-    constructor(private userService: UserService, private formBuilder: FormBuilder, ) { }
+    constructor(private userService: UserService,
+                private formBuilder: FormBuilder,
+                private router: Router,
+                private logger: NGXLogger) { }
 
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }
 
     ngOnInit() {
+        
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
@@ -39,11 +48,10 @@ export class AdminComponent implements OnInit {
         this.loading = true;
         this.userService.getAll().pipe(first()).subscribe(users => {
             this.loading = false;
-
             this.users = users.filter(user => user.role == 'User');
             console.log(this.users);
         });
-        this.receive = true;
+        this.receive = true;        
     }
 
     delete(id: number): void {
@@ -51,7 +59,20 @@ export class AdminComponent implements OnInit {
         this.userService.deleteUser(id).subscribe();
     }
 
-    onSubmit(){
-        //this.userService.addOperator(new User('Han','han',Role.User));
+    onSubmit() {        
+        this.logger.info('this.loginForm.controls.username.value: '+this.f.username.value);
+        this.submitted = true;
+        const operator = new User({
+            username: this.f.username.value,
+            password: this.f.password.value,
+            role: Role.User
+        })
+        this.userService.addOperator(operator).subscribe(
+            _ => {
+                this.submitted = false;
+                $('#exampleModal').modal('hide');
+                this.ngOnInit();                
+            }
+        );
     }
 }

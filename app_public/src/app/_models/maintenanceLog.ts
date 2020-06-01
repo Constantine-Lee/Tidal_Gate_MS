@@ -3,7 +3,7 @@ export class MaintenanceLog {
     id: number;
     timestamp: number;
     gate: String;
-    date_maintenance: String;
+    date_maintenance: string;
     action_taken: String;
     action_needed: String;
     question: string;
@@ -13,7 +13,7 @@ export class MaintenanceLog {
         _id?: number,
         timestamp?: number;
         gate?: String;
-        date_maintenance?: String;
+        date_maintenance?: string;
         action_taken?: String;
         action_needed?: String;
         question?: string;

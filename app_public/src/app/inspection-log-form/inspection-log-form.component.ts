@@ -45,7 +45,7 @@ export class InspectionLogFormComponent implements OnInit {
     const formValue = this.form.getRawValue();
     this.questions.map(question => question.value = formValue[question.key]);
 
-    const newInspectionLog = new InspectionLog({ gate: formValue['Lokasi *'], date_inspection: formValue['Tarikh*'], question: JSON.stringify(this.questions) });
+    const newInspectionLog = new InspectionLog({ gate: formValue['Lokasi_Pintu_Air'], date_inspection: formValue['Tarikh'], question: JSON.stringify(this.questions) });
 
     this.inspectionLogService.addInspectionLog(newInspectionLog).subscribe(_ => this.router.navigate(['/inspectionLog']),
       err => {

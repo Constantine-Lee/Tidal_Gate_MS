@@ -4,6 +4,7 @@ import { DropdownQuestion } from './questionDropdown';
 import { QuestionBase } from './questionBase';
 import { TextboxQuestion } from './questionTextbox';
 import { GroupLabelQuestion } from './questionGroupLabel';
+import { GateService } from '../_services/gate.service';
 
 const zero = 0; 
 const first = 1;
@@ -27,8 +28,47 @@ const thirteenth = 13;
 )
 export class InspectionLogQuestionService {
     
+    gateSelection: { key: string, value: string }[] = [];
+    constructor(private gateService: GateService) { }
+
+    getTodayDate(): string {
+        let today = new Date();
+        let dd ;
+        let mm ; //January is 0!
+        let yyyy = today.getFullYear().toString();
+
+        if (today.getDate() < 10) {
+            dd = '0' + today.getDate().toString();
+        }
+        else { 
+            dd = today.getDate().toString();
+        }
+
+        if (today.getMonth() + 1 < 10) {
+            mm = '0' + (today.getMonth() + 1).toString();
+        }
+        else {
+            mm = today.getMonth();
+        }
+
+        let date = yyyy + '-' + mm + '-' + dd
+        console.log(date)
+        return date;
+    }
+
+    async getGates() {
+        this.gateSelection = [];
+        await this.gateService.getGatesPromise().then(gates => {
+            gates.forEach(gate => {
+                this.gateSelection.push({ key: gate.name, value: gate.name })
+            })
+            //console.log(this.gateSelection);
+        });
+    }
+
     // TODO: get from a remote source of question metadata
     getQuestions() {
+        this.getGates();
 
         let questions: QuestionBase<string>[] = [
             new TextboxQuestion({
@@ -46,22 +86,9 @@ export class InspectionLogQuestionService {
                 order: zero
             }),
             new DropdownQuestion({
-                key: 'Lokasi *',
+                key: 'Lokasi_Pintu_Air',
                 label: 'Lokasi Pintu Air',
-                options: [
-                  { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
-                    { key: 'srw002 Ketup', value: 'Ketup' },
-                    { key: 'srw003 Moyan Ulu East', value: 'Moyan Ulu East' },
-                    { key: 'srw004 Serpan Ulu', value: 'Serpan Ulu' },
-                    { key: 'srw005 Asajaya Ulu', value: 'Asajaya Ulu' },
-                    { key: 'srw006 Sampun Gerunggang', value: 'Sampun Gerunggang' },
-                    { key: 'srw007 Moyan Ulu (West)', value: 'Moyan Ulu (West)' },
-                    { key: 'srw008 Beliong', value: 'Beliong' },
-                    { key: 'srw009 Meranti', value: 'Meranti' },
-                    { key: 'srw010 Sampat', value: 'Sampat' },
-                    { key: 'srw011 Sampun Kelili', value: 'Sampun Kelili' },
-                    { key: 'srw012 Segali', value: 'Segali' },
-                ],
+                options:  this.gateSelection,
                 order: zero,
                 required: true
             }),
@@ -73,9 +100,10 @@ export class InspectionLogQuestionService {
                 order: zero
             }),
             new TextboxQuestion({
-                key: 'Tarikh*',
-                label: 'Tarikh*',
-                value: '',
+                key: 'Tarikh',
+                label: 'Tarikh',
+                value: this.getTodayDate(),
+                type: 'Date',
                 required: true,
                 order: zero
             }),

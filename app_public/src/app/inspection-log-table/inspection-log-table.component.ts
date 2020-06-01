@@ -3,6 +3,7 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import paginate = require('jw-paginate');
 import { fadeInAnimation } from '../_animations';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-inspection-log-table',
@@ -22,10 +23,12 @@ export class InspectionLogTableComponent implements OnInit {
   maxPages = 10;
 
   logIdAscending: boolean = true;
+  dateIsAscending: boolean = true;
   pager: any = {};
   receive: boolean;
 
-  constructor(private insepctionLogService: InspectionLogService) {}
+  constructor(private insepctionLogService: InspectionLogService,
+    private logger: NGXLogger) {}
 
   ngOnInit(): void {
     this.getInspectionLogs();
@@ -76,6 +79,23 @@ export class InspectionLogTableComponent implements OnInit {
     }
     this.logIdAscending = !this.logIdAscending;
     this.generatePager(idSorted, 1);
+  }
+
+  sortDate() {
+    this.logger.log("Function: sortDate()");
+
+    let arrSortedDate: Array<InspectionLog> = [];
+    if (this.dateIsAscending == true) {
+      this.logger.info("this.dateIsAscending == true");
+      arrSortedDate = this.inspectionLogs.slice().sort((a, b) => new Date(b.date_inspection).getTime() - new Date(a.date_inspection).getTime());
+    }
+    else {
+      this.logger.info("this.dateIsAscending == false");
+      arrSortedDate = this.inspectionLogs.slice().sort((a, b) => new Date(a.date_inspection).getTime() - new Date(b.date_inspection).getTime());
+    }
+    this.dateIsAscending = !this.dateIsAscending;
+    this.logger.info("arrSortedDate: " + arrSortedDate);
+    this.generatePager(arrSortedDate, 1);
   }
 
   onChangePage(pageOfItems: Array<any>) {

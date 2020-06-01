@@ -32,7 +32,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   receive: boolean;
 
   constructor(private maintenanceLogService: MaintenanceLogService,
-              private logger: NGXLogger) { }
+    private logger: NGXLogger) { }
 
   ngOnInit(): void {
     this.getMaintenanceLogs();
@@ -46,7 +46,7 @@ export class MaintenanceLogTableComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this.logger.log("Function: ngOnChanges");
-    
+
     // reset page if items array has changed
     if (changes.maintenanceLogs.currentValue !== changes.maintenanceLogs.previousValue) {
       this.setPage(this.initialPage);
@@ -60,14 +60,14 @@ export class MaintenanceLogTableComponent implements OnInit {
       this.maintenanceLogs = data;
       this.setPage(1);
     });
-    this.logger.info("this.maintenanceLogs: "+ this.maintenanceLogs);
+    this.logger.info("this.maintenanceLogs: " + this.maintenanceLogs);
   }
 
-  setPage(page: number) {    
+  setPage(page: number) {
     this.logger.log("Function: setPage");
 
     let arrayFilter = this.maintenanceLogs;
-    this.logger.info("arrayFilter: "+arrayFilter);
+    this.logger.info("arrayFilter: " + arrayFilter);
 
     //filer array with results contain search term
     if (this.searchTerm != "") {
@@ -79,7 +79,7 @@ export class MaintenanceLogTableComponent implements OnInit {
           i.action_taken.includes(this.searchTerm) ||
           i.action_needed.includes(this.searchTerm));
     }
-    this.logger.info("arrayFilter after Filter: "+arrayFilter);
+    this.logger.info("arrayFilter after Filter: " + arrayFilter);
 
     this.generatePager(arrayFilter, page);
   }
@@ -89,11 +89,11 @@ export class MaintenanceLogTableComponent implements OnInit {
 
     // get new pager object for specified page
     this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
-    this.logger.info("this.pager: "+this.pager);
+    this.logger.info("this.pager: " + this.pager);
 
     // get new page of items from items array
     let pageOfItems = array.slice(this.pager.startIndex, this.pager.endIndex + 1);
-    this.logger.info("pageOfItems"+pageOfItems);
+    this.logger.info("pageOfItems" + pageOfItems);
 
     // call change page function in parent component
     this.onChangePage(pageOfItems);
@@ -112,41 +112,41 @@ export class MaintenanceLogTableComponent implements OnInit {
     let arrSortedID: Array<MaintenanceLog> = [];
     if (this.idIsAscending == true) {
       this.logger.info("this.idIsAscending == true");
-      arrSortedID = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);      
+      arrSortedID = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);
     }
     else {
       this.logger.info("this.idIsAscending == false");
       arrSortedID = this.maintenanceLogs.slice().sort((a, b) => a.id - b.id);
     }
-    this.idIsAscending = !this.idIsAscending;        
-    this.logger.info("arrSortedID: "+arrSortedID);
+    this.idIsAscending = !this.idIsAscending;
+    this.logger.info("arrSortedID: " + arrSortedID);
     this.generatePager(arrSortedID, 1);
   }
 
-  sortDate(){
+  sortDate() {
     this.logger.log("Function: sortDate()");
 
     let arrSortedDate: Array<MaintenanceLog> = [];
-    if (this.dateIsAscending == true){
+    if (this.dateIsAscending == true) {
       this.logger.info("this.dateIsAscending == true");
-      arrSortedDate = this.maintenanceLogs.slice().sort((a, b) => b.id - a.id);
+      arrSortedDate = this.maintenanceLogs.slice().sort((a, b) => new Date(b.date_maintenance).getTime() - new Date(a.date_maintenance).getTime());
     }
     else {
       this.logger.info("this.dateIsAscending == false");
-      arrSortedDate = this.maintenanceLogs.slice().sort((a, b) => a.id - b.id);
+      arrSortedDate = this.maintenanceLogs.slice().sort((a, b) => new Date(a.date_maintenance).getTime() - new Date(b.date_maintenance).getTime());
     }
     this.dateIsAscending = !this.dateIsAscending;
-    this.logger.info("arrSortedDate: "+arrSortedDate);
+    this.logger.info("arrSortedDate: " + arrSortedDate);
     this.generatePager(arrSortedDate, 1);
   }
 
   delete(id: number): void {
     this.logger.log("Function: delete(id: number)");
 
-    this.logger.info("this.maintenanceLogs before Filter: "+this.maintenanceLogs);
+    this.logger.info("this.maintenanceLogs before Filter: " + this.maintenanceLogs);
     this.maintenanceLogs = this.maintenanceLogs.filter(l => l._id !== id);
-    this.logger.info("this.maintenanceLogs after Filter: "+this.maintenanceLogs);
-    
+    this.logger.info("this.maintenanceLogs after Filter: " + this.maintenanceLogs);
+
     this.setPage(1);
     this.maintenanceLogService.deleteMaintenanceLog(id).subscribe();
   }
