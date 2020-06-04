@@ -1,1 +1,1 @@
-https://dev.azure.com/100073484/Tidal_Gate_MS/_apis/build/status/Lee-Zong-Yang.Tidal_Gate_MS?branchName=master
+[![Build Status](https://dev.azure.com/100073484/Tidal_Gate_MS/_apis/build/status/Lee-Zong-Yang.Tidal_Gate_MS?branchName=master)](https://dev.azure.com/100073484/Tidal_Gate_MS/_build/latest?definitionId=7&branchName=master)
