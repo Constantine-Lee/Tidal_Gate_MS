@@ -73,6 +73,7 @@ export class UpdateGateComponent implements OnInit {
 
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
+    formData.append('GateID', formValue['Gate_ID']);
     formData.append('image', this.fileData);
     formData.append('profilePhoto', this.gate.profilePhoto);
     formData.append('timestamp', this.gate.timestamp.toString());

@@ -115,6 +115,7 @@ const editGate = async (req, res, next) => {
 
     try {
         const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, {
+            id: req.body.GateID,
             timestamp: Date.now(),
             name: req.body.name,
             profilePhoto: filename,
