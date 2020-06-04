@@ -3,8 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
 import { GateQuestionService } from '../question/gateQuestion.service';
-import { Gate } from '../_models/gate';
-import { Location } from '@angular/common';
+import { environment } from '../../environments/environment';
 import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { User } from '../_models/user';
@@ -22,7 +21,7 @@ declare var $: any;
 })
 export class GateFormComponent implements OnInit {
   fileData: File = null;
-  previewUrl: any = "../../assets/images/tidalGatePlaceHolder.png";
+  previewUrl: any = environment.apiUrl + '/images/tidalGatePlaceHolder.png';
   uploadedFilePath: string = null;
   public fileInput: string = "Choose Image";
 

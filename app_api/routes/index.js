@@ -22,34 +22,36 @@ const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './images')
     },
-    filename: function (req, file, cb) {        
+    filename: function (req, file, cb) {
         winston.info('storage filename Function.');
 
         //verbose
         const fileExtName = path.extname(file.originalname);
-        winston.verbose('fileExtName='+fileExtName);
+        winston.verbose('fileExtName=' + fileExtName);
 
         //verbose
         const timestamp = Date.now();
-        winston.verbose('timestamp='+timestamp);
-        
-        const fileName = 'gate-'+timestamp+fileExtName;
-        winston.verbose('fileName='+fileName);
+        winston.verbose('timestamp=' + timestamp);
+
+        const fileName = 'gate-' + timestamp + fileExtName;        
+
+        winston.verbose('fileName=' + fileName);
         cb(null, fileName);
     }
 })
 
-const upload = multer({ storage: storage ,
+const upload = multer({
+    storage: storage,
     fileFilter: function (req, file, cb) {
         winston.info('fileFilter Function.')
 
         const fileExtName = path.extname(file.originalname);
-        winston.verbose('fileExtName='+fileExtName);
+        winston.verbose('fileExtName=' + fileExtName);
 
-        if(fileExtName !== '.png' && fileExtName !== '.jpg' && fileExtName !== '.jpeg') {            
-            req.fileValidationError = true;            
+        if (fileExtName !== '.png' && fileExtName !== '.jpg' && fileExtName !== '.jpeg') {
+            req.fileValidationError = true;
             return cb(null, false);
-        }        
+        }
         cb(null, true);
     }
 })
@@ -95,7 +97,7 @@ router
 router
     .route('/gates/:gateID')
     .get(ctrlGate.getGate)
-    .put(upload.single('image'),ctrlGate.editGate)
+    .put(upload.single('image'), ctrlGate.editGate)
     .delete(ctrlGate.deleteGate)
 
 router

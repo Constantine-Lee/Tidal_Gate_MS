@@ -12,7 +12,7 @@ var options = {
       colorize: false,
     },
     console: {
-      level: 'info',
+      level: 'verbose',
       handleExceptions: true,
       json: false,
       colorize: true,

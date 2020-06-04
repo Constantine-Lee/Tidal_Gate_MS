@@ -29,8 +29,14 @@ const addGate = async (req, res, next) => {
     winston.info('Function=addGate');
     let filename;
     try {
-        filename = req.file.filename;
-        winston.verbose('Filename/req.file.filename: ' + filename);
+        winston.verbose('Filename/req.file.filename: ' + req.file);
+        if (req.file!=undefined) {
+            filename = process.env.imgFolderUrl + req.file.filename;
+        }
+        else {
+            filename = process.env.imgFolderUrl + 'tidalGatePlaceHolder.png';
+        }
+        winston.verbose('Filename/filename: ' + filename);
     } catch (err) {
         winston.error('Filename error=' + err);
         err = new ErrorHandler(500, "Please upload an Image.");
@@ -53,7 +59,7 @@ const addGate = async (req, res, next) => {
         const gate = new Gate({
             timestamp: Date.now(),
             name: req.body.name,
-            profilePhoto: process.env.imgFolderUrl + filename,
+            profilePhoto: filename,
             question: req.body.question
         });
         winston.silly('gate=' + gate);
@@ -84,8 +90,14 @@ const getGate = async (req, res, next) => {
 
 const editGate = async (req, res, next) => {
     winston.info('Function=editGate req.params.gateID=' + req.params.gateID);
-
+    let filename;
     try {
+        if (req.file!=undefined) {
+            filename = process.env.imgFolderUrl + req.file.filename;
+        }
+        else {
+            filename = req.body.profilePhoto;
+        }
         const gate = await Gate.findById(req.params.gateID).exec();
         //debug gate
         winston.debug('Fetched a Gate to Edit=' + gate);
@@ -96,19 +108,19 @@ const editGate = async (req, res, next) => {
             throw new ErrorHandler(404, "The Gate had been edited by others.");
         }
     } catch (err) {
-        winston.error('Edit Gate Error=' + err);        
+        winston.error('Edit Gate Error=' + err);
         return next(err);
     }
 
     try {
-        const editedGate = await Gate.updateOne({ _id: req.params.gateID }, {
+        const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, {
             timestamp: Date.now(),
             name: req.body.name,
-            profilePhoto: req.body.profilePhoto,
+            profilePhoto: filename,
             question: req.body.question
         });
         //silly gate
-        winston.silly('Edited Gate='+editedGate);
+        winston.silly('Edited Gate=' + editedGate);
         //verbose timestamp | name | profilePhoto
         winston.verbose('timestamp=' + editedGate.timestamp + ' name=' + editedGate.name + ' profilePhoto=' + editedGate.profilePhoto);
         res.status(200).json(editedGate);
@@ -130,7 +142,7 @@ const deleteGate = async (req, res, next) => {
         res.status(200).json(deleteResult);
     } catch (err) {
         winston.error('Delete Gate Error=' + err);
-        err = new ErrorHandler(500, 'Failed to delete the Gate='+gateID);
+        err = new ErrorHandler(500, 'Failed to delete the Gate=' + gateID);
         return next(err);
     }
 };

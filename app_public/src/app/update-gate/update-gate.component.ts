@@ -23,7 +23,7 @@ declare var $: any;
 export class UpdateGateComponent implements OnInit {
   gate: Gate;
   fileData: File = null;
-  previewUrl: any = "../../assets/images/tidalGatePlaceHolder.png";
+  previewUrl: any = environment.apiUrl + '/images/tidalGatePlaceHolder.png';
   uploadedFilePath: string = null;
   public fileInput: string = "Choose Image";
 
@@ -57,7 +57,7 @@ export class UpdateGateComponent implements OnInit {
       .then(gate => this.gate = gate);
     this.questions = JSON.parse(this.gate.question);
     this.form = this.qcs.toFormGroup(this.questions);
-    this.previewUrl = this.gate.profilePhoto;
+    this.previewUrl = this.gate.profilePhoto;  
     this.receive = true;
   }
 
@@ -74,7 +74,7 @@ export class UpdateGateComponent implements OnInit {
     formData.append('name', formValue['Gate Name']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
-    formData.append('profilePhoto', this.previewUrl);
+    formData.append('profilePhoto', this.gate.profilePhoto);
     formData.append('timestamp', this.gate.timestamp.toString());
 
     this.gateService.updateGate(formData, this.gate._id).subscribe(_ => this.router.navigate(['/gate']),
