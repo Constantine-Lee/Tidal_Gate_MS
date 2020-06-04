@@ -57,6 +57,7 @@ const addGate = async (req, res, next) => {
     try {
         // a document instance
         const gate = new Gate({
+            id: req.body.GateID,
             timestamp: Date.now(),
             name: req.body.name,
             profilePhoto: filename,

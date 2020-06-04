@@ -21,7 +21,7 @@ declare var $: any;
 })
 export class GateFormComponent implements OnInit {
   fileData: File = null;
-  previewUrl: any = environment.apiUrl + '/images/tidalGatePlaceHolder.png';
+  previewUrl: any = `${environment.apiUrl}/images/tidalGatePlaceHolder.png`;
   uploadedFilePath: string = null;
   public fileInput: string = "Choose Image";
 
@@ -53,6 +53,7 @@ export class GateFormComponent implements OnInit {
         
     this.questions.map(question => question.value = formValue[question.key]);    
     formData.append('name', formValue['Gate Name']);
+    formData.append('GateID', formValue['Gate_ID']);
     formData.append('question', JSON.stringify(this.questions));
     formData.append('image', this.fileData);
 

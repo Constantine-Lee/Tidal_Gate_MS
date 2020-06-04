@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const counter = require('./counter');
 
 const gateSchema = new mongoose.Schema({
-  id: Number, 
+  id: String, 
   name: {
     type: String,
     required: true
@@ -12,6 +12,7 @@ const gateSchema = new mongoose.Schema({
   question: String
 });
 
+/*
 gateSchema.pre('save', function(next) {
   var doc = this;
   counter.findByIdAndUpdate({_id: 'gate'}, {$inc: { seq: 1} }, function(error, counter)   {
@@ -21,5 +22,5 @@ gateSchema.pre('save', function(next) {
       next();
   });
 });
-
+*/
 mongoose.model('Gate', gateSchema);

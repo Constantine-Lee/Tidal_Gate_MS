@@ -9,12 +9,14 @@ export class Gate {
 
     constructor(options: {
         _id?: string,
+        id?: number,
         name?: string,
         profilePhoto?: string,
         timestamp?: number,
         question?: string,
     } = {}) {
         this._id = options._id;
+        this.id = options.id;
         this.name = options.name;
         this.profilePhoto = options.profilePhoto;
         this.timestamp = options.timestamp;        

@@ -43,7 +43,7 @@ export class GateQuestionService {
                 order: zero
             }),
             new TextboxQuestion({
-                key: 'Gate ID',
+                key: 'Gate_ID',
                 label: 'Gate ID',
                 value: '',
                 required: true,
