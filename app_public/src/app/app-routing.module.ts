@@ -17,25 +17,25 @@ import { InspectionLogTableComponent } from './inspection-log-table/inspection-l
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
 import { UpdateGateComponent } from './update-gate/update-gate.component';
-import { CanDeactivateGuard }    from './_helpers/can-deactivate.guard';
+import { CanDeactivateGuard } from './_helpers/can-deactivate.guard';
 
 const routes: Routes = [
-  { path: '', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: 'home', component: UserProfileComponent, canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },
+  { path: '', component: UserProfileComponent, canActivate: [AuthGuard], data: { title: 'Tidal Gate Management System' } },
+  { path: 'home', component: UserProfileComponent, canActivate: [AuthGuard], data: { title: 'Tidal Gate Management System' } },
+  { path: 'login', component: LoginComponent, data: { title: 'Tidal Gate Management System' } },
+  { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: { roles: [Role.Admin], title: 'Admin' } },
 
-  { path: 'gate', component: GateTableComponent, canActivate: [AuthGuard] },
-  { path: 'addGate', component: GateFormComponent, canActivate: [AuthGuard], data: { roles: [Role.Admin] } },  
-  { path: 'updateGate/:gateID', component: UpdateGateComponent, canActivate: [AuthGuard] },
+  { path: 'gate', component: GateTableComponent, canActivate: [AuthGuard], data: { title: 'Gate' } },
+  { path: 'addGate', component: GateFormComponent, canActivate: [AuthGuard], data: { roles: [Role.Admin], title: 'Add Gate' } },
+  { path: 'updateGate/:gateID', component: UpdateGateComponent, canActivate: [AuthGuard], data: { title: 'Update Gate' } },
 
-  { path: 'maintenanceLog', component: MaintenanceLogTableComponent, canActivate: [AuthGuard] },
-  { path: 'addMaintenanceLog', component: MaintenanceLogFormComponent, canActivate: [AuthGuard], canDeactivate: [CanDeactivateGuard] },  
-  { path: 'updateMaintenanceLog/:maintenanceLogID', component: UpdateMaintenanceLogComponent, canActivate: [AuthGuard] },
+  { path: 'maintenanceLog', component: MaintenanceLogTableComponent, canActivate: [AuthGuard], data: { title: 'Maitenance Log' } },
+  { path: 'addMaintenanceLog', component: MaintenanceLogFormComponent, canActivate: [AuthGuard], canDeactivate: [CanDeactivateGuard], data: { title: 'Add Maintenance Log' } },
+  { path: 'updateMaintenanceLog/:maintenanceLogID', component: UpdateMaintenanceLogComponent, canActivate: [AuthGuard], data: { title: 'Update Maintenance Log' } },
 
-  { path: 'inspectionLog', component: InspectionLogTableComponent, canActivate: [AuthGuard] },
-  { path: 'addInspectionLog', component: InspectionLogFormComponent, canActivate: [AuthGuard] },  
-  { path: 'updateInspectionLog/:inspectionLogID', component: UpdateInspectionLogComponent},
+  { path: 'inspectionLog', component: InspectionLogTableComponent, canActivate: [AuthGuard], data: { title: 'Inspection Log' } },
+  { path: 'addInspectionLog', component: InspectionLogFormComponent, canActivate: [AuthGuard], data: { title: 'Add Inspection Log' } },
+  { path: 'updateInspectionLog/:inspectionLogID', component: UpdateInspectionLogComponent, data: { title: 'Update Inspection Log' } },
 
   { path: '**', redirectTo: '' }
 ]

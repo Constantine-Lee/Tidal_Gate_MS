@@ -1,54 +1,65 @@
-<!--
-<div class="card mt-4 ">    
-    <div class="card-body">
-        <h4 >User Profile</h4>
-        
-        <p>Your role is: <strong>{{currentUser.role}}</strong>.</p>
-        <p>This page can be accessed by <u>all authenticated users</u>.</p>
-        <p class="mb-1">Current user from secure api end point:</p>
-        <div *ngIf="loading" class="spinner-border spinner-border-sm"></div>
-        <ul *ngIf="userFromApi">
-            <li>{{userFromApi.firstName}} {{userFromApi.lastName}}</li>
-        </ul>
-    </div>
-</div>-->
-<div>
-    <nav aria-label="breadcrumb ">
-        <ol class="breadcrumb mb-2">
-            <li class="breadcrumb-item"><a routerLink="home">Home</a></li>
-        </ol>
-    </nav>
-    <div @fadeInAnimation *ngIf="receive" class="container">
+<nav aria-label="breadcrumb ">
+    <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a routerLink="home">Home</a></li>
+    </ol>
+</nav>
+<div @fadeInAnimation *ngIf="receive" class="container pt-5 pb-5 justify-content-center">
 
-        <div>
-            <div class="card-deck align-bottom" >
-                <div class="card ">
-                    <a routerLink="/gate">
-                        <img class="card-img-top p-5" src="../../assets/images/tidalControlGate.svg" height="300">
-                        <div class="card-body">
-                            <h1 class="card-title  text-center">Tidal Control Gate</h1>
-                        </div>
-                    </a>
-                </div>
-                <div class="card">
-                    <a routerLink="/maintenanceLog">
-                        <img class="card-img-top p-5" src="../../assets/images/maintenanceLogo.svg" alt="Card image cap"
-                            height="300">
-                        <div class="card-body">
-                            <h1 class="card-title text-center">Maintenance Log</h1>
-                        </div>
-                    </a>
-                </div>
-                <div class="card">
-                    <a routerLink="/inspectionLog">
-                        <img class="card-img-top p-5" src="../../assets/images/inspectionLog.svg" alt="Card image cap"
-                            height="300">
-                        <div class="card-body">
-                            <h1 class="card-title text-center">Inspection Log</h1>
-                        </div>
-                    </a>
-                </div>
+    <div class="row pt-2 pb-2">
+        <div class="col-sm-4 pl-5 pr-5 ">
+            <div class="card">
+                <a routerLink="/gate">
+                    <img class="card-img-top p-4 btn btn-light " src="../../assets/images/tidalControlGate.svg"
+                        height="230">
+                    <h3 class="card-title  text-center">Tidal Control Gate</h3>
+                </a>
             </div>
-
+        </div>
+        <div class="col-sm-4 pl-5 pr-5">
+            <div class="card">
+                <a routerLink="/maintenanceLog">
+                    <img class="card-img-top p-4 btn btn-light " src="../../assets/images/maintenanceLogo.svg"
+                        height="230">
+                    <h3 class="card-title  text-center">Maintenance Log</h3>
+                </a>
+            </div>
+        </div>
+        <div class="col-sm-4 pl-5 pr-5">
+            <div class="card">
+                <a routerLink="/inspectionLog">
+                    <img class="card-img-top p-4 btn btn-light " src="../../assets/images/inspectionLog.svg"
+                        height="230">
+                    <h3 class="card-title  text-center">Inspection Log</h3>
+                </a>
+            </div>
         </div>
     </div>
+    <!--
+    <div class="card-deck align-bottom">
+        <div class="card ">
+            <a routerLink="/gate">
+                <img class="card-img-top p-5" src="../../assets/images/tidalControlGate.svg" height="200">
+                <div class="card-body">
+                    <h1 class="card-title  text-center">Tidal Control Gate</h1>
+                </div>
+            </a>
+        </div>
+        <div class="card">
+            <a routerLink="/maintenanceLog">
+                <img class="card-img-top p-5" src="../../assets/images/maintenanceLogo.svg" height="200">
+                <div class="card-body">
+                    <h1 class="card-title text-center">Maintenance Log</h1>
+                </div>
+            </a>
+        </div>
+        <div class="card">
+            <a routerLink="/inspectionLog">
+                <img class="card-img-top p-5" src="../../assets/images/inspectionLog.svg" height="200">
+                <div class="card-body">
+                    <h1 class="card-title text-center">Inspection Log</h1>
+                </div>
+            </a>
+        </div>
+    </div>
+    -->
+</div>
