@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
-
 import { User } from '../_models/user';
 import { UserService } from '../_services/user.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
@@ -21,7 +20,7 @@ declare var $: any;
 export class AdminComponent implements OnInit {
     loading = false;
     users: User[] = [];
-
+    listedUsers: User[] = [];
     loginForm: FormGroup;
     submitted = false;
     returnUrl: string;
@@ -31,15 +30,14 @@ export class AdminComponent implements OnInit {
     receive: boolean;
 
     constructor(private userService: UserService,
-                private formBuilder: FormBuilder,
-                private router: Router,
-                private logger: NGXLogger) { }
+        private formBuilder: FormBuilder,
+        private router: Router,
+        private logger: NGXLogger) { }
 
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }
 
     ngOnInit() {
-        
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
@@ -50,8 +48,19 @@ export class AdminComponent implements OnInit {
             this.loading = false;
             this.users = users.filter(user => user.role == 'User');
             console.log(this.users);
+            this.search();
         });
-        this.receive = true;        
+        this.receive = true;
+    }
+
+    search() {
+        this.listedUsers = this.users;
+        console.log(this.searchTerm);
+        if (this.searchTerm != "") {
+            this.listedUsers = this.users
+                .filter(i =>
+                    i.username.includes(this.searchTerm));
+        }       
     }
 
     delete(id: number): void {
@@ -59,8 +68,8 @@ export class AdminComponent implements OnInit {
         this.userService.deleteUser(id).subscribe();
     }
 
-    onSubmit() {        
-        this.logger.info('this.loginForm.controls.username.value: '+this.f.username.value);
+    onSubmit() {
+        this.logger.info('this.loginForm.controls.username.value: ' + this.f.username.value);
         this.submitted = true;
         const operator = new User({
             username: this.f.username.value,
@@ -71,7 +80,7 @@ export class AdminComponent implements OnInit {
             _ => {
                 this.submitted = false;
                 $('#exampleModal').modal('hide');
-                this.ngOnInit();                
+                this.ngOnInit();
             }
         );
     }

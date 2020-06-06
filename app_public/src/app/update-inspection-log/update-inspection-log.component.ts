@@ -1,12 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
-import { InspectionLogQuestionService } from '../question/inspectionLogQuestion.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { InspectionLogService } from '../_services/inspectionLog.service';
-import { Location } from '@angular/common';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
 declare var $: any;
@@ -24,7 +22,7 @@ export class UpdateInspectionLogComponent implements OnInit {
   form: FormGroup;
   receive: boolean;
   loading = false;
-  error: string = 'Unknown Error Occurs... Operation Failed.';
+  errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private route: ActivatedRoute,
     private router: Router, private inspectionLogService: InspectionLogService, private qcs: QuestionControlService, ) {
@@ -45,36 +43,43 @@ export class UpdateInspectionLogComponent implements OnInit {
     await this.inspectionLogService.getInspectionLogByID(id)
       .then(inspectionLog => this.inspectionLog = inspectionLog);
     this.questions = JSON.parse(this.inspectionLog.question);
-    
+
     this.form = this.qcs.toFormGroup(this.questions);
     this.receive = true;
   }
 
   onSubmit(): void {
+
     // stop here if form is invalid
     if (this.form.invalid) {
+      this.errorString = 'Please fill in all the required fields.';
+      $('#errorModal').modal('show');
       return;
-    }
+    };
+    
     this.loading = true;
-
     const formValue = this.form.getRawValue();
     this.questions.map(question => question.value = formValue[question.key]);
+
     const newInspectionLog = new InspectionLog({
       _id: this.inspectionLog._id,
       timestamp: this.inspectionLog.timestamp,
-      gate: formValue['Gate Name *'],
-      date_inspection: formValue['Maintenance Date *'],
+      gate: formValue['Lokasi_Pintu_Air'],
+      date_inspection: formValue['Tarikh'],
       question: JSON.stringify(this.questions)
     });
 
     this.inspectionLogService.updateInspectionLog(newInspectionLog).subscribe(_ => this.router.navigate(['/inspectionLog']),
-    err => {
-      console.log(err);
-      if (err != undefined) {
-        this.error = err;
-      }
-      this.loading = false;
-      $('#errorModal').modal('show');
-    });
+      err => {
+        console.log(err);
+        if (err != undefined) {
+          this.errorString = err;
+        }
+        else {
+          this.errorString = 'Unknown Error Occurs... Operation Failed.';
+        }
+        this.loading = false;
+        $('#errorModal').modal('show');
+      });
   }
 }

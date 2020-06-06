@@ -32,7 +32,7 @@ export class UpdateGateComponent implements OnInit {
   currentUser: User;
   receive: boolean;
   loading = false;
-  error: string = 'Unknown Error Occurs... Operation Failed.';
+  errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private route: ActivatedRoute,
     private router: Router, private qcs: QuestionControlService, private gateService: GateService, private authenticationService: AuthenticationService) {
@@ -62,10 +62,14 @@ export class UpdateGateComponent implements OnInit {
   }
 
   onSubmit() {
+
     // stop here if form is invalid
     if (this.form.invalid) {
+      this.errorString = 'Please fill in all the required fields.';
+      $('#errorModal').modal('show');
       return;
-    }
+    };
+
     this.loading = true;
     const formData = new FormData();
     let formValue = this.form.getRawValue();
@@ -82,7 +86,10 @@ export class UpdateGateComponent implements OnInit {
       err => {
         console.log(err);
         if (err != undefined) {
-          this.error = err;
+          this.errorString = err;
+        }
+        else {
+          this.errorString = 'Unknown Error Occurs... Operation Failed.';
         }
         this.loading = false;
         $('#errorModal').modal('show');

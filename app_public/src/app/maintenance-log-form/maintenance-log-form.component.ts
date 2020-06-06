@@ -54,8 +54,6 @@ export class MaintenanceLogFormComponent implements OnInit {
     map.set('Action_Taken', []);
     map.set('Action_Needed', []);
 
-
-
     // stop here if form is invalid
     if (this.form.invalid) {
       this.errorString = 'Please fill in all the required fields.';
