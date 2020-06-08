@@ -44,10 +44,26 @@
                                 <div class="d-flex justify-content-center">
                                     <button class="btn btn-light mr-2" [routerLink]="['/updateGate/',gate._id]"><i
                                             class="fa fa-search"></i></button>
-                                    <button *ngIf="isAdmin" class="btn btn-light" (click)="delete(gate._id)"><i
-                                            class="fa fa-trash"></i></button>
+                                    <button data-toggle="modal" data-target="#exampleModal" *ngIf="isAdmin"
+                                        class="btn btn-light"><i class="fa fa-trash"></i></button>
                                 </div>
                             </td>
+                            <!-- Modal -->
+                            <div class="modal" id="exampleModal">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <h4>Confirm Delete the Gate ?</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-dismiss="modal">Cancel</button>
+                                            <button type="button" (click)="delete(gate._id)"
+                                                class="btn btn-outline-danger" data-dismiss="modal">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </tr>
                     </tbody>
 
@@ -68,5 +84,7 @@
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>

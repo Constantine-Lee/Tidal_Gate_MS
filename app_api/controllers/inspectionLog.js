@@ -60,7 +60,7 @@ const getInspectionLog = async (req, res, next) => {
     }
 };
 
-const editInspectionLog = async (req, res) => {
+const editInspectionLog = async (req, res, next) => {
     const inspectionLogID = req.params.inspectionLogID;
     winston.info('Function=editInspectionLog req.params.inspectionLogID=' + inspectionLogID);
     try {

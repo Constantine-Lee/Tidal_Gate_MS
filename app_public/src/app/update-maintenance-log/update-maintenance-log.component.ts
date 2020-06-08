@@ -61,6 +61,10 @@ export class UpdateMaintenanceLogComponent implements OnInit {
     this.receive = true;
   }
 
+  refreshPage(){
+    this.ngOnInit();
+  }
+
   onSubmit(): void {
     this.logger.log("Function: onSubmit()");
 
@@ -117,7 +121,7 @@ export class UpdateMaintenanceLogComponent implements OnInit {
         err => {
           console.log(err);
           if (err != undefined) {
-            this.errorString = err;
+            this.errorString = err.error;
           }
           else {
             this.errorString = 'Unknown Error Occurs... Operation Failed.';

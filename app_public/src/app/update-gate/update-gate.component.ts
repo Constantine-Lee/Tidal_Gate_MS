@@ -86,7 +86,7 @@ export class UpdateGateComponent implements OnInit {
       err => {
         console.log(err);
         if (err != undefined) {
-          this.errorString = err;
+          this.errorString = err.error;
         }
         else {
           this.errorString = 'Unknown Error Occurs... Operation Failed.';
@@ -94,6 +94,10 @@ export class UpdateGateComponent implements OnInit {
         this.loading = false;
         $('#errorModal').modal('show');
       });
+  }
+
+  refreshPage(){
+    this.ngOnInit();
   }
 
   fileProgress(fileInput: any) {

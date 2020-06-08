@@ -50,10 +50,26 @@
                                     <button class="btn btn-light"
                                         [routerLink]="['/updateInspectionLog/',inspectionLog._id]"><i
                                             class="fa fa-search"></i></button>
-                                    <button class="btn btn-light" (click)="delete(inspectionLog._id)"><i
+                                    <button data-toggle="modal" data-target="#exampleModal" class="btn btn-light"><i
                                             class="fa fa-trash"></i></button>
                                 </div>
                             </td>
+                            <!-- Modal -->
+                            <div class="modal" id="exampleModal">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <h4>Confirm Delete the Inspection Log ?</h4>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-dismiss="modal">Cancel</button>
+                                            <button type="button" (click)="delete(inspectionLog._id)"
+                                                class="btn btn-outline-danger" data-dismiss="modal">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </tr>
                     </tbody>
 

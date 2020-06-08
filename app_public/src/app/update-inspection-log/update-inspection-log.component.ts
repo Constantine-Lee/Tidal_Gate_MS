@@ -48,6 +48,10 @@ export class UpdateInspectionLogComponent implements OnInit {
     this.receive = true;
   }
 
+  refreshPage(){
+    this.ngOnInit();
+  }
+
   onSubmit(): void {
 
     // stop here if form is invalid
@@ -73,7 +77,7 @@ export class UpdateInspectionLogComponent implements OnInit {
       err => {
         console.log(err);
         if (err != undefined) {
-          this.errorString = err;
+          this.errorString = err.error;
         }
         else {
           this.errorString = 'Unknown Error Occurs... Operation Failed.';
