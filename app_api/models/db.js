@@ -6,8 +6,9 @@ mongoose.set('useFindAndModify', false);
 let dbURI = `mongodb://localhost/fyp`;
 
 
-if (process.env.NODE_ENV === 'production') {  
-  dbURI = process.env.MONGODB_URI; }
+if (process.env.NODE_ENV === 'production') {
+  dbURI = process.env.MONGODB_URI;
+}
 
 const connect = () => {
   setTimeout(() => mongoose.connect(dbURI, { useNewUrlParser: true, useCreateIndex: true }), 1000);
@@ -31,13 +32,13 @@ if (process.platform === 'win32') {
     input: process.stdin,
     output: process.stdout
   });
-  rl.on ('SIGINT', () => {
+  rl.on('SIGINT', () => {
     process.emit("SIGINT");
   });
 }
 
 const gracefulShutdown = (msg, callback) => {
-  mongoose.connection.close( () => {
+  mongoose.connection.close(() => {
     console.log(`Mongoose disconnected through ${msg}`);
     callback();
   });
