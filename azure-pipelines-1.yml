@@ -29,9 +29,9 @@ steps:
   displayName: 'Test Angular'
 
 - task: PublishTestResults@2
-  inputs:
+  inputs:    
     testResultsFormat: 'JUnit'
-    testResultsFiles: './app_public/testresults/unit-test-result.xml'
+    testResultsFiles: '*/testresults/*.xml'
 
 
 
