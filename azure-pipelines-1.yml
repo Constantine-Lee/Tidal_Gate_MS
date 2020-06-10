@@ -20,7 +20,8 @@ steps:
     workingDir: './app_public'
   displayName: 'Install Node_Modules'
 
-- script: |               
-    ng test 
+- script: |         
+    cd app_public      
+    run-script test
   displayName: 'Angular Test'
 
