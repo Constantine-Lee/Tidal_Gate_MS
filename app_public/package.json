@@ -21,6 +21,7 @@
     "@angular/platform-browser-dynamic": "^9.1.9",
     "@angular/router": "^9.1.9",
     "@ckeditor/ckeditor5-angular": "^1.2.3",
+    "jspdf": "^1.5.3",
     "jw-angular-pagination": "^1.1.0",
     "ngx-logger": "^4.1.9",
     "rxjs": "^6.5.5",

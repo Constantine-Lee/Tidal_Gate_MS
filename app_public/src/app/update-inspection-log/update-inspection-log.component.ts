@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
@@ -7,6 +7,7 @@ import { switchMap } from 'rxjs/operators';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
+import { NGXLogger } from 'ngx-logger';
 declare var $: any;
 
 @Component({
@@ -25,7 +26,10 @@ export class UpdateInspectionLogComponent implements OnInit {
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private route: ActivatedRoute,
-    private router: Router, private inspectionLogService: InspectionLogService, private qcs: QuestionControlService, ) {
+              private router: Router, 
+              private inspectionLogService: InspectionLogService, 
+              private qcs: QuestionControlService,
+              private logger: NGXLogger ) {
   }
 
   ngOnInit(): void {
