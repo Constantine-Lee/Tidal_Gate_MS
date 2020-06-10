@@ -21,7 +21,7 @@ steps:
   displayName: 'Install Node_Modules'
 
 - script: |         
-    cd app_public      
+    workingDirectory: app_public      
     npm run test
   displayName: 'Angular Test'
 
