@@ -18,7 +18,7 @@ steps:
   
 - task: Cache@2
   inputs:         
-    key: './app_public/package-lock.json' 
+    key: './app_public/package.json' 
     path: $(npm_config_cache)
   displayName: Cache npm
 
@@ -28,6 +28,7 @@ steps:
     workingDir: './app_public'
     command: 'custom'    
     customCommand: 'install --cache $(npm_config_cache)'
+
 
 
 
