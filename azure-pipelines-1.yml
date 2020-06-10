@@ -18,4 +18,9 @@ steps:
   inputs:
     command: 'install'
     workingDir: './app_public'
+  displayName: 'Install Node_Modules'
+
+- script: |               
+    ng test 
+  displayName: 'Angular Test'
 
