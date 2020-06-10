@@ -15,17 +15,18 @@ steps:
   inputs:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
-  
+    
 - task: Npm@1
   displayName: Npm restore dependencies
   inputs:
     workingDir: './app_public'
     command: 'custom'    
     customCommand: 'install'
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: '$(Pipeline.Workspace)'
-    artifact: 'AngularNodeModules'
-    publishLocation: 'pipeline'
+
+- script: |
+    cd app_public
+    npm publish
+    displayName: 'NPM Publish'
+
 
 
