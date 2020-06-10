@@ -23,11 +23,21 @@ steps:
     command: 'custom'    
     customCommand: 'install'
 
+- script: |
+    cd app_public
+    npm run test
+  displayName: 'Test Angular'
+
+- task: PublishTestResults@2
+  inputs:    
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '*/testresults/*.xml'
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
-    testResultsFiles: './app_public/testresults/unit-test-result.xml'
+    testResultsFiles: '*.xml'
+    searchFolder: '/home/vsts/work/1/s/app_public/testresults'
 
 
 
