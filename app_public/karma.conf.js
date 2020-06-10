@@ -11,7 +11,8 @@ module.exports = function (config) {
       require('karma-jasmine-html-reporter'),
       require('karma-coverage-istanbul-reporter'),
       require('@angular-devkit/build-angular/plugins/karma'),
-      require('karma-junit-reporter')
+      require('karma-junit-reporter'),
+      require('karma-coverage')
     ],
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
@@ -22,7 +23,10 @@ module.exports = function (config) {
       fixWebpackSourcePaths: true
     },
     junitReporter: { outputDir: 'testresults/junit', outputFile: 'unit-test-result.xml', useBrowserName: false },
-    reporters: ['progress', 'kjhtml', 'junit'],
+    coverageReporter: {
+      type: 'cobertura', dir: 'testresults', subdir: 'coverage', file: 'code-coverage.xml'
+    },
+    reporters: ['progress', 'kjhtml', 'junit', 'coverage'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
