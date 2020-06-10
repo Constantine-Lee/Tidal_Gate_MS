@@ -16,24 +16,16 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
   
-- task: Cache@2
-  inputs:         
-    key: './app_public/package.json' 
-    path: $(npm_config_cache)
-  displayName: Cache npm
-
 - task: Npm@1
   displayName: Npm restore dependencies
   inputs:
     workingDir: './app_public'
     command: 'custom'    
-    customCommand: 'install --cache $(npm_config_cache)'
-
-- script: |      
-    cd app_public       
-    npm run test 
-  displayName: 'Angular Test'
-
-
+    customCommand: 'install'
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Pipeline.Workspace)'
+    artifact: 'AngularNodeModules'
+    publishLocation: 'pipeline'
 
 
