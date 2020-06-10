@@ -31,13 +31,13 @@ steps:
 - task: PublishTestResults@2
   inputs:    
     testResultsFormat: 'JUnit'
-    testResultsFiles: '*/testresults/*.xml'
+    testResultsFiles: '*/testresults/*/*.xml'
 
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'JUnit'
     testResultsFiles: '*.xml'
-    searchFolder: '/home/vsts/work/1/s/app_public/testresults'
+    searchFolder: '/home/vsts/work/1/s/app_public/testresults/junit'
 
 
 
