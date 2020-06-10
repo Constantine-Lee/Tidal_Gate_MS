@@ -31,13 +31,8 @@ steps:
 - task: PublishTestResults@2
   inputs:    
     testResultsFormat: 'JUnit'
-    testResultsFiles: '*/testresults/*.xml'
-
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '*.xml'
-    searchFolder: '/home/vsts/work/1/s/app_public/testresults'
+    testResultsFiles: 'app_public/testresults/junit/*.xml'
+'
 
 
 
