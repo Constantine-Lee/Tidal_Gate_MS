@@ -17,5 +17,5 @@ steps:
 - task: Npm@1
   inputs:
     command: 'install'
-    workingDir: '/app_public'
+    workingDir: './app_public'
 
