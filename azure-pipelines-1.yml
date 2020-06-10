@@ -33,6 +33,9 @@ steps:
     testResultsFormat: 'JUnit'
     testResultsFiles: 'app_public/testresults/junit/*.xml'
 
-
+- task: PublishCodeCoverageResults@1
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/app_public/testresults/coverage/code-coverage.xml'
 
 
