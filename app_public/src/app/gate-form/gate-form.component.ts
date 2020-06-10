@@ -32,7 +32,14 @@ export class GateFormComponent implements OnInit {
   loading = false;
   error: string = 'Unknown Error Occurs... Operation Failed.';
 
-  constructor(private router: Router, service: GateQuestionService, private qcs: QuestionControlService, private gateService: GateService, private authenticationService: AuthenticationService) {
+  constructor
+    (
+      private router: Router, 
+      service: GateQuestionService,
+      private qcs: QuestionControlService,
+      private gateService: GateService,
+      private authenticationService: AuthenticationService
+    ) {
     this.questions = service.getGates();
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
@@ -50,8 +57,8 @@ export class GateFormComponent implements OnInit {
     this.loading = true;
     const formData = new FormData();
     const formValue = this.form.getRawValue();
-        
-    this.questions.map(question => question.value = formValue[question.key]);    
+
+    this.questions.map(question => question.value = formValue[question.key]);
     formData.append('name', formValue['Gate Name']);
     formData.append('GateID', formValue['Gate_ID']);
     formData.append('question', JSON.stringify(this.questions));
@@ -64,7 +71,7 @@ export class GateFormComponent implements OnInit {
         if (err != undefined) {
           this.error = err.error;
         }
-       
+
         $('#errorModal').modal('show');
       });
   }
@@ -89,7 +96,7 @@ export class GateFormComponent implements OnInit {
     }
   }
 
-  get isAdmin() {    
+  get isAdmin() {
     return this.currentUser && this.currentUser.role === Role.Admin;
   }
 }

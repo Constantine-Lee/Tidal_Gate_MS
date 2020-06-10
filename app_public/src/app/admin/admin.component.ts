@@ -30,9 +30,8 @@ export class AdminComponent implements OnInit {
     receive: boolean;
 
     constructor(private userService: UserService,
-        private formBuilder: FormBuilder,
-        private router: Router,
-        private logger: NGXLogger) { }
+                private formBuilder: FormBuilder,                
+                private logger: NGXLogger) { }
 
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }

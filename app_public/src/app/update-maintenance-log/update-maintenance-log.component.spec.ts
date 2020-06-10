@@ -4,6 +4,10 @@ import { UpdateMaintenanceLogComponent } from './update-maintenance-log.componen
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
+import { LoggerModule, NGXLogger, LoggerConfig } from 'ngx-logger';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { QuestionControlService } from '../question/questionControl.service';
+import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 
 describe('UpdateMaintenanceLogComponent', () => {
   let component: UpdateMaintenanceLogComponent;
@@ -11,8 +15,9 @@ describe('UpdateMaintenanceLogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientModule, AppRoutingModule],
-      declarations: [ UpdateMaintenanceLogComponent ]
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, AppRoutingModule, LoggerModule],
+      declarations: [ UpdateMaintenanceLogComponent ],
+      providers: [NGXLogger, LoggerConfig, QuestionControlService, MaintenanceLogService]
     })
     .compileComponents();
   }));
@@ -23,9 +28,9 @@ describe('UpdateMaintenanceLogComponent', () => {
     fixture.detectChanges();
   });
 
-  /*
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
+  
 });

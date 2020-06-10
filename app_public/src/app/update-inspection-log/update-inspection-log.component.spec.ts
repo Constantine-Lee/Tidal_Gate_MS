@@ -2,9 +2,10 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UpdateInspectionLogComponent } from './update-inspection-log.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppRoutingModule } from '../app-routing.module';
 import { Router } from '@angular/router';
+import { LoggerModule, NGXLogger, LoggerConfig } from 'ngx-logger';
 
 describe('UpdateInspectionLogComponent', () => {
   let component: UpdateInspectionLogComponent;
@@ -12,9 +13,9 @@ describe('UpdateInspectionLogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientModule, AppRoutingModule],
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, AppRoutingModule, LoggerModule],
       declarations: [ UpdateInspectionLogComponent ],
-      providers: [Router]
+      providers: [NGXLogger, LoggerConfig]
     })
     .compileComponents();
   }));
@@ -25,9 +26,9 @@ describe('UpdateInspectionLogComponent', () => {
     fixture.detectChanges();
   });
 
-  /*
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
+  
 });

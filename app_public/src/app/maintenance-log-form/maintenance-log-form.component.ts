@@ -27,12 +27,11 @@ export class MaintenanceLogFormComponent implements OnInit {
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private service: MaintenanceLogQuestionService,
-    private qcs: QuestionControlService,
-    private maintenanceLogService: MaintenanceLogService,
-    private router: Router,
-    private dialogService: DialogService,
-    private logger: NGXLogger) {
-  }
+              private qcs: QuestionControlService,
+              private maintenanceLogService: MaintenanceLogService,
+              private router: Router,
+              //private dialogService: DialogService,
+              private logger: NGXLogger) {}
 
   //get questions and transform to formGroup, mark the form as receieved
   ngOnInit(): void {

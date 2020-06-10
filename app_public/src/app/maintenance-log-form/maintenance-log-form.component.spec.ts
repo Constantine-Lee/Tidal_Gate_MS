@@ -2,9 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MaintenanceLogFormComponent } from './maintenance-log-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppRoutingModule } from '../app-routing.module';
 import { LoggerModule, NGXLogger, LoggerConfig } from 'ngx-logger';
+import { MaintenanceLogQuestionService } from '../question/maintenanceLogQuestion.service';
+import { QuestionControlService } from '../question/questionControl.service';
+import { MaintenanceLogService } from '../_services/maintenanceLog.service';
+import { Router } from '@angular/router';
+import { FormQuestionComponent } from '../question-form/form-question.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 describe('MaintenanceLogFormComponent', () => {
   let component: MaintenanceLogFormComponent;
@@ -12,11 +19,25 @@ describe('MaintenanceLogFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientModule, AppRoutingModule, LoggerModule],
-      declarations: [ MaintenanceLogFormComponent ],
-      providers: [LoggerConfig]
+      imports: [        
+        BrowserAnimationsModule,
+        HttpClientTestingModule,
+        AppRoutingModule,
+        LoggerModule,
+        FormsModule, 
+        ReactiveFormsModule, 
+        CKEditorModule     
+      ],
+      declarations: [FormQuestionComponent, MaintenanceLogFormComponent],
+      providers: [
+        MaintenanceLogQuestionService,
+        QuestionControlService,
+        MaintenanceLogService,        
+        NGXLogger,
+        LoggerConfig
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -25,9 +46,10 @@ describe('MaintenanceLogFormComponent', () => {
     fixture.detectChanges();
   });
 
-  /*
+
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
+
 });

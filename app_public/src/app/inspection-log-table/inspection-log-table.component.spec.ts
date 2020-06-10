@@ -2,7 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InspectionLogTableComponent } from './inspection-log-table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import { NGXLogger, LoggerConfig, LoggerModule } from 'ngx-logger';
+import { FormsModule } from '@angular/forms';
 
 describe('InspectionLogTableComponent', () => {
   let component: InspectionLogTableComponent;
@@ -10,8 +12,9 @@ describe('InspectionLogTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientModule],
-      declarations: [ InspectionLogTableComponent ]
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, LoggerModule, FormsModule],
+      declarations: [ InspectionLogTableComponent ],
+      providers: [NGXLogger, LoggerConfig ]
     })
     .compileComponents();
   }));
@@ -22,9 +25,9 @@ describe('InspectionLogTableComponent', () => {
     fixture.detectChanges();
   });
 
-  /*
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
+  
 });

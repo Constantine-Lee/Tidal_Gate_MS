@@ -13,7 +13,7 @@ describe('FormQuestionComponent', () => {
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule, CKEditorModule, AppModule],
       declarations: [ FormQuestionComponent ],
-     
+           
     })
     .compileComponents();
   }));

@@ -33,6 +33,7 @@ export class UpdateInspectionLogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.logger.info("Lifecycle: ngOnInit(), Update Inspection Log");
     this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
         this.getInspectionLogByID(params.get('inspectionLogID')))
@@ -40,10 +41,11 @@ export class UpdateInspectionLogComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    console.log("Update Component Destroy");
+    this.logger.info("Lifecycle: ngOnDestroy(), Update Inspection Log");
   }
 
   async getInspectionLogByID(id: string) {
+    this.logger.info("Function: getInspectionLogByID(id: string), Update Inspection Log");
     await this.inspectionLogService.getInspectionLogByID(id)
       .then(inspectionLog => this.inspectionLog = inspectionLog);
     this.questions = JSON.parse(this.inspectionLog.question);
@@ -53,6 +55,7 @@ export class UpdateInspectionLogComponent implements OnInit {
   }
 
   refreshPage(){
+    
     this.ngOnInit();
   }
 

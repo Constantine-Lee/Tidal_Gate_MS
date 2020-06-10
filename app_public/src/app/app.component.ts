@@ -9,11 +9,9 @@ import { filter, map } from 'rxjs/operators';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-
 })
 export class AppComponent{
-  currentUser: User;
-  title = 'Tidal Gatment System';
+  currentUser: User;  
 
   constructor(private authenticationService: AuthenticationService,
               private titleService: Title,

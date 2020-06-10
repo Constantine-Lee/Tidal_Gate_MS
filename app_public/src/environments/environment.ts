@@ -8,7 +8,8 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
   logLevel: NgxLoggerLevel.INFO,
-  serverLogLevel: NgxLoggerLevel.OFF
+  serverLogLevel: NgxLoggerLevel.OFF,
+  testBrowser: 'ChromeHeadless'
 };
 
 /*

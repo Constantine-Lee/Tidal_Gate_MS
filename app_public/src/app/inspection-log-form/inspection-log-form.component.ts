@@ -25,8 +25,11 @@ export class InspectionLogFormComponent implements OnInit {
   loading = false;
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
-  constructor(private service: InspectionLogQuestionService, private qcs: QuestionControlService, private inspectionLogService: InspectionLogService, private router: Router) {
-  }
+  constructor(
+    private service: InspectionLogQuestionService,
+    private qcs: QuestionControlService,
+    private inspectionLogService: InspectionLogService,
+    private router: Router) {}
 
   ngOnInit(): void {
     this.questions = this.service.getQuestions();

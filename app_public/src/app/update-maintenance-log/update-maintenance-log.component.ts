@@ -45,8 +45,7 @@ export class UpdateMaintenanceLogComponent implements OnInit {
 
   async getMaintenanceLogByID(id: string) {
     await this.maintenanceLogService.getMaintenanceLogByID(id)
-      .then(maintenanceLog => this.maintenanceLog = maintenanceLog);
-    console.log(this.maintenanceLog.question);
+      .then(maintenanceLog => this.maintenanceLog = maintenanceLog);    
     this.questions = JSON.parse(this.maintenanceLog.question);
 
     /*

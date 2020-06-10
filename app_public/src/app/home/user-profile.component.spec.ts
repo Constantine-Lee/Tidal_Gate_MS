@@ -3,6 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserProfileComponent } from './user.profile.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 
 describe('HomeComponent', () => {
   let component: UserProfileComponent;
@@ -10,7 +11,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientModule],
+      imports: [BrowserAnimationsModule, HttpClientTestingModule],
       declarations: [ UserProfileComponent ]
     })
     .compileComponents();

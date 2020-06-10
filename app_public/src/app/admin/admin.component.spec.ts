@@ -1,10 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AdminComponent } from './admin.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from '../app-routing.module';
+import { LoggerModule, NGXLogger, LoggerConfig } from 'ngx-logger';
+import { UserService } from '../_services/user.service';
 
 describe('AdminComponent', () => {
   let component: AdminComponent;
@@ -12,9 +15,15 @@ describe('AdminComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule],
+      imports: [HttpClientTestingModule,
+                FormsModule, 
+                ReactiveFormsModule, 
+                BrowserAnimationsModule, 
+                AppRoutingModule,
+                LoggerModule
+              ],
       declarations: [AdminComponent],
-      providers: [FormBuilder]
+      providers: [FormBuilder, NGXLogger, LoggerConfig]
     })
       .compileComponents();
   }));
@@ -24,10 +33,10 @@ describe('AdminComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
-  /*
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
+  
+
 });

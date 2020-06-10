@@ -2,8 +2,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MaintenanceLogTableComponent } from './maintenance-log-table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import { NGXLogger, LoggerModule, NGXMapperService, LoggerConfig } from 'ngx-logger';
+import { FormsModule } from '@angular/forms';
 
 describe('MaintenanceLogTableComponent', () => {
   let component: MaintenanceLogTableComponent;
@@ -11,9 +12,9 @@ describe('MaintenanceLogTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientModule, LoggerModule],
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, LoggerModule, FormsModule],
       declarations: [ MaintenanceLogTableComponent ], 
-      providers: [LoggerConfig,NGXMapperService,]
+      providers: [LoggerConfig, NGXLogger]
     })
     .compileComponents();
   }));
@@ -24,9 +25,9 @@ describe('MaintenanceLogTableComponent', () => {
     fixture.detectChanges();
   });
 
-  /*
+  
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  */
+  
 });
