@@ -23,10 +23,11 @@ steps:
     command: 'custom'    
     customCommand: 'install'
 
-- script: |
-    cd app_public
-    npm publish
-  displayName: 'NPM Publish'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: './app_public/testresults/unit-test-result.xml'
 
 
 
