@@ -26,7 +26,7 @@ steps:
 - script: |
     cd app_public
     npm publish
-    displayName: 'NPM Publish'
+  displayName: 'NPM Publish'
 
 
 
