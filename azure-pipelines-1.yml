@@ -22,6 +22,6 @@ steps:
 
 - script: |         
     cd app_public      
-    run-script test
+    npm run test
   displayName: 'Angular Test'
 
