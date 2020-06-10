@@ -13,8 +13,8 @@ steps:
 
 - task: Cache@2
   inputs:    
-    key: '**/package-lock.json, !**/node_modules/**/package-lock.json'
-    path: '**/node_modules, !**/node_modules/**/node_modules'
+    key: '*/package-lock.json, !*/node_modules/**/package-lock.json'
+    path: '*/node_modules, !*/node_modules/**/node_modules'
     
 - task: NodeTool@0
   inputs:
@@ -28,11 +28,6 @@ steps:
   displayName: 'Install Node_Modules'
 
 - script: |         
-    workingDirectory:      
+    workingDirectory: './app_public'     
     npm run test
   displayName: 'Angular Test'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: $(System.DefaultWorkingDirectory)/app_public/node_modules
-    artifactName: AngularNodeModules
