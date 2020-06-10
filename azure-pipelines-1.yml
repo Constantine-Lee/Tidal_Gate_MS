@@ -12,7 +12,7 @@ pool:
 steps:
 
 - task: Cache@2
-  inputs:
+  inputs:    
     key: '**/package-lock.json, !**/node_modules/**/package-lock.json'
     path: '**/node_modules, !**/node_modules/**/node_modules'
     
@@ -32,3 +32,7 @@ steps:
     npm run test
   displayName: 'Angular Test'
 
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)/app_public/node_modules
+    artifactName: AngularNodeModules
