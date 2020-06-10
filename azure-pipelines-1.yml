@@ -32,7 +32,7 @@ steps:
   inputs:    
     testResultsFormat: 'JUnit'
     testResultsFiles: 'app_public/testresults/junit/*.xml'
-'
+
 
 
 
