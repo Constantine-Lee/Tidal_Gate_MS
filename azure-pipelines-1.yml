@@ -29,6 +29,10 @@ steps:
     command: 'custom'    
     customCommand: 'install --cache $(npm_config_cache)'
 
+- script: |      
+    cd app_public       
+    npm run test 
+  displayName: 'Angular Test'
 
 
 
