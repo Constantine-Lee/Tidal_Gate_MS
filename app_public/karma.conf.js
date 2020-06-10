@@ -17,11 +17,13 @@ module.exports = function (config) {
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
+    
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, './coverage/compiler-playground'),
-      reports: ['html', 'lcovonly', 'text-summary'],
+      reports: ['html', 'lcovonly', 'text-summary'],      
       fixWebpackSourcePaths: true
     },
+    
     junitReporter: { outputDir: 'testresults/junit', outputFile: 'unit-test-result.xml', useBrowserName: false },
     coverageReporter: {
       type: 'cobertura', dir: 'testresults', subdir: 'coverage', file: 'code-coverage.xml'
