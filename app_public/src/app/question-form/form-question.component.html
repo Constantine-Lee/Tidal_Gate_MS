@@ -43,7 +43,7 @@
         <!--RTX-->
         <div class="container pr-4 pl-3 mt-2" *ngSwitchCase="'RTX'">
             <ckeditor #editor [editor]="Editor" class=" bg-light" [formControlName]="question.key" [config]="config"
-                (change)="onChange($event)"></ckeditor>
+                ></ckeditor>
         </div>
 
         <!--FullTextBox-->

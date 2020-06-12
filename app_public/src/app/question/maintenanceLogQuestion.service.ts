@@ -613,8 +613,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'AT_Maintenance', label: 'Maintenance', value: false },
                     { key: 'AT_Visit', label: 'Visit', value: false },
                     { key: 'AT_Inspection', label: 'Inspection', value: false },
-                    { key: 'AT_Commisioning', label: 'Commisioning', value: false },
-                    { key: 'AT_No Action', label: 'No Action', value: false }
+                    { key: 'AT_Commisioning', label: 'Commisioning', value: false }
                 ],
                 order: thirteenth
             }),

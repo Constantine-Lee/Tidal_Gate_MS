@@ -17,18 +17,18 @@ export class QuestionControlService {
     //console.log(questions);
 
     questions.forEach(question => {
-      
+
       // checkbox control
       if (question.controlType == 'checkbox') {
-        let fG = question.checkboxes.map((checkbox) => 
-        new FormControl(checkbox.value)
-      )     
-        group[question.key] = new FormArray(fG,this.minSelectedCheckboxes(1));
+        let fG = question.checkboxes.map((checkbox) =>
+          new FormControl(checkbox.value)
+        )
+        group[question.key] = new FormArray(fG, this.minSelectedCheckboxes(1));
       }
       // other control
       else {
         group[question.key] = question.required ? new FormControl(question.value || '', Validators.required)
-        : new FormControl(question.value || '');
+          : new FormControl(question.value || '');
       };
 
     });
@@ -44,11 +44,11 @@ export class QuestionControlService {
         .map(control => control.value)
         // total up the number of checked checkboxes
         .reduce((prev, next) => next ? prev + next : prev, 0);
-  
+
       // if the total is not greater than the minimum, return the error message
       return totalSelected >= min ? null : { required: true };
     };
-  
+
     return validator;
   }
 }
