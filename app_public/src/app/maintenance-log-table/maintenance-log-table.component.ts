@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { generate } from 'rxjs';
 import { fadeInAnimation } from '../_animations';
 import { NGXLogger } from 'ngx-logger';
+declare var $: any;
 
 @Component({
   selector: 'app-maintenance-log-table',
@@ -30,6 +31,8 @@ export class MaintenanceLogTableComponent implements OnInit {
 
   currentViewLog: MaintenanceLog;
   receive: boolean;
+
+  _idToDelete: number;
 
   constructor(private maintenanceLogService: MaintenanceLogService,
     private logger: NGXLogger) { }
@@ -140,14 +143,22 @@ export class MaintenanceLogTableComponent implements OnInit {
     this.generatePager(arrSortedDate, 1);
   }
 
-  delete(id: number): void {
-    this.logger.log("Function: delete(id: number)");
+  showConfirmationModal(id: number) {
+    this.logger.log("Function: showConfirmationModal(id: string)");
+    this.logger.info("id: string" + id);
+
+    this._idToDelete = id;
+    $('#confirmationModal').modal('show');
+  }
+
+  delete(): void {
+    this.logger.log("Function: delete()");
 
     this.logger.info("this.maintenanceLogs before Filter: " + this.maintenanceLogs);
-    this.maintenanceLogs = this.maintenanceLogs.filter(l => l._id !== id);
+    this.maintenanceLogs = this.maintenanceLogs.filter(l => l._id !== this._idToDelete);
     this.logger.info("this.maintenanceLogs after Filter: " + this.maintenanceLogs);
 
     this.setPage(1);
-    this.maintenanceLogService.deleteMaintenanceLog(id).subscribe();
+    this.maintenanceLogService.deleteMaintenanceLog(this._idToDelete).subscribe();
   }
 }

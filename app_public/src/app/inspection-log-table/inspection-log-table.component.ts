@@ -4,6 +4,7 @@ import { InspectionLog } from '../_models/inspectionLog';
 import paginate = require('jw-paginate');
 import { fadeInAnimation } from '../_animations';
 import { NGXLogger } from 'ngx-logger';
+declare var $: any;
 
 @Component({
   selector: 'app-inspection-log-table',
@@ -26,6 +27,8 @@ export class InspectionLogTableComponent implements OnInit {
   dateIsAscending: boolean = true;
   pager: any = {};
   receive: boolean;
+
+  _idToDelete: number;
 
   constructor(private insepctionLogService: InspectionLogService,
     private logger: NGXLogger) {}
@@ -110,9 +113,18 @@ export class InspectionLogTableComponent implements OnInit {
     });
   }
 
-  delete(id: number): void {
-    this.inspectionLogs = this.inspectionLogs.filter(l => l._id !== id);
+  showConfirmationModal(id: number) {
+    this.logger.log("Function: showConfirmationModal(id: string)");
+    this.logger.info("id: string" + id);
+
+    this._idToDelete = id;
+    $('#confirmationModal').modal('show');
+  }
+
+  delete(): void {
+    this.logger.log("Function: delete()");
+    this.inspectionLogs = this.inspectionLogs.filter(l => l._id !== this._idToDelete);
     this.setPage(1);
-    this.insepctionLogService.deleteInspectionLog(id).subscribe();
+    this.insepctionLogService.deleteInspectionLog(this._idToDelete).subscribe();
   }
 }

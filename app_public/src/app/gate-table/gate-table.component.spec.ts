@@ -4,6 +4,7 @@ import { GateTableComponent } from './gate-table.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
+import { NGXLogger, LoggerModule, LoggerConfig } from 'ngx-logger';
 
 describe('GateTableComponent', () => {
   let component: GateTableComponent;
@@ -11,8 +12,9 @@ describe('GateTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientTestingModule, FormsModule],
-      declarations: [ GateTableComponent ]
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, FormsModule, LoggerModule],
+      declarations: [ GateTableComponent],
+      providers: [LoggerConfig]
     })
     .compileComponents();
   }));
