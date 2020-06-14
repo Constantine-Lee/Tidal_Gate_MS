@@ -29,6 +29,8 @@ export class AdminComponent implements OnInit {
 
     receive: boolean;
 
+    _idToDelete: number;
+    
     constructor(private userService: UserService,
                 private formBuilder: FormBuilder,                
                 private logger: NGXLogger) { }
@@ -62,10 +64,19 @@ export class AdminComponent implements OnInit {
         }       
     }
 
-    delete(id: number): void {
-        this.users = this.users.filter(l => l._id !== id);
-        this.listedUsers = this.listedUsers.filter(user => user._id !== id);
-        this.userService.deleteUser(id).subscribe();
+    showConfirmationModal(id: number) {
+        this.logger.log("Function: showConfirmationModal(id: string)");
+        this.logger.info("id: string" + id);
+    
+        this._idToDelete = id;
+        $('#confirmationModal').modal('show');
+      }
+
+    delete(): void {
+        this.logger.log("Function: delete()");
+        this.users = this.users.filter(l => l._id !== this._idToDelete);
+        this.listedUsers = this.listedUsers.filter(user => user._id !== this._idToDelete);
+        this.userService.deleteUser(this._idToDelete).subscribe();
     }
 
     onSubmit() {
