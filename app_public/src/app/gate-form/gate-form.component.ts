@@ -10,6 +10,7 @@ import { User } from '../_models/user';
 import { Role } from '../_models/role';
 import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
+import { NGXLogger } from 'ngx-logger';
 declare var $: any;
 
 @Component({
@@ -30,7 +31,7 @@ export class GateFormComponent implements OnInit {
   currentUser: User;
   receive: boolean;
   loading = false;
-  error: string = 'Unknown Error Occurs... Operation Failed.';
+  errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor
     (
@@ -38,7 +39,8 @@ export class GateFormComponent implements OnInit {
       service: GateQuestionService,
       private qcs: QuestionControlService,
       private gateService: GateService,
-      private authenticationService: AuthenticationService
+      private authenticationService: AuthenticationService,
+      private logger: NGXLogger
     ) {
     this.questions = service.getGates();
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
@@ -50,10 +52,14 @@ export class GateFormComponent implements OnInit {
   }
 
   onSubmit() {
+    this.logger.log("Function: onSubmit()");
+    
     // stop here if form is invalid
     if (this.form.invalid) {
+      this.errorString = 'Please fill in all the required fields.';
+      $('#errorModal').modal('show');
       return;
-    }
+    };
     this.loading = true;
     const formData = new FormData();
     const formValue = this.form.getRawValue();
@@ -69,9 +75,12 @@ export class GateFormComponent implements OnInit {
         this.loading = false;
         console.log(err);
         if (err != undefined) {
-          this.error = err.error;
+          this.errorString = err.error;
         }
-
+        else {
+          this.errorString = 'Unknown Error Occurs... Operation Failed.';
+        }
+        this.loading = false;
         $('#errorModal').modal('show');
       });
   }
