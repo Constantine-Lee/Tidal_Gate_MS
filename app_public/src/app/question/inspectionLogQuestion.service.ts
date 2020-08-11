@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { DropdownQuestion } from './questionDropdown';
 import { QuestionBase } from './questionBase';
-import { TextboxQuestion } from './questionTextbox';
-import { GroupLabelQuestion } from './questionGroupLabel';
+import { TextboxQuestion, GroupLabelQuestion, DateQuestion } from './questionTextbox';
+
 import { GateService } from '../_services/gate.service';
+
 
 const zero = 0; 
 const first = 1;
@@ -73,15 +74,13 @@ export class InspectionLogQuestionService {
         let questions: QuestionBase<string>[] = [
             new TextboxQuestion({
                 key: 'Nama Penjaga',
-                label: 'Nama Penjaga',
-                value: '',
+                label: 'Nama Penjaga',                
                 required: true,
                 order: zero
             }),
             new TextboxQuestion({
                 key: 'No. Rujukan',
-                label: 'No. Rujukan',
-                value: '',
+                label: 'No. Rujukan',                
                 required: true,
                 order: zero
             }),
@@ -99,7 +98,7 @@ export class InspectionLogQuestionService {
                 required: false,
                 order: zero
             }),
-            new TextboxQuestion({
+            new DateQuestion({
                 key: 'Tarikh',
                 label: 'Tarikh',
                 value: this.getTodayDate(),
@@ -109,8 +108,7 @@ export class InspectionLogQuestionService {
             }),
             new GroupLabelQuestion({
                 key: '1. Struktur Pintu',
-                label: '1. Struktur Pintu',
-                value: '',
+                label: '1. Struktur Pintu',                
                 required: false,
                 order: first
             }),
@@ -120,7 +118,7 @@ export class InspectionLogQuestionService {
                 options: [
                     { key: 'Ya', value: 'Ya' },
                     { key: 'Tidak', value: 'Tidak' }
-                ],
+                ],                
                 order: first
             }),
             new DropdownQuestion({
@@ -186,8 +184,7 @@ export class InspectionLogQuestionService {
             }),
             new GroupLabelQuestion({
                 key: '2. Badan Pintu Air',
-                label: '2. Badan Pintu Air',
-                value: '',
+                label: '2. Badan Pintu Air',                
                 required: false,
                 order: second
             }),
@@ -245,8 +242,7 @@ export class InspectionLogQuestionService {
             }),
             new GroupLabelQuestion({
                 key: '3. Mekanisma Pengangkut',
-                label: '3. Mekanisma Pengangkut',
-                value: '',
+                label: '3. Mekanisma Pengangkut',                
                 required: false,
                 order: third
             }),            
@@ -358,8 +354,7 @@ export class InspectionLogQuestionService {
             }),
             new GroupLabelQuestion({
                 key: '4. Umum',
-                label: '4. Umum',
-                value: '',
+                label: '4. Umum',                
                 required: false,
                 order: fourth
             }),
@@ -410,15 +405,13 @@ export class InspectionLogQuestionService {
             }),
             new TextboxQuestion({
                 key: 'Cadangan (Umum)',
-                label: 'Cadangan (Umum)',
-                value: '',
+                label: 'Cadangan (Umum)',                
                 required: false,
                 order: fourth
             }),
             new GroupLabelQuestion({
                 key: '5. Rail Pintu dan Lekatnya',
-                label: '5. Rail Pintu dan Lekatnya',
-                value: '',
+                label: '5. Rail Pintu dan Lekatnya',               
                 required: false,
                 order: fifth
             }),
@@ -460,15 +453,13 @@ export class InspectionLogQuestionService {
             }),
             new TextboxQuestion({
                 key: 'Cadangan (Rail Pintu dan Lekatnya)',
-                label: 'Cadangan (Rail Pintu dan Lekatnya)',
-                value: '',
+                label: 'Cadangan (Rail Pintu dan Lekatnya)',                
                 required: false,
                 order: fifth
             }),
             new GroupLabelQuestion({
                 key: '6. Fungsi Air Pintu',
-                label: '6. Fungsi Air Pintu',
-                value: '',
+                label: '6. Fungsi Air Pintu',                
                 required: false,
                 order: sixth
             }),  
@@ -526,8 +517,7 @@ export class InspectionLogQuestionService {
             }),
             new GroupLabelQuestion({
                 key: '7. Miscellaneous ',
-                label: '7. Miscellaneous ',
-                value: '',
+                label: '7. Miscellaneous ',                
                 required: false,
                 order: seventh
             }),   
@@ -567,8 +557,7 @@ export class InspectionLogQuestionService {
             }),
             new GroupLabelQuestion({
                 key: 'TCG SCADA and Automation System Inspection Report',
-                label: 'TCG SCADA and Automation System Inspection Report',
-                value: '',
+                label: 'TCG SCADA and Automation System Inspection Report',                
                 required: false,
                 order: eighth
             }),   

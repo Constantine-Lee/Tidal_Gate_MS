@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 
 import { QuestionBase } from './questionBase';
-import { TextboxQuestion } from './questionTextbox';
-import { GroupLabelQuestion } from './questionGroupLabel';
+import { TextboxQuestion, GroupLabelQuestion } from './questionTextbox';
+
 import { FullTextboxQuestion } from './fullQuestionTextbox';
 
 const zero = 0; 

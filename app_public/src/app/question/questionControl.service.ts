@@ -20,15 +20,17 @@ export class QuestionControlService {
 
       // checkbox control
       if (question.controlType == 'checkbox') {
-        let fG = question.checkboxes.map((checkbox) =>
+
+        let fG = (<CheckBoxQuestion>question).checkboxes.map((checkbox) =>
           new FormControl(checkbox.value)
         )
         group[question.key] = new FormArray(fG, this.minSelectedCheckboxes(1));
       }
       // other control
       else {
-        group[question.key] = question.required ? new FormControl(question.value || '', Validators.required)
-          : new FormControl(question.value || '');
+        group[question.key] = question.required ?         
+                              new FormControl(question.value || '', Validators.required) : 
+                              new FormControl(question.value || '');
       };
 
     });

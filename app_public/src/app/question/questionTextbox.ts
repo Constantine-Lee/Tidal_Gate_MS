@@ -2,10 +2,24 @@ import { QuestionBase } from './questionBase';
 
 export class TextboxQuestion extends QuestionBase<string> {
   controlType = 'textbox';
-  type: string;
 
-  constructor(options: {} = {}) {
+  constructor(options: {}) {
     super(options);
-    this.type = options['type'] || '';
+  }
+}
+
+export class GroupLabelQuestion extends QuestionBase<string> {
+  controlType = 'groupLabel';  
+
+  constructor(options: {}) {
+    super(options);    
+  }
+}
+
+export class DateQuestion extends QuestionBase<string> {
+  controlType = 'date';  
+
+  constructor(options: {}) {
+    super(options);    
   }
 }
