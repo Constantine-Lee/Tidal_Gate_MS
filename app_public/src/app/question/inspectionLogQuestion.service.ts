@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { DropdownQuestion } from './questionDropdown';
-import { QuestionBase } from './questionBase';
-import { TextboxQuestion, GroupLabelQuestion, DateQuestion } from './questionTextbox';
+import { QuestionBase, TextboxQuestion, CategoryLabel, DateQuestion, DropdownQuestion } from './questionType';
 
 import { GateService } from '../_services/gate.service';
 
@@ -101,12 +99,11 @@ export class InspectionLogQuestionService {
             new DateQuestion({
                 key: 'Tarikh',
                 label: 'Tarikh',
-                value: this.getTodayDate(),
-                type: 'Date',
+                value: this.getTodayDate(),                
                 required: true,
                 order: zero
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '1. Struktur Pintu',
                 label: '1. Struktur Pintu',                
                 required: false,
@@ -182,7 +179,7 @@ export class InspectionLogQuestionService {
                 required: false,
                 order: first
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '2. Badan Pintu Air',
                 label: '2. Badan Pintu Air',                
                 required: false,
@@ -240,7 +237,7 @@ export class InspectionLogQuestionService {
                 required: false,
                 order: second
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '3. Mekanisma Pengangkut',
                 label: '3. Mekanisma Pengangkut',                
                 required: false,
@@ -352,7 +349,7 @@ export class InspectionLogQuestionService {
                 required: false,
                 order: third
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '4. Umum',
                 label: '4. Umum',                
                 required: false,
@@ -409,7 +406,7 @@ export class InspectionLogQuestionService {
                 required: false,
                 order: fourth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '5. Rail Pintu dan Lekatnya',
                 label: '5. Rail Pintu dan Lekatnya',               
                 required: false,
@@ -457,7 +454,7 @@ export class InspectionLogQuestionService {
                 required: false,
                 order: fifth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '6. Fungsi Air Pintu',
                 label: '6. Fungsi Air Pintu',                
                 required: false,
@@ -515,7 +512,7 @@ export class InspectionLogQuestionService {
                 required: false,
                 order: sixth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '7. Miscellaneous ',
                 label: '7. Miscellaneous ',                
                 required: false,
@@ -555,7 +552,7 @@ export class InspectionLogQuestionService {
                 ],
                 order: seventh
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TCG SCADA and Automation System Inspection Report',
                 label: 'TCG SCADA and Automation System Inspection Report',                
                 required: false,

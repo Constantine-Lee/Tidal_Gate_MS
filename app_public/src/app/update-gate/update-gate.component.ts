@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
 import { Gate } from '../_models/gate';
 import { GateService } from '../_services/gate.service';
@@ -11,6 +10,7 @@ import { Role } from '../_models/role';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { fadeInAnimation } from '../_animations';
+import { QuestionBase } from '../question/questionType';
 declare var $: any;
 
 @Component({

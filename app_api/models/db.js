@@ -67,3 +67,4 @@ require('./user');
 require('./inspectionLog');
 require('./maintenanceLog');
 require('./counter');
+require('./testForm');

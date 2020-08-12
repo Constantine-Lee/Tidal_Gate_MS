@@ -84,6 +84,10 @@ router
     .post(ctrlInspect.addInspectionLog)
 
 router
+    .route('/form/inspectionLog')
+    .get(ctrlInspect.getForm)
+
+router
     .route('/maintenanceLogs/:maintenanceLogID')
     .get(ctrlMaintain.getMaintenanceLog)
     .put(ctrlMaintain.editMaintenanceLog)

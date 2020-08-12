@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
 
-import { DropdownQuestion } from './questionDropdown';
-import { QuestionBase } from './questionBase';
-import { TextboxQuestion, GroupLabelQuestion, DateQuestion } from './questionTextbox';
+import { QuestionBase, TextboxQuestion, CategoryLabel, DateQuestion, DropdownQuestion, RTXQuestion, CheckBoxQuestion } from './questionType';
 
 import { GateService } from '../_services/gate.service';
-import { CheckBoxQuestion } from './questionCheckBox';
-import { RTXQuestion } from './questionRTX';
-
 
 const zero = 0;
 const first = 1;
@@ -93,7 +88,7 @@ export class MaintenanceLogQuestionService {
         this.getGates();
 
         let questions: QuestionBase<string>[] = [
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: '0.0 GATE INFORMATION',
                 label: '0.0 GATE INFORMATION',
                 value: '',
@@ -115,7 +110,7 @@ export class MaintenanceLogQuestionService {
                 type: 'Date',
                 order: zero
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 1.0 : POWER SUPPLY (415Vac, 3 Phase) TESTING',
                 label: 'TESTING 1.0 : POWER SUPPLY (415Vac, 3 Phase) TESTING',
                 value: '',
@@ -167,7 +162,7 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: first
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 1.1 : POWER SUPPLY (240Vac, 1 Phase) TESTING',
                 label: 'TESTING 1.1 : POWER SUPPLY (240Vac, 1 Phase) TESTING',
                 value: '',
@@ -209,7 +204,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: second
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 1.2 : SOLAR POWER SUPPLY & SOLAR POWER CHARGING TESTING',
                 label: 'TESTING 1.2 : SOLAR POWER SUPPLY & SOLAR POWER CHARGING TESTING',
                 value: '',
@@ -250,7 +245,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: third
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 2.0 : SECONDARY POWER BACK UP',
                 label: 'TESTING 2.0 : SECONDARY POWER BACK UP',
                 value: '',
@@ -294,7 +289,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: fourth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',
                 label: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',
                 value: '',
@@ -351,7 +346,7 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: fifth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',
                 label: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',
                 value: '',
@@ -392,7 +387,7 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: sixth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',
                 label: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',
                 value: '',
@@ -429,7 +424,7 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: seventh
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',
                 label: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',
                 value: '',
@@ -473,7 +468,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: eighth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 7.0 : ACTUATOR FUNCTION VERIFICATION',
                 label: 'TESTING 7.0 : ACTUATOR FUNCTION VERIFICATION',
                 value: '',
@@ -517,7 +512,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: ninth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 8.0 : FLOOD SURVEILLANCE VERIFICATION',
                 label: 'TESTING 8.0 : FLOOD SURVEILLANCE VERIFICATION',
                 value: '',
@@ -544,7 +539,7 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: tenth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',
                 label: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',
                 value: '',
@@ -561,7 +556,7 @@ export class MaintenanceLogQuestionService {
                 ],
                 order: eleventh
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',
                 label: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',
                 value: '',
@@ -599,7 +594,7 @@ export class MaintenanceLogQuestionService {
                 order: twelfth
             }),
 
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'SUMMARY',
                 label: 'SUMMARY',
                 value: '',

@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { QuestionBase } from './questionBase';
-import { TextboxQuestion, GroupLabelQuestion } from './questionTextbox';
-
-import { FullTextboxQuestion } from './fullQuestionTextbox';
+import { QuestionBase, TextboxQuestion, CategoryLabel, FullTextboxQuestion } from './questionType';
 
 const zero = 0; 
 const first = 1;
@@ -28,7 +25,7 @@ export class GateQuestionService {
     getGates() {
 
         let questions: QuestionBase<string>[] = [
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'GATE INFORMATION',
                 label: 'GATE INFORMATION',
                 value: '',
@@ -105,7 +102,7 @@ export class GateQuestionService {
                 required: false,
                 order: zero
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'Actuators & Sensors',
                 label: 'Actuators & Sensors',
                 value: '',
@@ -155,7 +152,7 @@ export class GateQuestionService {
                 required: false,
                 order: first
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'SCADA Components',
                 label: 'SCADA Components',
                 value: '',
@@ -261,7 +258,7 @@ export class GateQuestionService {
                 order: second
             }),
             
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'Control Settings',
                 label: 'Control Settings',
                 value: '',
@@ -314,7 +311,7 @@ export class GateQuestionService {
                 required: false,
                 order: third
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'SMS Settings',
                 label: 'SMS Settings',
                 value: '',
@@ -483,7 +480,7 @@ export class GateQuestionService {
                 required: false,
                 order: fourth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'Solar Power Supply(for Solar Supply only)',
                 label: 'Solar Power Supply(for Solar Supply only)',
                 value: '',
@@ -567,7 +564,7 @@ export class GateQuestionService {
                 required: false,
                 order: fifth
             }),
-            new GroupLabelQuestion({
+            new CategoryLabel({
                 key: 'Last Update Log(remarks)',
                 label: 'Last Update Log(remarks)',
                 value: '',

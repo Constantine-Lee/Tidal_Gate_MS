@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { QuestionBase } from '.././question/questionBase';
+
 import { QuestionControlService } from '.././question/questionControl.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
 import { NGXLogger } from 'ngx-logger';
+import { QuestionBase } from '../question/questionType';
 declare var $: any;
 
 @Component({

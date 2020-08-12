@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { QuestionBase } from '.././question/questionBase';
+
 import { QuestionControlService } from '.././question/questionControl.service';
 import { InspectionLogQuestionService } from '../question/inspectionLogQuestion.service';
 import { InspectionLogService } from '../_services/inspectionLog.service';
@@ -8,6 +8,7 @@ import { InspectionLog } from '../_models/inspectionLog';
 import { Router } from '@angular/router';
 // import fade in animation
 import { fadeInAnimation } from '../_animations/index';
+import { QuestionBase } from '../question/questionType';
 
 declare var $: any;
 

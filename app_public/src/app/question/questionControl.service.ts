@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormArray, ValidatorFn } from '@angular/forms';
+import { QuestionBase, CheckBoxQuestion } from './questionType';
 
-import { QuestionBase } from './questionBase';
-import { CheckBoxQuestion } from './questionCheckBox';
 
 @Injectable(
   {

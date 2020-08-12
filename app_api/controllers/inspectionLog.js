@@ -1,7 +1,24 @@
 const mongoose = require('mongoose');
 const InspectionLog = mongoose.model('InspectionLog');
+const Form = mongoose.model('eventbatch');
+
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error')
+
+const getForm = async (req, res, next) => {
+    winston.info('Function=getForm');
+    try{
+        const form = await Form.find().exec();
+        winston.silly('getForm=' + JSON.stringify(form));
+
+        res.status(200).json(form);
+    } catch (err) {
+        winston.error('Get Form Error=' + err);
+        err - new ErrorHandler(404, 'Failed to get Form.');
+        return next(err);
+    }
+}
+
 
 const getInspectionLogs = async (req, res, next) => {
     winston.info('Function=getInspectionLogs');
@@ -117,5 +134,6 @@ module.exports = {
     addInspectionLog,
     getInspectionLog,
     editInspectionLog,
-    deleteInspectionLog
+    deleteInspectionLog,
+    getForm
 };
