@@ -35,10 +35,9 @@ export class UpdateInspectionLogComponent implements OnInit {
 
   ngOnInit(): void {
     this.logger.info("Lifecycle: ngOnInit(), Update Inspection Log");
-    this.route.paramMap.pipe(
-      switchMap((params: ParamMap) =>
-        this.getInspectionLogByID(params.get('inspectionLogID')))
-    ).subscribe();
+    this.route.paramMap.subscribe((params: ParamMap) =>
+      this.getInspectionLogByID(params.get('inspectionLogID'))
+    );
   }
 
   ngOnDestroy(): void {
@@ -47,16 +46,15 @@ export class UpdateInspectionLogComponent implements OnInit {
 
   async getInspectionLogByID(id: string) {
     this.logger.info("Function: getInspectionLogByID(id: string), Update Inspection Log");
-    await this.inspectionLogService.getInspectionLogByID(id)
-      .then(inspectionLog => this.inspectionLog = inspectionLog);
-    this.questions = JSON.parse(this.inspectionLog.question);
 
+    this.inspectionLog = await this.inspectionLogService.getInspectionLogByID(id);     
+
+    this.questions = JSON.parse(this.inspectionLog.question);
     this.form = this.qcs.toFormGroup(this.questions);
     this.receive = true;
   }
 
-  refreshPage(){
-    
+  refreshPage(){    
     this.ngOnInit();
   }
 

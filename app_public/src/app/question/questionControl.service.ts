@@ -13,7 +13,7 @@ export class QuestionControlService {
 
   toFormGroup(questions: QuestionBase<string>[]) {
     let group: any = {};
-    //console.log(questions);
+    console.log(questions);
 
     questions.forEach(question => {
 

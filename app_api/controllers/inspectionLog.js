@@ -8,10 +8,11 @@ const { ErrorHandler } = require('../models/error')
 const getForm = async (req, res, next) => {
     winston.info('Function=getForm');
     try{
-        const form = await Form.find().exec();
-        winston.silly('getForm=' + JSON.stringify(form));
+        const form = await Form.findOne({}).select('questions ').exec();
+        winston.silly( form.questions);
+        
 
-        res.status(200).json(form);
+        res.status(200).json(form.questions);
     } catch (err) {
         winston.error('Get Form Error=' + err);
         err - new ErrorHandler(404, 'Failed to get Form.');

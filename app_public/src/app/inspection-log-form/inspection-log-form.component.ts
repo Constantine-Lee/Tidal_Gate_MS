@@ -27,15 +27,18 @@ export class InspectionLogFormComponent implements OnInit {
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(
-    private service: InspectionLogQuestionService,
     private qcs: QuestionControlService,
     private inspectionLogService: InspectionLogService,
-    private router: Router) {}
+    private router: Router) { }
 
-  ngOnInit(): void {
-    this.questions = this.service.getQuestions();
-    this.form = this.qcs.toFormGroup(this.questions);
-    this.receive = true;
+  ngOnInit() {
+    this.inspectionLogService.getForms().subscribe(
+      questions => {
+        this.questions = questions;
+        this.form = this.qcs.toFormGroup(questions);
+        this.receive = true;
+      }
+    );
   }
 
   onSubmit(): void {

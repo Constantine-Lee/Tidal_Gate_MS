@@ -1,5 +1,11 @@
 var appRoot = require('app-root-path');
 var winston = require('winston');
+const { format } = require('logform');
+
+let date = new Date().toISOString();
+const logFormat = format.printf(function(info) {
+  return `${date}-${info.level}:` + info.message;
+});
 
 var options = {
     file: {
@@ -12,6 +18,7 @@ var options = {
       colorize: false,
     },
     console: {
+      format: winston.format.combine(winston.format.colorize(), logFormat),
       level: 'silly',
       handleExceptions: true,
       json: false,

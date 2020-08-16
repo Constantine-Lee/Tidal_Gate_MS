@@ -6,7 +6,7 @@ import { User } from '../_models/user';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap, retry } from 'rxjs/operators';
 import { InspectionLog } from '../_models/inspectionLog';
-import { QuestionBase } from '.././question/questionBase';
+import { QuestionBase} from '../question/questionType';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -14,31 +14,40 @@ const httpOptions = {
     })
   };
 
+  const baseUrl = `${environment.apiUrl}`;
+
 @Injectable({ providedIn: 'root' })
 export class InspectionLogService {
+  
+
     constructor(private http: HttpClient) { }
 
     addInspectionLog(inspectionLog: InspectionLog): Observable<InspectionLog>{
-        return this.http.post<InspectionLog>(`${environment.apiUrl}/inspectionLogs`, inspectionLog, httpOptions);
+        return this.http.post<InspectionLog>(baseUrl + `/inspectionLogs`, inspectionLog, httpOptions);
     }
 
     getInspectionLogs(): Observable<InspectionLog[]>{
-       return this.http.get<InspectionLog[]>(`${environment.apiUrl}/inspectionLogs`);
+       return this.http.get<InspectionLog[]>(baseUrl + `/inspectionLogs`);
     }
 
-    async getInspectionLogByID(id: string): Promise<InspectionLog>{
-      return await this.http.get<InspectionLog>(`${environment.apiUrl}/inspectionLogs/${id}`).toPromise();
+    getInspectionLogByID(id: string): Promise<InspectionLog>{      
+      return this.http.get<InspectionLog>(baseUrl + `/inspectionLogs/${id}`).toPromise();
    }
 
-    deleteInspectionLog(id : number){
-        const url = `${environment.apiUrl}/inspectionLogs/${id}`;
-        return this.http.delete<InspectionLog>(url, httpOptions);
+    deleteInspectionLog(id : number){        
+        return this.http.delete<InspectionLog>(baseUrl + `/inspectionLogs/${id}`, httpOptions);
     }
 
-    updateInspectionLog(inspectionLog: InspectionLog): Observable<InspectionLog>{
-        const url = `${environment.apiUrl}/inspectionLogs/${inspectionLog._id}`;
-        return this.http.put<InspectionLog>(url, inspectionLog, httpOptions);
+    updateInspectionLog(inspectionLog: InspectionLog): Observable<InspectionLog>{        
+        return this.http.put<InspectionLog>(baseUrl + `/inspectionLogs/${inspectionLog._id}`, inspectionLog, httpOptions);
     }
 
+    getForm(): Promise<QuestionBase<string>[]>{      
+      return this.http.get<QuestionBase<string>[]>(baseUrl + `/form/inspectionLog`).toPromise();
+    }
+
+    getForms(){      
+      return this.http.get<QuestionBase<string>[]>(baseUrl + `/form/inspectionLog`);
+    }
 
 }
