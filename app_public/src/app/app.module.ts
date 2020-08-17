@@ -14,13 +14,9 @@ import { MaintenanceLogTableComponent } from './maintenance-log-table/maintenanc
 import { GateTableComponent } from './gate-table/gate-table.component';
 import { GateFormComponent } from './gate-form/gate-form.component';
 
-import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
 import { UserProfileComponent } from './home/user.profile.component';
-
-// used to create fake backend
-import { fakeBackendProvider } from './_helpers/fake-backend';
-
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { LogInterceptor } from './_helpers/log.interceptor';
@@ -38,14 +34,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
-import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { QuillModule } from 'ngx-quill'
+import { LoggerModule} from 'ngx-logger';
 import { environment } from 'src/environments/environment';
 
 export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
-  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }, 
-]; 
+  { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+];
+
+var toolbarOptions = [            
+  [{ 'header': 1 }, { 'list': 'ordered' }, { 'image': true}],               
+         
+];
 
 @NgModule({
   declarations: [
@@ -66,9 +68,17 @@ export const httpInterceptorProviders = [
     InspectionLogFormComponent,
     InspectionLogTableComponent,
     UpdateInspectionLogComponent
-    
+
   ],
   imports: [
+    QuillModule.forRoot({      
+      modules: {
+          toolbar: toolbarOptions
+      },
+      placeholder: 'Compose an epic...',
+      readOnly: false,
+      theme: 'snow'
+  }),
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,
@@ -84,10 +94,10 @@ export const httpInterceptorProviders = [
     })
   ],
   providers: [
-    httpInterceptorProviders  
+    httpInterceptorProviders
     // provider used to create fake backend
     //fakeBackendProvider
-],
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

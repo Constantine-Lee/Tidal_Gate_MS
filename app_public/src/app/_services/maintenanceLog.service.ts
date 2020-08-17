@@ -6,7 +6,6 @@ import { User } from '../_models/user';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MaintenanceLog } from '../_models/maintenanceLog';
-import { QuestionBase } from '.././question/questionBase';
 import { InspectionLog } from '../_models/inspectionLog';
 
 const httpOptions = {

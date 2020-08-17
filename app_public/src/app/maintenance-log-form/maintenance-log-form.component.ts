@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { QuestionBase } from '.././question/questionBase';
 import { QuestionControlService } from '.././question/questionControl.service';
 import { MaintenanceLogQuestionService } from '../question/maintenanceLogQuestion.service';
 import { Observable } from 'rxjs';
@@ -10,6 +9,7 @@ import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
 import { NGXLogger } from 'ngx-logger';
+import { QuestionBase } from '../question/questionType';
 
 //for modal
 declare var $: any;

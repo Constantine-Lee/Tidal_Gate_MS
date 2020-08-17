@@ -5,7 +5,6 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Gate } from '../_models/gate';
-import { QuestionBase } from '.././question/questionBase';
 
 const httpOptions = {
   headers: new HttpHeaders({
