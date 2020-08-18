@@ -35,15 +35,13 @@ export class MaintenanceLogFormComponent implements OnInit {
 
   //get questions and transform to formGroup, mark the form as receieved
   ngOnInit(): void {
-    this.questions = this.service.getQuestions();
-    for (let question of this.questions) {
-      this.logger.debug("question: " + JSON.stringify(question));
-    }
-
-    this.form = this.qcs.toFormGroup(this.questions);
-    this.logger.info("this.form: " + this.form);
-
-    this.receive = true;
+    this.maintenanceLogService.getForms().subscribe(
+      questions => {
+        this.questions = questions;
+        this.form = this.qcs.toFormGroup(questions);
+        this.receive = true;
+      }
+    )
   }
 
   onSubmit(): void {
@@ -67,7 +65,7 @@ export class MaintenanceLogFormComponent implements OnInit {
 
     // update the questions based on form control value
     for (let question of this.questions) {
-      if (question.checkboxes != undefined) {
+      /*if (question.checkboxes != undefined) {
         question.checkboxes.forEach((checkbox, i) => {
           checkbox.value = formValue[question.key][i];
           if (checkbox.value) {
@@ -75,7 +73,7 @@ export class MaintenanceLogFormComponent implements OnInit {
             map.get(question.key).push(checkbox.label)
           };
         });
-      }
+      }*/
       question.value = formValue[question.key]
     }
 

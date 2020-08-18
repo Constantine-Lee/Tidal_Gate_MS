@@ -31,9 +31,6 @@ import { InspectionLogTableComponent } from './inspection-log-table/inspection-l
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-
 import { QuillModule } from 'ngx-quill'
 import { LoggerModule} from 'ngx-logger';
 import { environment } from 'src/environments/environment';
@@ -68,7 +65,6 @@ var toolbarOptions = [
     InspectionLogFormComponent,
     InspectionLogTableComponent,
     UpdateInspectionLogComponent
-
   ],
   imports: [
     QuillModule.forRoot({      
@@ -85,7 +81,6 @@ var toolbarOptions = [
     HttpClientModule,
     FormsModule,
     BrowserAnimationsModule,
-    CKEditorModule,
     LoggerModule.forRoot({
       serverLoggingUrl: `${environment.apiUrl}/logs`,
       level: environment.logLevel,

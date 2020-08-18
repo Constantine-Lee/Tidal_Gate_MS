@@ -26,9 +26,11 @@ db.once('open', function () {
     },
         { discriminatorKey: 'controlType', _id: false });
 
-    var batchSchema = new Schema({ questions: [baseQuestionSchema] });
+    var form = new Schema({ 
+        _id: String,
+        questions: [baseQuestionSchema] });
 
-    var docArray = batchSchema.path('questions');
+    var docArray = form.path('questions');
 
     var textQuestionSchema = new Schema({}, { _id: false });
     var dropDownQuestionSchema = new Schema({
@@ -39,16 +41,16 @@ db.once('open', function () {
     }, { _id: false });
     var categoryLabelSchema = new Schema({}, { _id: false});
 
-
     var TextboxQuestion = docArray.discriminator('textbox', textQuestionSchema);
     var DropdownQuestion = docArray.discriminator('dropdown', dropDownQuestionSchema);
     var DateQuestion = docArray.discriminator('date', dateQuestionSchema);
     var CategoryLabel = docArray.discriminator('groupLabel', categoryLabelSchema);
 
-    var Batch = db.model('EventBatch', batchSchema);
+    var form = db.model('form', form);
 
     // Create a new batch of events with different kinds
     var batch = {
+        _id: 'inspectionLogForm',
         questions: [
             new TextboxQuestion({
                 key: 'Nama Penjaga',
@@ -568,7 +570,7 @@ db.once('open', function () {
         ]
     };
 
-    Batch.create(batch).
+    form.create(batch).
         then(function (doc) {
             //doc.events.push({ kind: 'Purchased', product: 'action-figure-2' });
             //return doc.save();

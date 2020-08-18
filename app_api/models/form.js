@@ -9,12 +9,14 @@ var baseQuestionSchema = new Schema({
     required: Boolean,
     label: String,
     value: String,
-},
-    { discriminatorKey: 'questionType', _id: false });
+}, { discriminatorKey: 'controlType', _id: false });
 
-var batchSchema = new Schema({ questions: [baseQuestionSchema] });
+var form = new Schema({
+    _id: String,
+    questions: [baseQuestionSchema]
+});
 
-mongoose.model('eventbatch', batchSchema);
+mongoose.model('form', form);
 
 
 

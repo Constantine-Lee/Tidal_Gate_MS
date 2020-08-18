@@ -57,7 +57,7 @@
         </div>-->
 
         <div class="container pr-4 pl-3 mt-2" *ngSwitchCase="'RTX'">
-            <quill-editor>
+            <quill-editor #editor class=" bg-light" [formControlName]="question.key">
               </quill-editor>
 
 

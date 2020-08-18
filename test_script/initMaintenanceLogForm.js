@@ -1,8 +1,6 @@
-import { Injectable } from '@angular/core';
-
-import { QuestionBase, TextboxQuestion, CategoryLabel, DateQuestion, DropdownQuestion, RTXQuestion, CheckBoxQuestion } from './questionType';
-
-import { GateService } from '../_services/gate.service';
+const mongoose = require('mongoose');
+var assert = require('assert');
+var Schema = mongoose.Schema;
 
 const zero = 0;
 const first = 1;
@@ -18,76 +16,58 @@ const tenth = 10;
 const eleventh = 11;
 const twelfth = 12;
 const thirteenth = 13;
-const fourteenth = 14;
-const fifteenth = 15;
 
-@Injectable(
-    {
-        providedIn: 'root',
-    }
-)
-export class MaintenanceLogQuestionService {
+mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function () {
+    var baseQuestionSchema = new Schema({
+        key: String,
+        controlType: String,
+        order: Number,
+        required: Boolean,
+        label: String,
+        value: String,
+    }, { discriminatorKey: 'controlType', _id: false });
 
-    gateSelection: { key: string, value: string }[] = [];
+    var form = new Schema({ 
+        _id: String,
+        questions: [baseQuestionSchema] });
 
-    constructor(private gateService: GateService) { }
+    var docArray = form.path('questions');
 
-    getTodayDate(): string {
-        let today = new Date();
-        let dd ;
-        let mm ; //January is 0!
-        let yyyy = today.getFullYear().toString();
+    var textQuestionSchema = new Schema({    
 
-        if (today.getDate() < 10) {
-            dd = '0' + today.getDate().toString();
-        }
-        else { 
-            dd = today.getDate().toString();
-        }
+    }, { _id: false });
 
-        if (today.getMonth() + 1 < 10) {
-            mm = '0' + (today.getMonth() + 1).toString();
-        }
-        else {
-            mm = today.getMonth();
-        }
+    var dropDownQuestionSchema = new Schema({
+        options: []
+    }, { _id: false });
 
-        let date = yyyy + '-' + mm + '-' + dd
-        console.log(date)
-        return date;
-    }
+    var dateQuestionSchema = new Schema({
+        value: { type: Date, default: Date.now }
+    }, { _id: false });
 
-    async getGates() {
-        this.gateSelection = [];
-        await this.gateService.getGatesPromise().then(gates => {
-            gates.forEach(gate => {
-                this.gateSelection.push({ key: gate.name, value: gate.name })
-            })
-            //console.log(this.gateSelection);
-        });
-    }
+    var categoryLabelSchema = new Schema({
 
-    /*[
-        { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
-        { key: 'srw002 Ketup', value: 'Ketup' },
-        { key: 'srw003 Moyan Ulu East', value: 'Moyan Ulu East' },
-        { key: 'srw004 Serpan Ulu', value: 'Serpan Ulu' },
-        { key: 'srw005 Asajaya Ulu', value: 'Asajaya Ulu' },
-        { key: 'srw006 Sampun Gerunggang', value: 'Sampun Gerunggang' },
-        { key: 'srw007 Moyan Ulu (West)', value: 'Moyan Ulu (West)' },
-        { key: 'srw008 Beliong', value: 'Beliong' },
-        { key: 'srw009 Meranti', value: 'Meranti' },
-        { key: 'srw010 Sampat', value: 'Sampat' },
-        { key: 'srw011 Sampun Kelili', value: 'Sampun Kelili' },
-        { key: 'srw012 Segali', value: 'Segali' },
-    ];*/
+    }, { _id: false });
 
-    // TODO: get from a remote source of question metadata
-    getQuestions() {
+    var rtxQuestionSchema = new Schema({
 
-        this.getGates();
+    })
 
-        let questions: QuestionBase<string>[] = [
+    var TextboxQuestion = docArray.discriminator('textbox', textQuestionSchema);
+    var DropdownQuestion = docArray.discriminator('dropdown', dropDownQuestionSchema);
+    var DateQuestion = docArray.discriminator('date', dateQuestionSchema);
+    var CategoryLabel = docArray.discriminator('groupLabel', categoryLabelSchema);
+    var RTXQuestion = docArray.discriminator('RTX', rtxQuestionSchema);
+
+    var form = db.model('form', form);
+
+    // Create a new batch of events with different kinds
+    var batch = {
+        _id: 'maintenanceLogForm',
+        questions: [
             new CategoryLabel({
                 key: '0.0 GATE INFORMATION',
                 label: '0.0 GATE INFORMATION',
@@ -98,22 +78,19 @@ export class MaintenanceLogQuestionService {
             new DropdownQuestion({
                 key: 'Gate Name',
                 label: 'Gate Name',
-                options: this.gateSelection,
+                options: [],
                 required: true,
                 order: zero
             }),
-            new TextboxQuestion({
+            new DateQuestion({
                 key: 'Maintenance Date',
                 label: 'Maintenance Date',
-                required: true,
-                value: this.getTodayDate(),
-                type: 'Date',
+                required: true,                
                 order: zero
             }),
             new CategoryLabel({
                 key: 'TESTING 1.0 : POWER SUPPLY (415Vac, 3 Phase) TESTING',
-                label: 'TESTING 1.0 : POWER SUPPLY (415Vac, 3 Phase) TESTING',
-                value: '',
+                label: 'TESTING 1.0 : POWER SUPPLY (415Vac, 3 Phase) TESTING',               
                 required: false,
                 order: first
             }),
@@ -164,8 +141,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 1.1 : POWER SUPPLY (240Vac, 1 Phase) TESTING',
-                label: 'TESTING 1.1 : POWER SUPPLY (240Vac, 1 Phase) TESTING',
-                value: '',
+                label: 'TESTING 1.1 : POWER SUPPLY (240Vac, 1 Phase) TESTING',                
                 required: false,
                 order: second
             }),
@@ -206,8 +182,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 1.2 : SOLAR POWER SUPPLY & SOLAR POWER CHARGING TESTING',
-                label: 'TESTING 1.2 : SOLAR POWER SUPPLY & SOLAR POWER CHARGING TESTING',
-                value: '',
+                label: 'TESTING 1.2 : SOLAR POWER SUPPLY & SOLAR POWER CHARGING TESTING',                
                 required: false,
                 order: third
             }),
@@ -247,8 +222,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 2.0 : SECONDARY POWER BACK UP',
-                label: 'TESTING 2.0 : SECONDARY POWER BACK UP',
-                value: '',
+                label: 'TESTING 2.0 : SECONDARY POWER BACK UP',                
                 required: false,
                 order: fourth
             }),
@@ -291,8 +265,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',
-                label: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',
-                value: '',
+                label: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',                
                 required: false,
                 order: fifth
             }),
@@ -348,8 +321,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',
-                label: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',
-                value: '',
+                label: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',                
                 required: false,
                 order: sixth
             }),
@@ -389,8 +361,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',
-                label: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',
-                value: '',
+                label: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',               
                 required: false,
                 order: seventh
             }),
@@ -426,8 +397,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',
-                label: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',
-                value: '',
+                label: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',                
                 required: false,
                 order: eighth
             }),
@@ -470,8 +440,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 7.0 : ACTUATOR FUNCTION VERIFICATION',
-                label: 'TESTING 7.0 : ACTUATOR FUNCTION VERIFICATION',
-                value: '',
+                label: 'TESTING 7.0 : ACTUATOR FUNCTION VERIFICATION',               
                 required: false,
                 order: ninth
             }),
@@ -514,8 +483,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 8.0 : FLOOD SURVEILLANCE VERIFICATION',
-                label: 'TESTING 8.0 : FLOOD SURVEILLANCE VERIFICATION',
-                value: '',
+                label: 'TESTING 8.0 : FLOOD SURVEILLANCE VERIFICATION',                
                 required: false,
                 order: tenth
             }),
@@ -541,8 +509,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',
-                label: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',
-                value: '',
+                label: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',                
                 required: false,
                 order: eleventh
             }),
@@ -558,8 +525,7 @@ export class MaintenanceLogQuestionService {
             }),
             new CategoryLabel({
                 key: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',
-                label: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',
-                value: '',
+                label: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',                
                 required: false,
                 order: twelfth
             }),
@@ -596,8 +562,7 @@ export class MaintenanceLogQuestionService {
 
             new CategoryLabel({
                 key: 'SUMMARY',
-                label: 'SUMMARY',
-                value: '',
+                label: 'SUMMARY',                
                 required: false,
                 order: thirteenth
             }),
@@ -677,10 +642,16 @@ export class MaintenanceLogQuestionService {
                 value: '',
                 required: false,
                 order: thirteenth
-            }),
-        ];
+            })
+        ]
+    };
 
-        return questions.sort((a, b) => a.order - b.order);
-    }
-
-}
+    form.create(batch).
+        then(function (doc) {
+            //doc.events.push({ kind: 'Purchased', product: 'action-figure-2' });
+            //return doc.save();
+        }).
+        then(function (doc) {
+        }).
+        catch();
+});

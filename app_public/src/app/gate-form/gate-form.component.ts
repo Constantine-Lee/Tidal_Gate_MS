@@ -89,6 +89,7 @@ export class GateFormComponent implements OnInit {
   fileProgress(fileInput: any) {
     this.fileInput = fileInput.target.files[0].name;
     this.fileData = <File>fileInput.target.files[0];
+    console.log(this.fileInput);
     this.preview();
   }
 
@@ -103,6 +104,7 @@ export class GateFormComponent implements OnInit {
     reader.readAsDataURL(this.fileData);
     reader.onload = (_event) => {
       this.previewUrl = reader.result;
+      console.log(reader.result);
     }
   }
 

@@ -16,7 +16,7 @@ export class QuestionControlService {
     console.log(questions);
 
     questions.forEach(question => {
-
+/*
       // checkbox control
       if (question.controlType == 'checkbox') {
 
@@ -26,7 +26,7 @@ export class QuestionControlService {
         group[question.key] = new FormArray(fG, this.minSelectedCheckboxes(1));
       }
       // other control
-      else {
+      else */{
         group[question.key] = question.required ?         
                               new FormControl(question.value || '', Validators.required) : 
                               new FormControl(question.value || '');

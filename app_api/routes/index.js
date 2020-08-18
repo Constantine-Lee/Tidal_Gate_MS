@@ -4,19 +4,12 @@ const jwt = require('express-jwt');
 const multer = require('multer')
 const path = require('path');
 const winston = require('../config/winston');
+const controller = require('../controllers');
 
 const auth = jwt({
     secret: process.env.JWT_SECRET,
     userProperty: 'payload'
 })
-
-const ctrlAuth = require('../controllers/authentication');
-const ctrlUser = require('../controllers/user');
-const ctrlInspect = require('../controllers/inspectionLog');
-const ctrlMaintain = require('../controllers/maintenanceLog');
-const ctrlGate = require('../controllers/gate');
-const ctrlCounter = require('../controllers/counter');
-
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -56,57 +49,57 @@ const upload = multer({
     }
 })
 
-router.post('/register', ctrlAuth.register);
-router.post('/login', ctrlAuth.login);
-router.get('/users', ctrlUser.getUsers);
-router.delete('/users/:userID', ctrlUser.deleteUser);
+router.post('/register', controller.auth.register);
+router.post('/login', controller.auth.login);
+router.get('/users', controller.user.getUsers);
+router.delete('/users/:userID', controller.user.deleteUser);
 
 router
     .route('/counters')
-    .get(ctrlCounter.getCounters)
-    .post(ctrlCounter.addCounter)
+    .get(controller.counter.getCounters)
+    .post(controller.counter.addCounter)
 
 router
     .route('/counters/:counterID')
-    .get(ctrlCounter.getCounter)
-    .put(ctrlCounter.editCounter)
-    .delete(ctrlCounter.deleteCounter)
+    .get(controller.counter.getCounter)
+    .put(controller.counter.editCounter)
+    .delete(controller.counter.deleteCounter)
 
 router
     .route('/inspectionLogs/:inspectionLogID')
-    .get(ctrlInspect.getInspectionLog)
-    .put(ctrlInspect.editInspectionLog)
-    .delete(ctrlInspect.deleteInspectionLog)
+    .get(controller.inspectionLog.getInspectionLog)
+    .put(controller.inspectionLog.editInspectionLog)
+    .delete(controller.inspectionLog.deleteInspectionLog)
 
 router
     .route('/inspectionLogs')
-    .get(ctrlInspect.getInspectionLogs)
-    .post(ctrlInspect.addInspectionLog)
+    .get(controller.inspectionLog.getInspectionLogs)
+    .post(controller.inspectionLog.addInspectionLog)
 
 router
-    .route('/form/inspectionLog')
-    .get(ctrlInspect.getForm)
+    .route('/form/:formID')
+    .get(controller.form.getForm)
 
 router
     .route('/maintenanceLogs/:maintenanceLogID')
-    .get(ctrlMaintain.getMaintenanceLog)
-    .put(ctrlMaintain.editMaintenanceLog)
-    .delete(ctrlMaintain.deleteMaintenanceLog)
+    .get(controller.maintenanceLog.getMaintenanceLog)
+    .put(controller.maintenanceLog.editMaintenanceLog)
+    .delete(controller.maintenanceLog.deleteMaintenanceLog)
 
 router
     .route('/maintenanceLogs')
-    .get(ctrlMaintain.getMaintenanceLogs)
-    .post(ctrlMaintain.addMaintenanceLog)
+    .get(controller.maintenanceLog.getMaintenanceLogs)
+    .post(controller.maintenanceLog.addMaintenanceLog)
 
 router
     .route('/gates/:gateID')
-    .get(ctrlGate.getGate)
-    .put(upload.single('image'), ctrlGate.editGate)
-    .delete(ctrlGate.deleteGate)
+    .get(controller.gate.getGate)
+    .put(upload.single('image'), controller.gate.editGate)
+    .delete(controller.gate.deleteGate)
 
 router
     .route('/gates')
-    .get(ctrlGate.getGates)
-    .post(upload.single('image'), ctrlGate.addGate)
+    .get(controller.gate.getGates)
+    .post(upload.single('image'), controller.gate.addGate)
 
 module.exports = router;

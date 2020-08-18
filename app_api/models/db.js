@@ -61,10 +61,3 @@ process.on('SIGTERM', () => {
 });
 
 connect();
-
-require('./gate');
-require('./user');
-require('./inspectionLog');
-require('./maintenanceLog');
-require('./counter');
-require('./testForm');
