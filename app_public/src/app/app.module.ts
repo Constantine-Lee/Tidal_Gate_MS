@@ -67,14 +67,7 @@ var toolbarOptions = [
     UpdateInspectionLogComponent
   ],
   imports: [
-    QuillModule.forRoot({      
-      modules: {
-          toolbar: toolbarOptions
-      },
-      placeholder: 'Compose an epic...',
-      readOnly: false,
-      theme: 'snow'
-  }),
+    QuillModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     ReactiveFormsModule,

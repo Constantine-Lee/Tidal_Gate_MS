@@ -10,24 +10,21 @@ const winston = require('./app_api/config/winston');
 require('./app_api/models/');
 
 require('./app_api/config/passport');
-const { handleError } = require('./app_api/models/error')
+const { handleError } = require('./app_api/models/error');
 
 const apiRouter = require('./app_api/routes/index');
 
 const app = express();
 
 app.use(morgan('combined', { stream: winston.stream }));
-// view engine setup
-app.set('views', path.join(__dirname, 'app_server', 'views'));
-app.set('view engine', 'pug');
 
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ 
+  limit: '10mb'}));
+app.use(express.urlencoded({ 
+  limit: '10mb',
+  extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'app_public', 'build')));
-
 app.use(passport.initialize());
 
 app.use((req, res, next) => {

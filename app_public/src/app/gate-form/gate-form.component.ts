@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { QuestionControlService } from '.././question/questionControl.service';
-import { GateQuestionService } from '../question/gateQuestion.service';
 import { environment } from '../../environments/environment';
 import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';
@@ -22,39 +21,45 @@ declare var $: any;
   animations: [fadeInAnimation]
 })
 export class GateFormComponent implements OnInit {
-  fileData: File = null;
-  previewUrl: any = `${environment.apiUrl}/images/tidalGatePlaceHolder.png`;
+
+  file: File = null;
+  previewUrl: any = `${environment.apiUrl}/images/uploadImage.png`;
   uploadedFilePath: string = null;
-  public fileInput: string = "Choose Image";
 
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   currentUser: User;
-  receive: boolean;
   loading = false;
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
+  get isAdmin() {
+    return this.currentUser && this.currentUser.role === Role.Admin;
+  }
+
   constructor
     (
-      private router: Router, 
-      service: GateQuestionService,
+      private router: Router,
       private qcs: QuestionControlService,
       private gateService: GateService,
       private authenticationService: AuthenticationService,
       private logger: NGXLogger
     ) {
-    this.questions = service.getGates();
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
   ngOnInit(): void {
-    this.form = this.qcs.toFormGroup(this.questions);
-    this.receive = true;
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    this.gateService.getForms().subscribe(
+      q => {
+        this.questions = q;
+        this.form = this.qcs.toFormGroup(q);
+      }
+    )
   }
+
 
   onSubmit() {
     this.logger.log("Function: onSubmit()");
-    
+
     // stop here if form is invalid
     if (this.form.invalid) {
       this.errorString = 'Please fill in all the required fields.';
@@ -69,7 +74,7 @@ export class GateFormComponent implements OnInit {
     formData.append('name', formValue['Gate Name']);
     formData.append('GateID', formValue['Gate_ID']);
     formData.append('question', JSON.stringify(this.questions));
-    formData.append('image', this.fileData);
+    formData.append('image', this.file);
 
     this.gateService.addGate(formData).subscribe(_ => this.router.navigate(['/gate']),
       err => {
@@ -87,28 +92,30 @@ export class GateFormComponent implements OnInit {
   }
 
   fileProgress(fileInput: any) {
-    this.fileInput = fileInput.target.files[0].name;
-    this.fileData = <File>fileInput.target.files[0];
-    console.log(this.fileInput);
-    this.preview();
-  }
-
-  preview() {
-    // Show preview 
-    var mimeType = this.fileData.type;
+    this.previewUrl = `${environment.apiUrl}/images/loading.gif`;
+    let width: number = 250;
+    let height: number = 190;
+    var mimeType = fileInput.target.files[0].type;
     if (mimeType.match(/image\/*/) == null) {
+      alert("Please upload image of PNG and JPG format.");
       return;
     }
-
-    var reader = new FileReader();
-    reader.readAsDataURL(this.fileData);
-    reader.onload = (_event) => {
-      this.previewUrl = reader.result;
-      console.log(reader.result);
-    }
+    this.file = fileInput.target.files[0];
+    const img = new Image();
+    img.src = URL.createObjectURL(this.file)
+    img.onload = () => {
+      const elem = document.createElement('canvas');
+      elem.width = width;
+      elem.height = height;
+      const ctx = elem.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      let base64: string = ctx.canvas.toDataURL('image/jpeg', 1);
+      console.log(base64);
+      this.gateService.upload({base64String: base64}).subscribe( _ => {
+        this.previewUrl = base64;
+      }        
+      );      
+    }    
   }
 
-  get isAdmin() {
-    return this.currentUser && this.currentUser.role === Role.Admin;
-  }
 }

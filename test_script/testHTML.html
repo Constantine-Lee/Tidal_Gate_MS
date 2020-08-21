@@ -1,0 +1,19 @@
+<form method="post" enctype="multipart/form-data">
+    <div>
+      <label for="image_uploads">Choose images to upload (PNG, JPG)</label>
+      <input type="file" id="image_uploads" name="image_uploads" accept=".jpg, .jpeg, .png" multiple>
+    </div>
+    <div class="preview">
+      <p>No files currently selected for upload</p>
+    </div>
+    <div>
+      <button>Submit</button>
+    </div>
+  </form>
+
+  <script>
+      const input = document.querySelector('input');
+const preview = document.querySelector('.preview');
+
+input.style.opacity = 0;
+  </script>

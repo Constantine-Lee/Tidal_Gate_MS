@@ -6,24 +6,19 @@
             <li class="breadcrumb-item active" aria-current="page">Add</li>
         </ol>
     </nav>
-    <div @fadeInAnimation *ngIf="receive" class="container ">
+    <div @fadeInAnimation *ngIf="form" class="container ">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
             <div class="bg-light mt-4 mb-3">
-                <div class="col-sm-4 mx-auto p-0 ">
-                    <img class="  img-thumbnail" [src]="previewUrl" />
+                <div class="text-center">
+                    <label for="profilePic">
+                        <img width="250" height="190" class="img border border-info"  [src]="previewUrl" />
+                        <input type="file" style="display:none; " name="image" id="profilePic" (change)="fileProgress($event)"
+                        accept="image/png, image/jpeg">
+                    </label>                    
                 </div>
-                <div class="input-group justify-content-center mb-3">
-                    <div class="custom-file col-sm-4">
-                        <input type="file" name="image" (change)="fileProgress($event)" id="inputGroupFile02"
-                            accept="image/png, image/jpeg">
-                        <label class="custom-file-label bg-light" for="inputGroupFile02">{{fileInput}}</label>
-                    </div>
-                </div>
-
                 <div *ngFor="let question of questions">
                     <app-form-question [question]="question" [form]="form"></app-form-question>
                 </div>
-                
             </div>
             <div class="d-flex justify-content-center align-items-center container ">
                 <button type="button" [disabled]="loading" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4"

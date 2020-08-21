@@ -49,6 +49,10 @@ const upload = multer({
     }
 })
 
+router
+    .route('/upload')
+    .post(controller.upload.uploadImage);
+
 router.post('/register', controller.auth.register);
 router.post('/login', controller.auth.login);
 router.get('/users', controller.user.getUsers);

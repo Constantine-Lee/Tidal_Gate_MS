@@ -2,20 +2,7 @@ const mongoose = require('mongoose');
 var assert = require('assert');
 var Schema = mongoose.Schema;
 
-const zero = 0;
-const first = 1;
-const second = 2;
-const third = 3;
-const fourth = 4;
-const fifth = 5;
-const sixth = 6;
-const seventh = 7;
-const eighth = 8;
-const ninth = 9;
-const tenth = 10;
-const eleventh = 11;
-const twelfth = 12;
-const thirteenth = 13;
+const number = require('../app_api/models/CONSTANT');
 
 mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
 const db = mongoose.connection;
@@ -30,618 +17,586 @@ db.once('open', function () {
         value: String,
     }, { discriminatorKey: 'controlType', _id: false });
 
-    var form = new Schema({ 
+    var formSchema = new Schema({ 
         _id: String,
         questions: [baseQuestionSchema] });
 
-    var docArray = form.path('questions');
+    var docArray = formSchema.path('questions');
 
     var textQuestionSchema = new Schema({    
 
-    }, { _id: false });
-
-    var dropDownQuestionSchema = new Schema({
-        options: []
-    }, { _id: false });
-
-    var dateQuestionSchema = new Schema({
-        value: { type: Date, default: Date.now }
     }, { _id: false });
 
     var categoryLabelSchema = new Schema({
 
     }, { _id: false });
 
-    var rtxQuestionSchema = new Schema({
+    var fullTextBoxSchema = new Schema({
 
-    })
+    }, { _id: false });
 
     var TextboxQuestion = docArray.discriminator('textbox', textQuestionSchema);
-    var DropdownQuestion = docArray.discriminator('dropdown', dropDownQuestionSchema);
-    var DateQuestion = docArray.discriminator('date', dateQuestionSchema);
     var CategoryLabel = docArray.discriminator('groupLabel', categoryLabelSchema);
-    var RTXQuestion = docArray.discriminator('RTX', rtxQuestionSchema);
+    const FullTextboxQuestion = docArray.discriminator('fullTextbox', fullTextBoxSchema);
 
-    var form = db.model('form', form);
+    var form = db.model('form', formSchema);
 
     // Create a new batch of events with different kinds
     var batch = {
-        _id: 'maintenanceLogForm',
+        _id: 'gateForm',
         questions: [
             new CategoryLabel({
-                key: '0.0 GATE INFORMATION',
-                label: '0.0 GATE INFORMATION',
+                key: 'GATE INFORMATION',
+                label: 'GATE INFORMATION',
                 value: '',
                 required: false,
-                order: zero
+                order: number.zero
             }),
-            new DropdownQuestion({
+            new TextboxQuestion({
                 key: 'Gate Name',
                 label: 'Gate Name',
-                options: [],
-                required: true,
-                order: zero
-            }),
-            new DateQuestion({
-                key: 'Maintenance Date',
-                label: 'Maintenance Date',
-                required: true,                
-                order: zero
-            }),
-            new CategoryLabel({
-                key: 'TESTING 1.0 : POWER SUPPLY (415Vac, 3 Phase) TESTING',
-                label: 'TESTING 1.0 : POWER SUPPLY (415Vac, 3 Phase) TESTING',               
-                required: false,
-                order: first
-            }),
-            new TextboxQuestion({
-                key: 'Red / Blue Phases Supply Voltage Testing',
-                label: 'Red / Blue Phases Supply Voltage Testing',
-                value: '',
-                required: false,
-                order: first
-            }),
-
-            new TextboxQuestion({
-                key: 'Red / Yellow Phases Supply Voltage Testing',
-                label: 'Red / Yellow Phases Supply Voltage Testing',
-                value: '',
-                required: false,
-                order: first
-            }),
-
-            new TextboxQuestion({
-                key: 'Yellow / Blue Phases Supply Voltage Testing',
-                label: 'Yellow / Blue Phases Supply Voltage Testing',
-                value: '',
-                required: false,
-                order: first
-            }),
-
-            new DropdownQuestion({
-                key: 'RCCB auto re-close function verification.',
-                label: 'RCCB auto re-close function verification.',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: first
-            }),
-
-            new DropdownQuestion({
-                key: 'RCCB function verification',
-                label: 'RCCB function verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: first
-            }),
-            new CategoryLabel({
-                key: 'TESTING 1.1 : POWER SUPPLY (240Vac, 1 Phase) TESTING',
-                label: 'TESTING 1.1 : POWER SUPPLY (240Vac, 1 Phase) TESTING',                
-                required: false,
-                order: second
-            }),
-            new TextboxQuestion({
-                key: 'Red / Neutral Phases Supply Voltage Testing ',
-                label: 'Red / Neutral Phases Supply Voltage Testing ',
-                value: '',
-                required: false,
-                order: second
-            }),
-            new TextboxQuestion({
-                key: 'Yellow / Neutral Phases Supply Voltage Testing',
-                label: 'Yellow / Neutral Phases Supply Voltage Testing',
-                value: '',
-                required: false,
-                order: second
-            }),
-            new TextboxQuestion({
-                key: 'Blue / Neutral Phases Supply Voltage Testing ',
-                label: 'Blue / Neutral Phases Supply Voltage Testing ',
-                value: '',
-                required: false,
-                order: second
-            }),
-            new TextboxQuestion({
-                key: 'Power Supply 240Vac/24Vdc reading',
-                label: 'Power Supply 240Vac/24Vdc reading',
-                value: '',
-                required: false,
-                order: second
-            }),
-            new TextboxQuestion({
-                key: 'Power Supply 240Vdc/5Vdc reading',
-                label: 'Power Supply 240Vdc/5Vdc reading',
-                value: '',
-                required: false,
-                order: second
-            }),
-            new CategoryLabel({
-                key: 'TESTING 1.2 : SOLAR POWER SUPPLY & SOLAR POWER CHARGING TESTING',
-                label: 'TESTING 1.2 : SOLAR POWER SUPPLY & SOLAR POWER CHARGING TESTING',                
-                required: false,
-                order: third
-            }),
-            new DropdownQuestion({
-                key: 'Solar Main Power Supply Voltage Testing',
-                label: 'Solar Main Power Supply Voltage Testing',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: third
-            }),
-            new TextboxQuestion({
-                key: 'Solar Main Power Supply Voltage Testing Value',
-                label: 'Solar Main Power Supply Voltage Testing Value',
-                value: '',
-                required: false,
-                order: third
-            }),
-            new DropdownQuestion({
-                key: 'Solar Main Power Supply Voltage Testing',
-                label: 'Solar Main Power Supply Voltage Testing',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: third
-            }),
-            new TextboxQuestion({
-                key: 'Solar Power Charging Ampere and Voltage Testing Value',
-                label: 'Solar Power Charging Ampere and Voltage Testing Value',
-                value: '',
-                required: false,
-                order: third
-            }),
-            new CategoryLabel({
-                key: 'TESTING 2.0 : SECONDARY POWER BACK UP',
-                label: 'TESTING 2.0 : SECONDARY POWER BACK UP',                
-                required: false,
-                order: fourth
-            }),
-            new DropdownQuestion({
-                key: 'UPS Backup Verification',
-                label: 'UPS Backup Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fourth
-            }),
-            new DropdownQuestion({
-                key: 'Power resume after power down.',
-                label: 'Power resume after power down.',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fourth
-            }),
-            new DropdownQuestion({
-                key: 'UPS Backup Time Verification',
-                label: 'UPS Backup Time Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fourth
-            }),
-            new TextboxQuestion({
-                key: 'State the duration of the Backup Time',
-                label: 'State the duration of the Backup Time',
-                value: '',
-                required: false,
-                order: fourth
-            }),
-            new CategoryLabel({
-                key: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',
-                label: 'TESTING 3.0 : GATE OPERATIONAL (MANUAL, AUTO, REMOTE AND EMERGENCY STOP)',                
-                required: false,
-                order: fifth
-            }),
-            new DropdownQuestion({
-                key: 'Actuator Fully Open Signal Test',
-                label: 'Actuator Fully Open Signal Test',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fifth
-            }),
-            new DropdownQuestion({
-                key: 'Actuator Fully Closed Signal Test',
-                label: 'Actuator Fully Closed Signal Test',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fifth
-            }),
-            new DropdownQuestion({
-                key: 'Gate Manual Control Test',
-                label: 'Gate Manual Control Test',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fifth
-            }),
-            new DropdownQuestion({
-                key: 'Gate Auto Control Test',
-                label: 'Gate Auto Control Test',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fifth
-            }),
-            new DropdownQuestion({
-                key: 'Emergency Stop the Operation',
-                label: 'Emergency Stop the Operation',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: fifth
-            }),
-            new CategoryLabel({
-                key: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',
-                label: 'TESTING 4.0 : WATER LEVEL AND SENSOR CALIBRATION',                
-                required: false,
-                order: sixth
-            }),
-            new TextboxQuestion({
-                key: 'Upstream Water Level Measurement',
-                label: 'Upstream Water Level Measurement',
-                value: '',
-                required: false,
-                order: sixth
-            }),
-            new TextboxQuestion({
-                key: 'Downstream Water Level Measurement',
-                label: 'Downstream Water Level Measurement',
-                value: '',
-                required: false,
-                order: sixth
-            }),
-            new DropdownQuestion({
-                key: 'Verify Upstream Sensor Reading is same as Real Water Level',
-                label: 'Verify Upstream Sensor Reading is same as Real Water Level',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: sixth
-            }),
-            new DropdownQuestion({
-                key: 'Verify Downstream Sensor Reading is same as Real Water Level',
-                label: 'Verify Downstream Sensor Reading is same as Real Water Level',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: sixth
-            }),
-            new CategoryLabel({
-                key: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',
-                label: 'TESTING 5.0 : TOUCH SCREEN VERIFICATION',               
-                required: false,
-                order: seventh
-            }),
-            new DropdownQuestion({
-                key: 'Different Level User Login Verification',
-                label: 'Different Level User Login Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: seventh
-            }),
-            new DropdownQuestion({
-                key: 'Button Function Verification',
-                label: 'Button Function Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: seventh
-            }),
-            new DropdownQuestion({
-                key: 'Gate Info Page Verification',
-                label: 'Gate Info Page Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: seventh
-            }),
-            new CategoryLabel({
-                key: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',
-                label: 'TESTING 6.0 : SYSTEM EMERGENCY ALERT AND INFO REQUEST VERIFICATION',                
-                required: false,
-                order: eighth
-            }),
-            new DropdownQuestion({
-                key: 'Local Emergency Alert System Verification',
-                label: 'Local Emergency Alert System Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: eighth
-            }),
-            new DropdownQuestion({
-                key: 'Emergency SMS Alert Verification',
-                label: 'Emergency SMS Alert Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: eighth
-            }),
-            new DropdownQuestion({
-                key: 'Gate Info Request Center',
-                label: 'Gate Info Request Center',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: eighth
-            }),
-            new TextboxQuestion({
-                key: 'Gate Info Request Center:',
-                label: 'Gate Info Request Center:',
-                value: '',
-                required: false,
-                order: eighth
-            }),
-            new CategoryLabel({
-                key: 'TESTING 7.0 : ACTUATOR FUNCTION VERIFICATION',
-                label: 'TESTING 7.0 : ACTUATOR FUNCTION VERIFICATION',               
-                required: false,
-                order: ninth
-            }),
-            new DropdownQuestion({
-                key: 'Actuator Local/Remote Signal Test',
-                label: 'Actuator Local/Remote Signal Test',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: ninth
-            }),
-            new DropdownQuestion({
-                key: 'Gate Local (Actuator) Control Test',
-                label: 'Gate Local (Actuator) Control Test',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: ninth
-            }),
-            new DropdownQuestion({
-                key: 'Replace 9V Battery for Rotork Actuator',
-                label: 'Replace 9V Battery for Rotork Actuator',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: ninth
-            }),
-            new TextboxQuestion({
-                key: 'State the number of 9V batteries replaced:',
-                label: 'State the number of 9V batteries replaced:',
-                value: '',
-                required: false,
-                order: ninth
-            }),
-            new CategoryLabel({
-                key: 'TESTING 8.0 : FLOOD SURVEILLANCE VERIFICATION',
-                label: 'TESTING 8.0 : FLOOD SURVEILLANCE VERIFICATION',                
-                required: false,
-                order: tenth
-            }),
-            new DropdownQuestion({
-                key: 'PTZ Camera Verification',
-                label: 'PTZ Camera Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: tenth
-            }),
-            new DropdownQuestion({
-                key: 'PTZ Camera Verification',
-                label: 'PTZ Camera Verification',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: tenth
-            }),
-            new CategoryLabel({
-                key: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',
-                label: 'TESTING 9.0 RAIN GAUGE FUNCTION VERIFICATION',                
-                required: false,
-                order: eleventh
-            }),
-            new DropdownQuestion({
-                key: 'Rain gauge functioning test. Due to the collected 0.5mm rainwater. ',
-                label: 'Rain gauge functioning test. Due to the collected 0.5mm rainwater. ',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: eleventh
-            }),
-            new CategoryLabel({
-                key: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',
-                label: 'TESTING 10.0 CONTROL PANEL CLEANING AND COMPONENTS MAINTENANCE',                
-                required: false,
-                order: twelfth
-            }),
-            new DropdownQuestion({
-                key: 'Control Panel Cleaning ',
-                label: 'Control Panel Cleaning ',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: twelfth
-            }),
-            new DropdownQuestion({
-                key: 'Control Panel Maintenance',
-                label: 'Control Panel Maintenance',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: twelfth
-            }),
-            new DropdownQuestion({
-                key: 'Control Panel Components Checking',
-                label: 'Control Panel Components Checking',
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: twelfth
-            }),
-
-            new CategoryLabel({
-                key: 'SUMMARY',
-                label: 'SUMMARY',                
-                required: false,
-                order: thirteenth
-            }),
-            /*
-            new CheckBoxQuestion({
-                key: 'Action_Taken',
-                label: 'Action Taken',
-                checkboxes: [
-                    { key: 'AT_Maintenance', label: 'Maintenance', value: false },
-                    { key: 'AT_Visit', label: 'Visit', value: false },
-                    { key: 'AT_Inspection', label: 'Inspection', value: false },
-                    { key: 'AT_Commisioning', label: 'Commisioning', value: false }
-                ],
-                order: thirteenth
-            }),*/
-            new RTXQuestion({
-                key: 'RTX_Action_Taken',
-                value: '<p></p><br><p></p>',
-                required: false,
-                order: thirteenth
-            }),
-            /*
-            new CheckBoxQuestion({
-                key: 'Action_Needed',
-                label: 'Action Needed',
-                checkboxes: [
-                    { key: 'AN_Maintenance', label: 'Maintenance', value: false },
-                    { key: 'AN_Visit', label: 'Visit', value: false },
-                    { key: 'AN_Inspection', label: 'Inspection', value: false },
-                    { key: 'AN_Commisioning', label: 'Commisioning', value: false },
-                    { key: 'AN_No Action', label: 'No Action', value: false }
-                ],
-                order: thirteenth
-            }),*/
-            new RTXQuestion({
-                key: 'RTX_Action_Needed',
-                value: '<p></p><br><p></p>',
-                required: false,
-                order: thirteenth
-            }),
-            new DropdownQuestion({
-                key: 'State if you have completed the protocol',
-                label: 'State if you have completed the protocol',
-                value: 'C',
-                required: true,
-                options: [
-                    { key: 'c', value: 'C' },
-                    { key: 'NC', value: 'NC' },
-                    { key: 'NA', value: 'NA' },
-                ],
-                order: thirteenth
-            }),
-            new TextboxQuestion({
-                key: 'Tested by',
-                label: 'Tested by',
                 value: '',
                 required: true,
-                order: thirteenth
+                order: number.zero
             }),
             new TextboxQuestion({
-                key: 'Witnessed by',
-                label: 'Witnessed by',
+                key: 'Gate_ID',
+                label: 'Gate ID',
                 value: '',
-                required: false,
-                order: thirteenth
+                required: true,
+                order: number.zero
             }),
             new TextboxQuestion({
-                key: 'Reviewed by',
-                label: 'Reviewed by',
+                key: 'Mitigation Scheme(Location)',
+                label: 'Mitigation Scheme(Location)',
                 value: '',
                 required: false,
-                order: thirteenth
+                order: number.zero
             }),
             new TextboxQuestion({
-                key: 'Approved by',
-                label: 'Approved by',
+                key: 'Longitude',
+                label: 'Longitude',
                 value: '',
                 required: false,
-                order: thirteenth
+                order: number.zero
+            }),
+            new TextboxQuestion({
+                key: 'Lattitude',
+                label: 'Lattitude',
+                value: '',
+                required: false,
+                order: number.zero
+            }),
+            new TextboxQuestion({
+                key: 'Gate Type',
+                label: 'Gate Type',
+                value: '',
+                required: false,
+                order: number.zero
+            }),
+            new TextboxQuestion({
+                key: 'Nos of bays',
+                label: 'Nos of bays',
+                value: '',
+                required: false,
+                order: number.zero
+            }),
+            new TextboxQuestion({
+                key: 'SCADA Commisioning Year',
+                label: 'SCADA Commisioning Year',
+                value: '',
+                required: false,
+                order: number.zero
+            }),
+            new TextboxQuestion({
+                key: 'SCADA Commisioning Month',
+                label: 'SCADA Commisioning Month',
+                value: '',
+                required: false,
+                order: number.zero
+            }),
+            new TextboxQuestion({
+                key: 'Power Source Type',
+                label: 'Power Source Type',
+                value: '',
+                required: false,
+                order: number.zero
+            }),
+            new CategoryLabel({
+                key: 'Actuators & Sensors',
+                label: 'Actuators & Sensors',
+                value: '',
+                required: false,
+                order: number.first
+            }),
+
+            new TextboxQuestion({
+                key: 'Actuator Brand',
+                label: 'Actuator Brand',
+                value: '',
+                required: false,
+                order: number.first
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Model',
+                label: 'Actuator Model',
+                value: '',
+                required: false,
+                order: number.first
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Power(kW)',
+                label: 'Actuator Power(kW)',
+                value: '',
+                required: false,
+                order: number.first
+            }),
+            new TextboxQuestion({
+                key: 'Sensor Brand',
+                label: 'Sensor Brand',
+                value: '',
+                required: false,
+                order: number.first
+            }),
+            new TextboxQuestion({
+                key: 'Sensor Controller Model',
+                label: 'Sensor Controller Model',
+                value: '',
+                required: false,
+                order: number.first
+            }),
+            new TextboxQuestion({
+                key: 'Sensor Head Model',
+                label: 'Sensor Head Model',
+                value: '',
+                required: false,
+                order: number.first
+            }),
+            new CategoryLabel({
+                key: 'SCADA Components',
+                label: 'SCADA Components',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'PLC Brand',
+                label: 'PLC Brand',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'PLC Model',
+                label: 'PLC Model',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'HMI Brand',
+                label: 'HMI Brand',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'HMI Type',
+                label: 'HMI Type',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'HMI Model',
+                label: 'HMI Model',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'RTU Embedded Model',
+                label: 'RTU Embedded Model',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'Modem Brand',
+                label: 'Modem Brand',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'Modem Communication',
+                label: 'Modem Communication',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'Modem Connectivity',
+                label: 'Modem Connectivity',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'Modem Phone Number',
+                label: 'Modem Phone Number',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'Nos of Modem Antennas',
+                label: 'Nos of Modem Antennas',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'UPS Brand & Model',
+                label: 'UPS Brand & Model',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'UPS Battery Connection Type',
+                label: 'UPS Battery Connection Type',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            new TextboxQuestion({
+                key: 'UPS Battery Capacity(Ah)',
+                label: 'UPS Battery Capacity(Ah)',
+                value: '',
+                required: false,
+                order: number.second
+            }),
+            
+            new CategoryLabel({
+                key: 'Control Settings',
+                label: 'Control Settings',
+                value: '',
+                required: false,
+                order: number.third
+            }),            
+
+            new TextboxQuestion({
+                key: 'Sensor Level(metres) at 4 mA',
+                label: 'Sensor Level(metres) at 4 mA',
+                value: '',
+                required: false,
+                order: number.third
+            }),
+
+            new TextboxQuestion({
+                key: 'Sensor Level(metres) at 20 mA',
+                label: 'Sensor Level(metres) at 20 mA',
+                value: '',
+                required: false,
+                order: number.third
+            }),
+            new TextboxQuestion({
+                key: 'Sensor Level(metres) Offset',
+                label: 'Sensor Level(metres) Offset',
+                value: '',
+                required: false,
+                order: number.third
+            }),
+
+            new TextboxQuestion({
+                key: 'Gate Danger Level(metres) Setpoint(SP)',
+                label: 'Gate Danger Level(metres) Setpoint(SP)',
+                value: '',
+                required: false,
+                order: number.third
+            }),
+            new TextboxQuestion({
+                key: 'Gate Alert Level(metres) Setpoint(SP)',
+                label: 'Gate Alert Level(metres) Setpoint(SP)',
+                value: '',
+                required: false,
+                order: number.third
+            }),
+
+            new TextboxQuestion({
+                key: 'Gate Control(metres) Setpoint(SP)',
+                label: 'Gate Control(metres) Setpoint(SP)',
+                value: '',
+                required: false,
+                order: number.third
+            }),
+            new CategoryLabel({
+                key: 'SMS Settings',
+                label: 'SMS Settings',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Last Setting Date(DD/MM/YYYY)',
+                label: 'SMS Last Setting Date(DD/MM/YYYY)',
+                value: '',
+                type: 'Date',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 1',
+                label: 'SMS Name 1',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 1',
+                label: 'No 1',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 2',
+                label: 'SMS Name 2',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 2',
+                label: 'No 2',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 3',
+                label: 'SMS Name 3',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 3',
+                label: 'No 3',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 4',
+                label: 'SMS Name 4',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 4',
+                label: 'No 4',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 5',
+                label: 'SMS Name 5',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 5',
+                label: 'No 5',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 6',
+                label: 'SMS Name 6',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 6',
+                label: 'No 6',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 7',
+                label: 'SMS Name 7',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 7',
+                label: 'No 7',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 8',
+                label: 'SMS Name 8',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 8',
+                label: 'No 8',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 9',
+                label: 'SMS Name 9',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 9',
+                label: 'No 9',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'SMS Name 10',
+                label: 'SMS Name 10',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'No 10',
+                label: 'No 10',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'Operator Name',
+                label: 'Operator Name',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new TextboxQuestion({
+                key: 'Operator Phone Number',
+                label: 'Operator Phone Number',
+                value: '',
+                required: false,
+                order: number.fourth
+            }),
+            new CategoryLabel({
+                key: 'Solar Power Supply(for Solar Supply only)',
+                label: 'Solar Power Supply(for Solar Supply only)',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Solar Charge Controller Model',
+                label: 'Actuator Solar Charge Controller Model',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Solar Usage Unit',
+                label: 'Actuator Solar Usage Unit',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Solar Nos of Batteries',
+                label: 'Actuator Solar Nos of Batteries',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Solar Battery Capacity(Ah)',
+                label: 'Actuator Solar Battery Capacity(Ah)',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Inverter Model',
+                label: 'Actuator Inverter Model',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'Actuator Inverter Output',
+                label: 'Actuator Inverter Output',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'SCADA Solar Charge Controller Model',
+                label: 'SCADA Solar Charge Controller Model',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'SCADA Solar Nos of Batteries',
+                label: 'SCADA Solar Nos of Batteries',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'SCADA Solar Battery Capacity(Ah)',
+                label: 'SCADA Solar Battery Capacity(Ah)',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'SCADA Inverter Model',
+                label: 'SCADA Inverter Model',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new TextboxQuestion({
+                key: 'SCADA Inverter Output',
+                label: 'SCADA Inverter Output',
+                value: '',
+                required: false,
+                order: number.fifth
+            }),
+            new CategoryLabel({
+                key: 'Last Update Log(remarks)',
+                label: 'Last Update Log(remarks)',
+                value: '',
+                required: false,
+                order: number.sixth
+            }),
+            new FullTextboxQuestion({
+                key: 'Last Update Log(remarks)_TEXTBOX',
+                label: '',
+                value: '',
+                required: false,
+                order: number.sixth
             })
         ]
     };

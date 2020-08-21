@@ -6,4 +6,5 @@ module.exports = {
     gate: require('../controllers/gate'),
     counter: require('../controllers/counter'),
     form: require('../controllers/form'),
+    upload: require('../controllers/upload')
 }

@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Gate } from '../_models/gate';
+import { QuestionBase } from '../question/questionType';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -12,6 +13,8 @@ const httpOptions = {
     //'responseType':  'blob'      
   })
 };
+
+const baseUrl = `${environment.apiUrl}`;
 
 @Injectable({ providedIn: 'root' })
 export class GateService {
@@ -42,10 +45,19 @@ export class GateService {
     return this.http.delete<Gate>(url);
   }
 
-  updateGate(gate: FormData, _id: string): Observable<any>{
+  updateGate(gate: FormData, _id: string): Observable<any> {
     console.log(gate);
     const url = `${environment.apiUrl}/gates/${_id}`;
     console.log(url);
     return this.http.put<any>(url, gate);
-}
+  }
+
+  upload(base64: any): Observable<any> {
+    const url = `${environment.apiUrl}/upload`;
+    return this.http.post<any>(url, base64);
+  }
+
+  getForms() {
+    return this.http.get<QuestionBase<string>[]>(baseUrl + `/form/gateForm`);
+  }
 }
