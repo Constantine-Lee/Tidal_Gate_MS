@@ -7,8 +7,8 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { fadeInAnimation } from '../_animations';
-import { NGXLogger } from 'ngx-logger';
-import { QuestionBase } from '../question/questionType';
+import { QuestionBase, CheckBoxQuestion } from '../question/questionType';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({
@@ -30,7 +30,7 @@ export class UpdateMaintenanceLogComponent implements OnInit {
     private router: Router,
     private qcs: QuestionControlService,
     private maintenanceLogService: MaintenanceLogService,
-    private logger: NGXLogger) { }
+    private logger: LoggingService) { }
 
   ngOnInit(): void {
     this.route.paramMap.pipe(
@@ -65,7 +65,7 @@ export class UpdateMaintenanceLogComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.logger.log("Function: onSubmit()");
+    this.logger.info("Function: onSubmit()");
 
     let map = new Map();
     map.set('Action_Taken', []);
@@ -81,12 +81,12 @@ export class UpdateMaintenanceLogComponent implements OnInit {
     // start spinning on the button 
     this.loading = true;
     const formValue = this.form.getRawValue();
-    this.logger.trace("formValue: " + formValue);
+    this.logger.debug("formValue: " + formValue);
 
     // update the questions based on form control value
     for (let question of this.questions) {
-      if (question.checkboxes != undefined) {
-        question.checkboxes.forEach((checkbox, i) => {
+      if ((<CheckBoxQuestion>question).checkboxes != undefined) {
+        (<CheckBoxQuestion>question).checkboxes.forEach((checkbox, i) => {
           checkbox.value = formValue[question.key][i];
           if (checkbox.value) {
             //push the checked into corresponding array

@@ -7,8 +7,8 @@ import { switchMap } from 'rxjs/operators';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
-import { NGXLogger } from 'ngx-logger';
 import { QuestionBase } from '../question/questionType';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({
@@ -30,7 +30,7 @@ export class UpdateInspectionLogComponent implements OnInit {
               private router: Router, 
               private inspectionLogService: InspectionLogService, 
               private qcs: QuestionControlService,
-              private logger: NGXLogger ) {
+              private logger: LoggingService ) {
   }
 
   ngOnInit(): void {

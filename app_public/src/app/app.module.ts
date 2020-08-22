@@ -32,7 +32,6 @@ import { UpdateInspectionLogComponent } from './update-inspection-log/update-ins
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { QuillModule } from 'ngx-quill'
-import { LoggerModule} from 'ngx-logger';
 import { environment } from 'src/environments/environment';
 
 export const httpInterceptorProviders = [
@@ -73,13 +72,7 @@ var toolbarOptions = [
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule,
-    LoggerModule.forRoot({
-      serverLoggingUrl: `${environment.apiUrl}/logs`,
-      level: environment.logLevel,
-      serverLogLevel: environment.serverLogLevel,
-      disableConsoleLogging: false
-    })
+    BrowserAnimationsModule
   ],
   providers: [
     httpInterceptorProviders

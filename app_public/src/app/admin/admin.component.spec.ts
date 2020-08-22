@@ -6,7 +6,6 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from '../app-routing.module';
-import { LoggerModule, NGXLogger, LoggerConfig } from 'ngx-logger';
 import { UserService } from '../_services/user.service';
 
 describe('AdminComponent', () => {
@@ -19,11 +18,10 @@ describe('AdminComponent', () => {
                 FormsModule, 
                 ReactiveFormsModule, 
                 BrowserAnimationsModule, 
-                AppRoutingModule,
-                LoggerModule
+                AppRoutingModule
               ],
       declarations: [AdminComponent],
-      providers: [FormBuilder, NGXLogger, LoggerConfig]
+      providers: [FormBuilder]
     })
       .compileComponents();
   }));

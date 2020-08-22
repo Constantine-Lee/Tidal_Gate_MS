@@ -7,9 +7,7 @@ import { AppRoutingModule } from '../app-routing.module';
 import { InspectionLogQuestionService } from '../question/inspectionLogQuestion.service';
 import { QuestionControlService } from '../question/questionControl.service';
 import { InspectionLogService } from '../_services/inspectionLog.service';
-import { LoggerModule, LoggerConfig, NGXLogger } from 'ngx-logger';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FormQuestionComponent } from '../question-form/form-question.component';
 
 describe('InspectionLogFormComponent', () => {
@@ -21,19 +19,16 @@ describe('InspectionLogFormComponent', () => {
       imports: [
         BrowserAnimationsModule,
         HttpClientTestingModule,
-        AppRoutingModule,
-        LoggerModule,
+        AppRoutingModule,        
         FormsModule,
-        ReactiveFormsModule,
-        CKEditorModule
+        ReactiveFormsModule
       ],
       declarations: [FormQuestionComponent, InspectionLogFormComponent],
       providers: [
         InspectionLogQuestionService,
         QuestionControlService,
-        InspectionLogService,
-        NGXLogger,
-        LoggerConfig]
+        InspectionLogService
+        ]
     })
       .compileComponents();
   }));

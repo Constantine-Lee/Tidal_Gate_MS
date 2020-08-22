@@ -6,7 +6,7 @@ import { Gate } from '../_models/gate';
 import paginate = require('jw-paginate');
 import { GateService } from '../_services/gate.service';
 import { fadeInAnimation } from '../_animations';
-import { NGXLogger } from 'ngx-logger';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({
@@ -36,13 +36,13 @@ export class GateTableComponent implements OnInit {
 
   constructor(private gateService: GateService,
     private authenticationService: AuthenticationService,
-    private logger: NGXLogger) {
-    this.logger.log("Lifecycle: constructor(private gateService: GateService, private authenticationService: AuthenticationService, private logger: NGXLogger");
+    private logger: LoggingService) {
+    this.logger.info("Lifecycle: constructor(private gateService: GateService, private authenticationService: AuthenticationService, private logger: NGXLogger");
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
   }
 
   ngOnInit(): void {
-    this.logger.log("Lifecycle: ngOnInit()");
+    this.logger.info("Lifecycle: ngOnInit()");
 
     this.getGates();
     // set page if items array isn't empty
@@ -53,7 +53,7 @@ export class GateTableComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.logger.log("Lifecycle: ngOnChanges(changes: SimpleChanges)");
+    this.logger.info("Lifecycle: ngOnChanges(changes: SimpleChanges)");
 
     // reset page if items array has changed
     if (changes.gates.currentValue !== changes.gates.previousValue) {
@@ -62,7 +62,7 @@ export class GateTableComponent implements OnInit {
   }
 
   generatePager(array: Array<Gate>, page: number) {
-    this.logger.log("Function: generatePager(array: Array<Gate>, page:number)");
+    this.logger.info("Function: generatePager(array: Array<Gate>, page:number)");
 
     // get new pager object for specified page
     this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
@@ -73,7 +73,7 @@ export class GateTableComponent implements OnInit {
   }
 
   setPage(page: number) {
-    this.logger.log("Function: setPage(page: number)");
+    this.logger.info("Function: setPage(page: number)");
 
     let arrayFilter = this.gates;
     if (this.searchTerm != "") {
@@ -86,7 +86,7 @@ export class GateTableComponent implements OnInit {
   }
 
   sortLogId() {
-    this.logger.log("Function: sortLogId()");
+    this.logger.info("Function: sortLogId()");
 
     let idSorted: Array<Gate> = [];
     if (this.logIdAscending == true) {
@@ -100,14 +100,14 @@ export class GateTableComponent implements OnInit {
   }
 
   onChangePage(pageOfItems: Array<any>) {
-    this.logger.log("Function: onChangePage(pageOfItems: Array<any>");
+    this.logger.info("Function: onChangePage(pageOfItems: Array<any>");
 
     // update current page of items
     this.pageOfItems = pageOfItems;
   }
 
   getGates() {
-    this.logger.log("Function: getGates()");
+    this.logger.info("Function: getGates()");
 
     this.gateService.getGates().subscribe(data => {
       this.gates = data;
@@ -116,7 +116,7 @@ export class GateTableComponent implements OnInit {
   }
 
   showConfirmationModal(id: string) {
-    this.logger.log("Function: showConfirmationModal(id: string)");
+    this.logger.info("Function: showConfirmationModal(id: string)");
     this.logger.info("id: string" + id);
 
     this._idToDelete = id;
@@ -124,7 +124,7 @@ export class GateTableComponent implements OnInit {
   }
 
   delete(): void {
-    this.logger.log("Function: delete()");
+    this.logger.info("Function: delete()");
 
     this.gates = this.gates.filter(l => l._id !== this._idToDelete);
     this.setPage(1);

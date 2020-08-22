@@ -3,7 +3,7 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import paginate = require('jw-paginate');
 import { fadeInAnimation } from '../_animations';
-import { NGXLogger } from 'ngx-logger';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({
@@ -31,7 +31,7 @@ export class InspectionLogTableComponent implements OnInit {
   _idToDelete: number;
 
   constructor(private insepctionLogService: InspectionLogService,
-    private logger: NGXLogger) {}
+    private logger: LoggingService) {}
 
   ngOnInit(): void {
     this.getInspectionLogs();
@@ -85,7 +85,7 @@ export class InspectionLogTableComponent implements OnInit {
   }
 
   sortDate() {
-    this.logger.log("Function: sortDate()");
+    this.logger.info("Function: sortDate()");
 
     let arrSortedDate: Array<InspectionLog> = [];
     if (this.dateIsAscending == true) {
@@ -114,7 +114,7 @@ export class InspectionLogTableComponent implements OnInit {
   }
 
   showConfirmationModal(id: number) {
-    this.logger.log("Function: showConfirmationModal(id: string)");
+    this.logger.info("Function: showConfirmationModal(id: string)");
     this.logger.info("id: string" + id);
 
     this._idToDelete = id;
@@ -122,7 +122,7 @@ export class InspectionLogTableComponent implements OnInit {
   }
 
   delete(): void {
-    this.logger.log("Function: delete()");
+    this.logger.info("Function: delete()");
     this.inspectionLogs = this.inspectionLogs.filter(l => l._id !== this._idToDelete);
     this.setPage(1);
     this.insepctionLogService.deleteInspectionLog(this._idToDelete).subscribe();

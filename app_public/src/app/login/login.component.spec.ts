@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { LoggerModule, LoggerConfig } from 'ngx-logger';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -13,9 +12,9 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientModule, AppRoutingModule, FormsModule, ReactiveFormsModule, LoggerModule],
+      imports: [BrowserAnimationsModule, HttpClientModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
       declarations: [ LoginComponent ],
-      providers: [LoggerConfig]
+      providers: []
     })
     .compileComponents();
   }));

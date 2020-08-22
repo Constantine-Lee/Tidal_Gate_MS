@@ -9,9 +9,7 @@ import { GateQuestionService } from '../question/gateQuestion.service';
 import { QuestionControlService } from '../question/questionControl.service';
 import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';
-import { LoggerModule, NGXLogger, LoggerConfig } from 'ngx-logger';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FormQuestionComponent } from '../question-form/form-question.component';
 
 describe('GateFormComponent', () => {
@@ -23,20 +21,16 @@ describe('GateFormComponent', () => {
       imports: [ 
         BrowserAnimationsModule,
         HttpClientTestingModule,
-        AppRoutingModule,
-        LoggerModule,
+        AppRoutingModule,        
         FormsModule,
-        ReactiveFormsModule,
-        CKEditorModule
+        ReactiveFormsModule
       ],
       declarations: [FormQuestionComponent, GateFormComponent ],
       providers: [
         GateQuestionService, 
         QuestionControlService, 
         GateService, 
-        AuthenticationService,
-        NGXLogger,
-        LoggerConfig
+        AuthenticationService
       ]
     })
     .compileComponents();

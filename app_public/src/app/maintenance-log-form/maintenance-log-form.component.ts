@@ -8,8 +8,8 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
-import { NGXLogger } from 'ngx-logger';
 import { QuestionBase } from '../question/questionType';
+import { LoggingService } from '../_services/logging.service';
 
 //for modal
 declare var $: any;
@@ -31,7 +31,7 @@ export class MaintenanceLogFormComponent implements OnInit {
               private maintenanceLogService: MaintenanceLogService,
               private router: Router,
               //private dialogService: DialogService,
-              private logger: NGXLogger) {}
+              private logger: LoggingService) {}
 
   //get questions and transform to formGroup, mark the form as receieved
   ngOnInit(): void {
@@ -45,7 +45,7 @@ export class MaintenanceLogFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.logger.log("Function: onSubmit()");
+    this.logger.info("Function: onSubmit()");
 
     let map = new Map();
     map.set('Action_Taken', []);
@@ -61,7 +61,7 @@ export class MaintenanceLogFormComponent implements OnInit {
     // start spinning on the button 
     this.loading = true;
     const formValue = this.form.getRawValue();
-    this.logger.trace("formValue: " + formValue);
+    this.logger.debug("formValue: " + formValue);
 
     // update the questions based on form control value
     for (let question of this.questions) {

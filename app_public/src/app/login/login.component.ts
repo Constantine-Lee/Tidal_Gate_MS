@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../_services/authentication.service';
 import { fadeInAnimation } from '../_animations';
-import { NGXLogger } from 'ngx-logger';
+import { LoggingService } from '../_services/logging.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
-        private logger: NGXLogger
+        private logger: LoggingService
     ) {
         this.logger.info('AuthenticationSerice.currentUserValue: '+this.authenticationService.currentUserValue);
         // redirect to home if already logged in

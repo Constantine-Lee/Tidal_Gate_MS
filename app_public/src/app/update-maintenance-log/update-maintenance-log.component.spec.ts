@@ -4,7 +4,6 @@ import { UpdateMaintenanceLogComponent } from './update-maintenance-log.componen
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
-import { LoggerModule, NGXLogger, LoggerConfig } from 'ngx-logger';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { QuestionControlService } from '../question/questionControl.service';
 import { MaintenanceLogService } from '../_services/maintenanceLog.service';
@@ -15,9 +14,9 @@ describe('UpdateMaintenanceLogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [BrowserAnimationsModule, HttpClientTestingModule, AppRoutingModule, LoggerModule],
+      imports: [BrowserAnimationsModule, HttpClientTestingModule, AppRoutingModule],
       declarations: [ UpdateMaintenanceLogComponent ],
-      providers: [NGXLogger, LoggerConfig, QuestionControlService, MaintenanceLogService]
+      providers: [QuestionControlService, MaintenanceLogService]
     })
     .compileComponents();
   }));

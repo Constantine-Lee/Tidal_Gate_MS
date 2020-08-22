@@ -1,5 +1,5 @@
 export class QuestionBase<T> {
-  controType: string;
+  controlType: string;
   value: T;
   key: string;
   label: string;

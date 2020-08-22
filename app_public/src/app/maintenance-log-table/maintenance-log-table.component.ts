@@ -5,7 +5,7 @@ import paginate = require('jw-paginate');
 import { map } from 'rxjs/operators';
 import { generate } from 'rxjs';
 import { fadeInAnimation } from '../_animations';
-import { NGXLogger } from 'ngx-logger';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({
@@ -35,7 +35,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   _idToDelete: number;
 
   constructor(private maintenanceLogService: MaintenanceLogService,
-    private logger: NGXLogger) { }
+    private logger: LoggingService) { }
 
   ngOnInit(): void {
     this.getMaintenanceLogs();
@@ -48,7 +48,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    this.logger.log("Function: ngOnChanges");
+    this.logger.info("Function: ngOnChanges");
 
     // reset page if items array has changed
     if (changes.maintenanceLogs.currentValue !== changes.maintenanceLogs.previousValue) {
@@ -57,7 +57,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   getMaintenanceLogs() {
-    this.logger.log("Function: getMaintenanceLogs");
+    this.logger.info("Function: getMaintenanceLogs");
 
     this.maintenanceLogService.getMaintenanceLogs().subscribe(data => {
       this.maintenanceLogs = data;
@@ -67,7 +67,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   setPage(page: number) {
-    this.logger.log("Function: setPage");
+    this.logger.info("Function: setPage");
 
     let arrayFilter = this.maintenanceLogs;
     this.logger.info("arrayFilter: " + arrayFilter);
@@ -88,7 +88,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   generatePager(array: Array<MaintenanceLog>, page: number) {
-    this.logger.log("Function: generatePager");
+    this.logger.info("Function: generatePager");
 
     // get new pager object for specified page
     this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
@@ -103,14 +103,14 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   onChangePage(pageOfItems: Array<any>) {
-    this.logger.log("Function: onChangePage");
+    this.logger.info("Function: onChangePage");
 
     // update current page of items
     this.pageOfItems = pageOfItems;
   }
 
   sortID() {
-    this.logger.log("Function: sortLogID()");
+    this.logger.info("Function: sortLogID()");
 
     let arrSortedID: Array<MaintenanceLog> = [];
     if (this.idIsAscending == true) {
@@ -127,7 +127,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   sortDate() {
-    this.logger.log("Function: sortDate()");
+    this.logger.info("Function: sortDate()");
 
     let arrSortedDate: Array<MaintenanceLog> = [];
     if (this.dateIsAscending == true) {
@@ -144,7 +144,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   showConfirmationModal(id: number) {
-    this.logger.log("Function: showConfirmationModal(id: string)");
+    this.logger.info("Function: showConfirmationModal(id: string)");
     this.logger.info("id: string" + id);
 
     this._idToDelete = id;
@@ -152,7 +152,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   }
 
   delete(): void {
-    this.logger.log("Function: delete()");
+    this.logger.info("Function: delete()");
 
     this.logger.info("this.maintenanceLogs before Filter: " + this.maintenanceLogs);
     this.maintenanceLogs = this.maintenanceLogs.filter(l => l._id !== this._idToDelete);

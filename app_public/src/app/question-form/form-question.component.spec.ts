@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FormQuestionComponent } from './form-question.component';
 import { FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { AppModule } from '../app.module';
 
 describe('FormQuestionComponent', () => {
@@ -11,7 +10,7 @@ describe('FormQuestionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, CKEditorModule, AppModule],
+      imports: [FormsModule, ReactiveFormsModule, AppModule],
       declarations: [ FormQuestionComponent ],
            
     })

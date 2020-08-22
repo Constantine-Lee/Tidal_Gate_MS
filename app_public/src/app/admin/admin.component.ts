@@ -6,7 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { fadeInAnimation } from '../_animations';
 import { Role } from '../_models/role';
 import { Router } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
+import { LoggingService } from '../_services/logging.service';
 
 //for modal
 declare var $: any;
@@ -32,8 +32,8 @@ export class AdminComponent implements OnInit {
     _idToDelete: number;
     
     constructor(private userService: UserService,
-                private formBuilder: FormBuilder,                
-                private logger: NGXLogger) { }
+                private formBuilder: FormBuilder,
+                private logger: LoggingService) { }
 
     // convenience getter for easy access to form fields
     get f() { return this.loginForm.controls; }
@@ -65,7 +65,7 @@ export class AdminComponent implements OnInit {
     }
 
     showConfirmationModal(id: number) {
-        this.logger.log("Function: showConfirmationModal(id: string)");
+        this.logger.info("Function: showConfirmationModal(id: string)");
         this.logger.info("id: string" + id);
     
         this._idToDelete = id;
@@ -73,7 +73,7 @@ export class AdminComponent implements OnInit {
       }
 
     delete(): void {
-        this.logger.log("Function: delete()");
+        this.logger.info("Function: delete()");
         this.users = this.users.filter(l => l._id !== this._idToDelete);
         this.listedUsers = this.listedUsers.filter(user => user._id !== this._idToDelete);
         this.userService.deleteUser(this._idToDelete).subscribe();
