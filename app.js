@@ -7,7 +7,7 @@ const morgan = require('morgan');
 const passport = require('passport');
 const winston = require('./app_api/config/winston');
 
-require('./app_api/models/');
+require('./app_api/models/databaseInit');
 
 require('./app_api/config/passport');
 const { handleError } = require('./app_api/models/error');

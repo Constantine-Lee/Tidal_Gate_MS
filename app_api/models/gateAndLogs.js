@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//Gate
 const gateSchema = new mongoose.Schema({
   id: String, 
   name: {
@@ -12,8 +13,14 @@ const gateSchema = new mongoose.Schema({
 });
 mongoose.model('Gate', gateSchema);
 
-const counter = require('./counter');
+//Counter
+const CounterSchema = new mongoose.Schema({    
+  _id: String,
+  seq: { Number, default: 0}
+});
+const counter = mongoose.model('Counter', CounterSchema);
 
+//Inspection Log
 const inspectionLogSchema = new mongoose.Schema({   
     id: Number, 
     timestamp: Number,
@@ -32,6 +39,7 @@ inspectionLogSchema.pre('save', function(next) {
 });
 mongoose.model('InspectionLog', inspectionLogSchema);
 
+//Maintenance Log
 const maintenanceLogSchema = new mongoose.Schema({    
   id: Number, 
   timestamp: Number,

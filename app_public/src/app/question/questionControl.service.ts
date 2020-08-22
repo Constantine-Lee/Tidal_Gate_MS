@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormArray, ValidatorFn } from '@angular/forms';
 import { QuestionBase, CheckBoxQuestion } from './questionType';
+import { LoggingService } from '../_services/logging.service';
 
 
 @Injectable(
@@ -9,11 +10,10 @@ import { QuestionBase, CheckBoxQuestion } from './questionType';
   }
 )
 export class QuestionControlService {
-  constructor() { }
+  constructor(private logger: LoggingService) { }
 
   toFormGroup(questions: QuestionBase<string>[]) {
-    let group: any = {};
-    console.log(questions);
+    let group: any = {};    
 
     questions.forEach(question => {
 /*
@@ -31,10 +31,20 @@ export class QuestionControlService {
                               new FormControl(question.value || '', Validators.required) : 
                               new FormControl(question.value || '');
       };
-
     });
-    //console.log(group);
-    return new FormGroup(group);
+    
+    let formGroup = new FormGroup(group);
+    let seen = [];
+    this.logger.debug(JSON.stringify(formGroup, function(key, val) {
+      if (val != null && typeof val == "object") {
+           if (seen.indexOf(val) >= 0) {
+               return;
+           }
+           seen.push(val);
+       }
+       return val;
+   }));
+    return formGroup;
   }
 
   // validator for checkboxes

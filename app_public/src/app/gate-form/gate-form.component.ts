@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
 import { QuestionControlService } from '.././question/questionControl.service';
 import { environment } from '../../environments/environment';
 import { GateService } from '../_services/gate.service';
@@ -9,8 +8,9 @@ import { User } from '../_models/user';
 import { Role } from '../_models/role';
 import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
-import { NGXLogger } from 'ngx-logger';
 import { QuestionBase } from '../question/questionType';
+import { LoggingService } from '../_services/logging.service';
+
 declare var $: any;
 
 @Component({
@@ -42,23 +42,30 @@ export class GateFormComponent implements OnInit {
       private qcs: QuestionControlService,
       private gateService: GateService,
       private authenticationService: AuthenticationService,
-      private logger: NGXLogger
+      private logger: LoggingService
     ) {
   }
 
   ngOnInit(): void {
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    this.logger.info("Function: ngOnInit()");
+    this.authenticationService.currentUser.subscribe(
+      x => {
+        this.currentUser = x;
+        this.logger.debug(JSON.stringify(this.currentUser));
+      }
+    );
     this.gateService.getForms().subscribe(
       q => {
         this.questions = q;
-        this.form = this.qcs.toFormGroup(q);
+        this.logger.debug(JSON.stringify(this.questions));
+        this.form = this.qcs.toFormGroup(q);        
       }
     )
   }
 
 
   onSubmit() {
-    this.logger.log("Function: onSubmit()");
+    this.logger.info("Function: onSubmit()");
 
     // stop here if form is invalid
     if (this.form.invalid) {
@@ -95,12 +102,15 @@ export class GateFormComponent implements OnInit {
     this.previewUrl = `${environment.apiUrl}/images/loading.gif`;
     let width: number = 250;
     let height: number = 190;
+    
     var mimeType = fileInput.target.files[0].type;
     if (mimeType.match(/image\/*/) == null) {
       alert("Please upload image of PNG and JPG format.");
       return;
     }
+
     this.file = fileInput.target.files[0];
+
     const img = new Image();
     img.src = URL.createObjectURL(this.file)
     img.onload = () => {
@@ -109,13 +119,14 @@ export class GateFormComponent implements OnInit {
       elem.height = height;
       const ctx = elem.getContext('2d');
       ctx.drawImage(img, 0, 0, width, height);
+
       let base64: string = ctx.canvas.toDataURL('image/jpeg', 1);
-      console.log(base64);
-      this.gateService.upload({base64String: base64}).subscribe( _ => {
+      this.logger.debug(base64);
+      this.gateService.upload({ base64String: base64 }).subscribe(_ => {
         this.previewUrl = base64;
-      }        
-      );      
-    }    
+      }
+      );
+    }
   }
 
 }

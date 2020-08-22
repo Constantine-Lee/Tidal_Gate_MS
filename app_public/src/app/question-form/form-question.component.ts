@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { QuestionBase } from '../question/questionType.js';
+import { QuestionBase, CheckBoxQuestion } from '../question/questionType.js';
 
 
 
@@ -33,7 +33,7 @@ export class FormQuestionComponent {
   };
 
   get isValid() { return this.form.controls[this.question.key].valid; }
-  get isCheckBox() { return this.question.controlType == 'checkbox'; }
+  get isCheckBox() { return (<CheckBoxQuestion>this.question).controlType == 'checkbox'; }
   get getCheckBoxFormArray() { return this.form.get(this.question.key)['controls']; }
 
   isDisabled: boolean = true;
@@ -43,7 +43,7 @@ export class FormQuestionComponent {
     //check is CheckBox then disable first four checkbox, then subscribe to value changes, disable first four checkbox if 5th checkbox is true
     if (this.isCheckBox) {
 
-      if (this.question.checkboxes.length == 5) {
+      if ((<CheckBoxQuestion>this.question).checkboxes.length == 5) {
         if (this.getCheckBoxFormArray[4].value) {
           this.getCheckBoxFormArray[0].disable();
           this.getCheckBoxFormArray[1].disable();
@@ -56,8 +56,8 @@ export class FormQuestionComponent {
           this.getCheckBoxFormArray[2].enable();
           this.getCheckBoxFormArray[3].enable();
         }
-        this.getCheckBoxFormArray[this.question.checkboxes.length - 1].valueChanges.subscribe((v) => {
-          for (let i = 0; i < this.question.checkboxes.length - 1; i++) {
+        this.getCheckBoxFormArray[(<CheckBoxQuestion>this.question).checkboxes.length - 1].valueChanges.subscribe((v) => {
+          for (let i = 0; i < (<CheckBoxQuestion>this.question).checkboxes.length - 1; i++) {
             console.log(this.getCheckBoxFormArray[i].value);
             if (v) {
               this.getCheckBoxFormArray[i].disable();
