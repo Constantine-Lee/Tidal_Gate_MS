@@ -5,7 +5,6 @@ mongoose.set('useFindAndModify', false);
 
 let dbURI = `mongodb://localhost/fyp`;
 
-
 if (process.env.NODE_ENV === 'production') {
   dbURI = process.env.MONGODB_URI;
 }

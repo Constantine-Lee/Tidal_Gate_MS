@@ -66,6 +66,7 @@ export class LoginComponent implements OnInit {
 
         this.logger.info("this.loginFormControls.username.value: "+this.loginFormControls.username.value);
         this.logger.info("this.loginFormControls.password.value: "+this.loginFormControls.password.value);
+        
         this.authenticationService.login(this.loginFormControls.username.value, this.loginFormControls.password.value)
             .subscribe(
                 _ => {

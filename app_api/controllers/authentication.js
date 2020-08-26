@@ -1,6 +1,5 @@
 const passport = require('passport');
-const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const User = require('mongoose').model('User');
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error')
 
@@ -11,8 +10,6 @@ const register = (req, res, next) => {
   if (!req.body.username || !req.body.password) {
     const err = new ErrorHandler(400, "All fields required");
     return next(err);    
-    /*
-    return res.status(400).json({"message": "All fields required"});*/
   }
 
   const user = new User();
@@ -40,21 +37,22 @@ const login = (req, res, next) => {
     const err = new ErrorHandler(400, "All fields required");
     return next(err); 
   }
-  passport.authenticate('local', (err, user, info) => {    
+  return passport.authenticate('local', (err, user, info) => {    
     if (err) {      
       const error = new ErrorHandler(404, err);
-      return next(error);      
-      //return res.status(404).json(err);
+      return next(error);           
     }
     if (user) {      
-      const token = user.generateJwt(), id = user._id, username = user.username, role = user.role;
+      const token = user.generateJwt();
+      const id = user._id;
+      const username = user.username;
+      const role = user.role;
       winston.info('Found User: id='+id+' username='+username+' role='+role);  
-      res.status(200).json({id, username, role, token});
+      res.status(200).json(user._id, user.username, user.role, token);
     } else {      
       res.status(401).json(info);
     }
-  })
-  (req, res, next);
+  });  
 };
 
 module.exports = {

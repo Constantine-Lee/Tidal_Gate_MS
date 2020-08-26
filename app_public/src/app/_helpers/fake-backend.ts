@@ -14,7 +14,6 @@ const users: User[] = [
 ];
 
 var maintenanceLogs = [
-
 ];
 
 @Injectable()
