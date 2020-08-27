@@ -27,12 +27,13 @@ export class AppComponent{
         filter(event => event instanceof NavigationEnd),
         map(() => {
           const child = this.activatedRoute.firstChild;
-          if (child.snapshot.data['title']) {
-            return child.snapshot.data['title'];
+          if (child.snapshot.data.title) {
+            console.log('title: ' + child.snapshot.data.title);
+            return child.snapshot.data.title;
           }
           return appTitle;
         })
-      ).subscribe((ttl: string) => {
+      ).subscribe((ttl: string) => {        
         this.titleService.setTitle(ttl);
       });
   }

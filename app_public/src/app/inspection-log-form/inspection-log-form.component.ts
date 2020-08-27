@@ -31,7 +31,7 @@ export class InspectionLogFormComponent implements OnInit {
     private inspectionLogService: InspectionLogService,
     private router: Router) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.inspectionLogService.getForms().subscribe(
       questions => {
         this.questions = questions;

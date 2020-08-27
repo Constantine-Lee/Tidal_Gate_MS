@@ -31,18 +31,12 @@ import { InspectionLogTableComponent } from './inspection-log-table/inspection-l
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { QuillModule } from 'ngx-quill'
-import { environment } from 'src/environments/environment';
+import { QuillModule } from 'ngx-quill';
 
 export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: LogInterceptor, multi: true },
   { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-];
-
-var toolbarOptions = [            
-  [{ 'header': 1 }, { 'list': 'ordered' }, { 'image': true}],               
-         
 ];
 
 @NgModule({

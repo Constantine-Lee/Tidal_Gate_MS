@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { QuestionControlService } from '.././question/questionControl.service';
@@ -27,10 +27,10 @@ export class UpdateInspectionLogComponent implements OnInit {
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
   constructor(private route: ActivatedRoute,
-              private router: Router, 
-              private inspectionLogService: InspectionLogService, 
-              private qcs: QuestionControlService,
-              private logger: LoggingService ) {
+    private router: Router,
+    private inspectionLogService: InspectionLogService,
+    private qcs: QuestionControlService,
+    private logger: LoggingService) {
   }
 
   ngOnInit(): void {
@@ -44,17 +44,18 @@ export class UpdateInspectionLogComponent implements OnInit {
     this.logger.info("Lifecycle: ngOnDestroy(), Update Inspection Log");
   }
 
-  async getInspectionLogByID(id: string) {
+  getInspectionLogByID(id: string) {
     this.logger.info("Function: getInspectionLogByID(id: string), Update Inspection Log");
 
-    this.inspectionLog = await this.inspectionLogService.getInspectionLogByID(id);     
-
-    this.questions = JSON.parse(this.inspectionLog.question);
-    this.form = this.qcs.toFormGroup(this.questions);
-    this.receive = true;
+    this.inspectionLogService.getInspectionLogByID(id).subscribe(iL => {
+      this.inspectionLog = iL;
+      this.questions = JSON.parse(iL.question);
+      this.form = this.qcs.toFormGroup(this.questions);
+      this.receive = true;
+    });
   }
 
-  refreshPage(){    
+  refreshPage() {
     this.ngOnInit();
   }
 
@@ -66,7 +67,7 @@ export class UpdateInspectionLogComponent implements OnInit {
       $('#errorModal').modal('show');
       return;
     };
-    
+
     this.loading = true;
     const formValue = this.form.getRawValue();
     this.questions.map(question => question.value = formValue[question.key]);

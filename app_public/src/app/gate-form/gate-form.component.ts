@@ -6,7 +6,7 @@ import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';
 import { User } from '../_models/user';
 import { Role } from '../_models/role';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { QuestionBase } from '../question/questionType';
 import { LoggingService } from '../_services/logging.service';
@@ -32,22 +32,28 @@ export class GateFormComponent implements OnInit {
   loading = false;
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
 
+  submitButtonLabel: string;
   get isAdmin() {
     return this.currentUser && this.currentUser.role === Role.Admin;
   }
 
-  constructor
-    (
-      private router: Router,
-      private qcs: QuestionControlService,
-      private gateService: GateService,
-      private authenticationService: AuthenticationService,
-      private logger: LoggingService
-    ) {
-  }
+  constructor(
+    private router: Router,
+    private qcs: QuestionControlService,
+    private gateService: GateService,
+    private authenticationService: AuthenticationService,
+    private logger: LoggingService,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     this.logger.info("Function: ngOnInit()");
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      if (params.has('gateID')) {
+        this.submitButtonLabel = 'Update';
+      }
+    }
+    );
     this.authenticationService.currentUser.subscribe(
       x => {
         this.currentUser = x;
@@ -58,7 +64,7 @@ export class GateFormComponent implements OnInit {
       q => {
         this.questions = q;
         this.logger.debug(JSON.stringify(this.questions));
-        this.form = this.qcs.toFormGroup(q);        
+        this.form = this.qcs.toFormGroup(q);
       }
     )
   }
@@ -102,7 +108,7 @@ export class GateFormComponent implements OnInit {
     this.previewUrl = `${environment.apiUrl}/images/loading.gif`;
     let width: number = 250;
     let height: number = 190;
-    
+
     var mimeType = fileInput.target.files[0].type;
     if (mimeType.match(/image\/*/) == null) {
       alert("Please upload image of PNG and JPG format.");

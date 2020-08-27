@@ -30,8 +30,8 @@ export class InspectionLogService {
     return this.http.get<InspectionLog[]>(baseUrl + `/inspectionLogs`);
   }
 
-  getInspectionLogByID(id: string): Promise<InspectionLog> {
-    return this.http.get<InspectionLog>(baseUrl + `/inspectionLogs/${id}`).toPromise();
+  getInspectionLogByID(id: string): Observable<InspectionLog> {
+    return this.http.get<InspectionLog>(baseUrl + `/inspectionLogs/${id}`);
   }
 
   deleteInspectionLog(id: number) {

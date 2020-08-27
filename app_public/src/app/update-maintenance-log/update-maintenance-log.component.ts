@@ -45,7 +45,7 @@ export class UpdateMaintenanceLogComponent implements OnInit {
 
   async getMaintenanceLogByID(id: string) {
     await this.maintenanceLogService.getMaintenanceLogByID(id)
-      .then(maintenanceLog => this.maintenanceLog = maintenanceLog);    
+      .then(maintenanceLog => this.maintenanceLog = maintenanceLog);
     this.questions = JSON.parse(this.maintenanceLog.question);
 
     /*
@@ -60,7 +60,7 @@ export class UpdateMaintenanceLogComponent implements OnInit {
     this.receive = true;
   }
 
-  refreshPage(){
+  refreshPage() {
     this.ngOnInit();
   }
 
