@@ -27,48 +27,24 @@ const getGates = async (req, res, next) => {
 
 const addGate = async (req, res, next) => {
     winston.info('Function=addGate');
-    let filename;
-    try {
-        winston.verbose('Filename/req.file.filename: ' + req.file);
-        if (req.file!=undefined) {
-            filename = process.env.imgFolderUrl + req.file.filename;
-        }
-        else {
-            filename = process.env.imgFolderUrl + 'tidalGatePlaceHolder.png';
-        }
-        winston.verbose('Filename/filename: ' + filename);
-    } catch (err) {
-        winston.error('Filename error=' + err);
-        err = new ErrorHandler(500, "Please upload an Image.");
-
-        return next(err);
-    }
-
-    try {
-        winston.verbose('Req.fileValidationError: ' + req.fileValidationError);
-        if (req.fileValidationError == true) {
-            throw new ErrorHandler(500, "Wrong Image Format.");
-        }
-    } catch (err) {
-        winston.error('File Type Error=' + err);
-        return next(err);
-    }
 
     try {
         // a document instance
         const gate = new Gate({
             id: req.body.GateID,
-            timestamp: Date.now(),
-            name: req.body.name,
-            profilePhoto: filename,
-            question: req.body.question
+            timestamp: Date.now(),            
+            profilePhoto: req.body.profilePhoto,    
+            questions: req.body.questions
         });
         winston.silly('gate=' + gate);
         winston.verbose('gate.timestamp=' + gate.timestamp + ' gate.name=' + gate.name + ' process.env.imgFolderUrl=' + process.env.imgFolderUrl + ' profilePhoto=' + gate.profilePhoto);
         // save model to database
-        const savedGate = await gate.save();
-        winston.debug('Saved Gate=' + savedGate);
-        res.status(200).json(savedGate);
+        winston.error('Save Gate Error=' + err);
+        err = new ErrorHandler(500, 'Failed to Save Gate.');
+        return next(err);
+        //const savedGate = await gate.save();
+        //winston.debug('Saved Gate=' + savedGate);
+        //res.status(200).json(savedGate);
     } catch (err) {
         winston.error('Save Gate Error=' + err);
         err = new ErrorHandler(500, 'Failed to Save Gate.');
@@ -91,14 +67,8 @@ const getGate = async (req, res, next) => {
 
 const editGate = async (req, res, next) => {
     winston.info('Function=editGate req.params.gateID=' + req.params.gateID);
-    let filename;
+
     try {
-        if (req.file!=undefined) {
-            filename = process.env.imgFolderUrl + req.file.filename;
-        }
-        else {
-            filename = req.body.profilePhoto;
-        }
         const gate = await Gate.findById(req.params.gateID).exec();
         //debug gate
         winston.debug('Fetched a Gate to Edit=' + gate);
@@ -117,7 +87,6 @@ const editGate = async (req, res, next) => {
         const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, {
             id: req.body.GateID,
             timestamp: Date.now(),
-            name: req.body.name,
             profilePhoto: filename,
             question: req.body.question
         });

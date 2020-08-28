@@ -8,7 +8,7 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
-import { QuestionBase } from '../question/questionType';
+import { QuestionBase } from '../_models/questionType';
 import { LoggingService } from '../_services/logging.service';
 
 //for modal

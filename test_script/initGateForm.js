@@ -17,11 +17,13 @@ db.once('open', function () {
         value: String,
     }, { discriminatorKey: 'controlType', _id: false });
 
-    var formSchema = new Schema({ 
-        _id: String,
-        questions: [baseQuestionSchema] });
+    const gateSchema = new mongoose.Schema({
+        _id: String, 
+        profilePhoto: String,
+        questions: [baseQuestionSchema]
+      });
 
-    var docArray = formSchema.path('questions');
+    var docArray = gateSchema.path('questions');
 
     var textQuestionSchema = new Schema({    
 
@@ -39,11 +41,12 @@ db.once('open', function () {
     var CategoryLabel = docArray.discriminator('groupLabel', categoryLabelSchema);
     const FullTextboxQuestion = docArray.discriminator('fullTextbox', fullTextBoxSchema);
 
-    var form = db.model('form', formSchema);
+    var form = db.model('form', gateSchema);
 
     // Create a new batch of events with different kinds
     var batch = {
         _id: 'gateForm',
+        profilePhoto: '',
         questions: [
             new CategoryLabel({
                 key: 'GATE INFORMATION',

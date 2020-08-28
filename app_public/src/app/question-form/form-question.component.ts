@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { QuestionBase, CheckBoxQuestion } from '../question/questionType.js';
+import { QuestionBase, CheckBoxQuestion } from '../_models/questionType.js';
 import { LoggingService } from '../_services/logging.service.js';
 import { GateService } from '../_services/gate.service.js';
 

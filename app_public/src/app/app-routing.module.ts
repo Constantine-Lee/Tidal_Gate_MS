@@ -16,7 +16,6 @@ import { UpdateMaintenanceLogComponent } from './update-maintenance-log/update-m
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
-import { UpdateGateComponent } from './update-gate/update-gate.component';
 import { CanDeactivateGuard } from './_helpers/can-deactivate.guard';
 
 const routes: Routes = [

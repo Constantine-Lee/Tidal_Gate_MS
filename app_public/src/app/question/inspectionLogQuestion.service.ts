@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { QuestionBase, TextboxQuestion, CategoryLabel, DateQuestion, DropdownQuestion } from './questionType';
+import { QuestionBase, TextboxQuestion, CategoryLabel, DateQuestion, DropdownQuestion } from '../_models/questionType';
 
 import { GateService } from '../_services/gate.service';
 import { InspectionLogService } from '../_services/inspectionLog.service';
@@ -55,7 +55,7 @@ export class InspectionLogQuestionService {
         console.log(date)
         return date;
     }
-
+   /*
     getGates() {
         this.gateSelection = [];
         this.gateService.getGatesPromise().then(gates => {
@@ -75,7 +75,7 @@ export class InspectionLogQuestionService {
         
     }
 
-    /*
+ 
     this.getGates(); 
 
     let questions: QuestionBase<string>[] = [

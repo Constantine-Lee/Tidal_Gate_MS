@@ -1,6 +1,7 @@
+
 import { Injectable } from '@angular/core';
 
-import { QuestionBase, TextboxQuestion, CategoryLabel, DateQuestion, DropdownQuestion, RTXQuestion, CheckBoxQuestion } from './questionType';
+import { QuestionBase, TextboxQuestion, CategoryLabel, DateQuestion, DropdownQuestion, RTXQuestion, CheckBoxQuestion } from '../_models/questionType';
 
 import { GateService } from '../_services/gate.service';
 
@@ -31,7 +32,7 @@ export class MaintenanceLogQuestionService {
     gateSelection: { key: string, value: string }[] = [];
 
     constructor(private gateService: GateService) { }
-
+/*
     getTodayDate(): string {
         let today = new Date();
         let dd ;
@@ -67,7 +68,7 @@ export class MaintenanceLogQuestionService {
         });
     }
 
-    /*[
+    [
         { key: 'srw001 Siol Kanan', value: 'Siol Kanan' },
         { key: 'srw002 Ketup', value: 'Ketup' },
         { key: 'srw003 Moyan Ulu East', value: 'Moyan Ulu East' },
@@ -81,7 +82,7 @@ export class MaintenanceLogQuestionService {
         { key: 'srw011 Sampun Kelili', value: 'Sampun Kelili' },
         { key: 'srw012 Segali', value: 'Segali' },
     ];*/
-
+/*
     // TODO: get from a remote source of question metadata
     getQuestions() {
 
@@ -601,7 +602,7 @@ export class MaintenanceLogQuestionService {
                 required: false,
                 order: thirteenth
             }),
-            /*
+            
             new CheckBoxQuestion({
                 key: 'Action_Taken',
                 label: 'Action Taken',
@@ -612,14 +613,14 @@ export class MaintenanceLogQuestionService {
                     { key: 'AT_Commisioning', label: 'Commisioning', value: false }
                 ],
                 order: thirteenth
-            }),*/
+            }),
             new RTXQuestion({
                 key: 'RTX_Action_Taken',
                 value: '<p></p><br><p></p>',
                 required: false,
                 order: thirteenth
             }),
-            /*
+            
             new CheckBoxQuestion({
                 key: 'Action_Needed',
                 label: 'Action Needed',
@@ -631,7 +632,7 @@ export class MaintenanceLogQuestionService {
                     { key: 'AN_No Action', label: 'No Action', value: false }
                 ],
                 order: thirteenth
-            }),*/
+            }),
             new RTXQuestion({
                 key: 'RTX_Action_Needed',
                 value: '<p></p><br><p></p>',
@@ -682,5 +683,5 @@ export class MaintenanceLogQuestionService {
 
         return questions.sort((a, b) => a.order - b.order);
     }
-
+*/
 }

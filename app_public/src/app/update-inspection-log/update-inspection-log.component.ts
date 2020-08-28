@@ -7,7 +7,7 @@ import { switchMap } from 'rxjs/operators';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
-import { QuestionBase } from '../question/questionType';
+import { QuestionBase } from '../_models/questionType';
 import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { QuestionBase, TextboxQuestion, CategoryLabel, FullTextboxQuestion } from './questionType';
+import { QuestionBase, TextboxQuestion, CategoryLabel, FullTextboxQuestion } from '../_models/questionType';
 
 const zero = 0; 
 const first = 1;

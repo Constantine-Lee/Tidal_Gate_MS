@@ -78,9 +78,9 @@ export class GateTableComponent implements OnInit {
     let arrayFilter = this.gates;
     if (this.searchTerm != "") {
       arrayFilter = this.gates
-        .filter(i =>
-          i.id.toString().includes(this.searchTerm) ||
-          i.name.includes(this.searchTerm));
+        //.filter(i =>
+          //i.id.toString().includes(this.searchTerm) ||
+          //i.name.includes(this.searchTerm));
     }
     this.generatePager(arrayFilter, page);
   }
@@ -90,10 +90,10 @@ export class GateTableComponent implements OnInit {
 
     let idSorted: Array<Gate> = [];
     if (this.logIdAscending == true) {
-      idSorted = this.gates.slice().sort((a, b) => b.id - a.id);
+      //idSorted = this.gates.slice().sort((a, b) => b.id - a.id);
     }
     else {
-      idSorted = this.gates.slice().sort((a, b) => a.id - b.id);
+      //idSorted = this.gates.slice().sort((a, b) => a.id - b.id);
     }
     this.logIdAscending = !this.logIdAscending;
     this.generatePager(idSorted, 1);

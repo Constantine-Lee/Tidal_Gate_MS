@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
 import { MaintenanceLog } from '../_models/maintenanceLog';
-import { QuestionBase } from '../question/questionType';
+import { QuestionBase } from '../_models/questionType';
 
 
 const httpOptions = {

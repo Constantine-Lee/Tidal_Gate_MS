@@ -25,7 +25,6 @@ import { UpdateMaintenanceLogComponent } from './update-maintenance-log/update-m
 
 import { JwPaginationComponent } from './jw-pagination/jw-pagination.component';
 import { FormsModule } from '@angular/forms';
-import { UpdateGateComponent } from './update-gate/update-gate.component';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
@@ -54,7 +53,6 @@ export const httpInterceptorProviders = [
     AdminComponent,
     UpdateMaintenanceLogComponent,
     JwPaginationComponent,
-    UpdateGateComponent,
     InspectionLogFormComponent,
     InspectionLogTableComponent,
     UpdateInspectionLogComponent

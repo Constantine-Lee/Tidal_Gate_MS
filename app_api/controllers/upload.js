@@ -19,7 +19,7 @@ const uploadImage = async (req, res, next) => {
                 winston.info('File created: ' + md5sum);
             }           
         })
-        res.status(200).json("Image upload success!");
+        res.status(200).json(process.env.imgFolderUrl + md5sum + '.jpg');
     } catch (err) {
         winston.error('Upload Image Error=' + err);
         err = new ErrorHandler(404, 'Failed to upload image.');

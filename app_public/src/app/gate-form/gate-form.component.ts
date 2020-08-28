@@ -8,8 +8,9 @@ import { User } from '../_models/user';
 import { Role } from '../_models/role';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
-import { QuestionBase } from '../question/questionType';
+import { QuestionBase } from '../_models/questionType';
 import { LoggingService } from '../_services/logging.service';
+import { Gate } from '../_models/gate';
 
 declare var $: any;
 
@@ -22,17 +23,15 @@ declare var $: any;
 })
 export class GateFormComponent implements OnInit {
 
-  file: File = null;
-  previewUrl: any = `${environment.apiUrl}/images/uploadImage.png`;
-  uploadedFilePath: string = null;
-
+  previewUrl: string;
   questions: QuestionBase<string>[] = [];
   form: FormGroup;
   currentUser: User;
-  loading = false;
+  submitting = false;
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
-
+  gate: Gate;
   submitButtonLabel: string;
+
   get isAdmin() {
     return this.currentUser && this.currentUser.role === Role.Admin;
   }
@@ -48,27 +47,30 @@ export class GateFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.logger.info("Function: ngOnInit()");
-    this.route.paramMap.subscribe((params: ParamMap) => {
-      if (params.has('gateID')) {
-        this.submitButtonLabel = 'Update';
-      }
-    }
-    );
-    this.authenticationService.currentUser.subscribe(
-      x => {
+
+    this.authenticationService.currentUser.subscribe(x => {
         this.currentUser = x;
         this.logger.debug(JSON.stringify(this.currentUser));
       }
     );
-    this.gateService.getForms().subscribe(
-      q => {
-        this.questions = q;
-        this.logger.debug(JSON.stringify(this.questions));
-        this.form = this.qcs.toFormGroup(q);
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      if (params.has('gateID')) {
+        this.gateService.getGateByID(params.get('gateID')).subscribe(g => this.initForm(g, 'Update'));
       }
-    )
+      else {
+        this.gateService.getForms().subscribe(g => this.initForm(g, 'Submit'));
+      }
+    }
+    );
   }
 
+  initForm(g: Gate, buttonLabel: string) {
+    this.gate = g;
+    this.previewUrl = this.gate.profilePhoto;
+    this.questions = this.gate.questions;
+    this.form = this.qcs.toFormGroup(this.questions);
+    this.submitButtonLabel = buttonLabel;
+  }
 
   onSubmit() {
     this.logger.info("Function: onSubmit()");
@@ -79,32 +81,38 @@ export class GateFormComponent implements OnInit {
       $('#errorModal').modal('show');
       return;
     };
-    this.loading = true;
-    const formData = new FormData();
+    this.submitting = true;
     const formValue = this.form.getRawValue();
 
-    this.questions.map(question => question.value = formValue[question.key]);
-    formData.append('name', formValue['Gate Name']);
-    formData.append('GateID', formValue['Gate_ID']);
-    formData.append('question', JSON.stringify(this.questions));
-    formData.append('image', this.file);
+    this.gate.questions.map(question => question.value = formValue[question.key]);
 
-    this.gateService.addGate(formData).subscribe(_ => this.router.navigate(['/gate']),
-      err => {
-        this.loading = false;
-        console.log(err);
-        if (err != undefined) {
-          this.errorString = err.error;
-        }
-        else {
-          this.errorString = 'Unknown Error Occurs... Operation Failed.';
-        }
-        this.loading = false;
-        $('#errorModal').modal('show');
-      });
+    if (this.submitButtonLabel == 'Submit') {
+      this.gateService.addGate(this.gate)
+        .subscribe(
+          _ => this.router.navigate(['/gate']),
+          err => this.submitErrHandling(err));
+    }
+    else if (this.submitButtonLabel == 'Update') {
+      this.gateService.updateGate(this.gate)
+        .subscribe(
+          _ => this.router.navigate(['/gate']),
+          err => this.submitErrHandling(err));
+    }
   }
 
-  fileProgress(fileInput: any) {
+  submitErrHandling(err) {
+    console.log(err);
+    if (err != undefined) {
+      this.errorString = err.error;
+    }
+    else {
+      this.errorString = 'Unknown Error Occurs... Operation Failed.';
+    }
+    this.submitting = false;
+    $('#errorModal').modal('show');
+  }
+
+  fileUpload(fileInput: any) {
     this.previewUrl = `${environment.apiUrl}/images/loading.gif`;
     let width: number = 250;
     let height: number = 190;
@@ -115,10 +123,8 @@ export class GateFormComponent implements OnInit {
       return;
     }
 
-    this.file = fileInput.target.files[0];
-
     const img = new Image();
-    img.src = URL.createObjectURL(this.file)
+    img.src = URL.createObjectURL(fileInput.target.files[0]);      
     img.onload = () => {
       const elem = document.createElement('canvas');
       elem.width = width;
@@ -128,8 +134,9 @@ export class GateFormComponent implements OnInit {
 
       let base64: string = ctx.canvas.toDataURL('image/jpeg', 1);
       this.logger.debug(base64);
-      this.gateService.upload({ base64String: base64 }).subscribe(_ => {
-        this.previewUrl = base64;
+      this.gateService.upload({ base64String: base64 }).subscribe(url => {
+        this.previewUrl = url;
+        this.gate.profilePhoto = url;
       }
       );
     }

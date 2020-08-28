@@ -6,7 +6,7 @@ import { User } from '../_models/user';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap, retry } from 'rxjs/operators';
 import { InspectionLog } from '../_models/inspectionLog';
-import { QuestionBase } from '../question/questionType';
+import { QuestionBase } from '../_models/questionType';
 
 const httpOptions = {
   headers: new HttpHeaders({

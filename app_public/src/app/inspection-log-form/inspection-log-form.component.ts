@@ -8,7 +8,7 @@ import { InspectionLog } from '../_models/inspectionLog';
 import { Router } from '@angular/router';
 // import fade in animation
 import { fadeInAnimation } from '../_animations/index';
-import { QuestionBase } from '../question/questionType';
+import { QuestionBase } from '../_models/questionType';
 
 declare var $: any;
 

@@ -1,25 +1,20 @@
+import { QuestionBase } from './questionType';
+
 export class Gate {
     _id: string;
-    id: number;
-    name: string;
     profilePhoto: string;
     timestamp: number;       
-    question: string;
-    options: { key: string, value: string }[];
+    questions: QuestionBase<string>[];
 
     constructor(options: {
         _id?: string,
-        id?: number,
-        name?: string,
         profilePhoto?: string,
         timestamp?: number,
-        question?: string,
+        questions?: QuestionBase<string>[],
     } = {}) {
         this._id = options._id;
-        this.id = options.id;
-        this.name = options.name;
         this.profilePhoto = options.profilePhoto;
         this.timestamp = options.timestamp;        
-        this.question = options.question;
+        this.questions = options.questions;
     }
 }

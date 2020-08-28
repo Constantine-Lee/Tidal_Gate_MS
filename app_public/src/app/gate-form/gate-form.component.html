@@ -6,7 +6,7 @@
                     <label for="profilePic">
                         <img width="250" height="190" class="img border border-info" [src]="previewUrl" />
                         <input type="file" style="display:none; " name="image" id="profilePic"
-                            (change)="fileProgress($event)" accept="image/png, image/jpeg">
+                            (change)="fileUpload($event)" accept="image/png, image/jpeg">
                     </label>
                 </div>
                 <div *ngFor="let question of questions">
@@ -14,8 +14,8 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center align-items-center container ">
-                <button type="button" [disabled]="loading" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4"
-                    data-toggle="modal" data-target="#exampleModal"><span *ngIf="loading"
+                <button type="button" [disabled]="submitting" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4"
+                    data-toggle="modal" data-target="#exampleModal"><span *ngIf="submitting"
                         class="spinner-border text-info spinner-border-sm mr-1 mb-1"></span>{{submitButtonLabel}}</button>
             </div>
             <!-- Modal -->

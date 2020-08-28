@@ -7,7 +7,7 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { fadeInAnimation } from '../_animations';
-import { QuestionBase, CheckBoxQuestion } from '../question/questionType';
+import { QuestionBase, CheckBoxQuestion } from '../_models/questionType';
 import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
