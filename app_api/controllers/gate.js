@@ -3,21 +3,49 @@ const Gate = mongoose.model('Gate');
 const multer = require('multer')
 const path = require('path');
 const winston = require('../config/winston');
+const paginate = require('./paginate');
 const { ErrorHandler } = require('../models/error')
 
 const getGates = async (req, res, next) => {
     winston.info('Function=getGates');
     try {
-        const gatesRaw = await Gate.find().exec();
-        winston.silly('gatesRaw=' + JSON.stringify(gatesRaw));
-
-        const gatesOpt = gatesRaw.map(gate => {
-            let { _id, id, name } = gate;
-            return { _id, id, name };
-        });
-        winston.verbose('gatesOpt=' + JSON.stringify(gatesOpt));
-
-        res.status(200).json(gatesOpt);
+        winston.verbose('req.query.limit: ' + req.query.limit + ' req.query.skip: ' + req.query.skip);
+        const skip = (parseInt(req.query.page) - 1) * 10;
+        const gates = await Gate.aggregate([
+            {
+                "$facet": {
+                    "totalCount": [
+                        {
+                            "$group": {
+                                "_id": null,
+                                "count": { "$sum": 1 }
+                            }
+                        }
+                    ],
+                    "searchResult": [
+                        { $skip: skip },
+                        { $limit: 10 },
+                        {
+                            $addFields: {
+                                id: { $arrayElemAt: ["$questions", 2] },
+                                name: { $arrayElemAt: ["$questions", 1] }
+                            }
+                        },
+                        {
+                            $addFields: {
+                                id: "$id.value",
+                                name: "$name.value"
+                            }
+                        },
+                        { $project: { _id: 1, "id": 1, "name": 1 } }
+                    ]
+                }
+            }
+        ]);        
+        const pager = paginate.paginate(gates[0].totalCount[0].count, parseInt(req.query.page), 10, 10);
+        delete gates[0].totalCount;
+        winston.verbose('gates: ' + JSON.stringify(gates[0], null, 2));
+        res.status(200).json({'pager': pager, 'gates': gates[0].searchResult});
     } catch (err) {
         winston.error('Get Gates Error=' + err);
         err = new ErrorHandler(404, 'Failed to get Gates.');
@@ -27,24 +55,12 @@ const getGates = async (req, res, next) => {
 
 const addGate = async (req, res, next) => {
     winston.info('Function=addGate');
-
     try {
-        // a document instance
-        const gate = new Gate({
-            id: req.body.GateID,
-            timestamp: Date.now(),            
-            profilePhoto: req.body.profilePhoto,    
-            questions: req.body.questions
-        });
-        winston.silly('gate=' + gate);
-        winston.verbose('gate.timestamp=' + gate.timestamp + ' gate.name=' + gate.name + ' process.env.imgFolderUrl=' + process.env.imgFolderUrl + ' profilePhoto=' + gate.profilePhoto);
-        // save model to database
-        winston.error('Save Gate Error=' + err);
-        err = new ErrorHandler(500, 'Failed to Save Gate.');
-        return next(err);
-        //const savedGate = await gate.save();
-        //winston.debug('Saved Gate=' + savedGate);
-        //res.status(200).json(savedGate);
+        req.body.timestamp = Date.now();
+        winston.debug('Gate to be saved: ' + JSON.stringify(req.body, null, 2));
+        const savedGate = await Gate.create(req.body);
+        winston.debug('Saved Gate=' + savedGate);
+        res.status(200).json(savedGate);
     } catch (err) {
         winston.error('Save Gate Error=' + err);
         err = new ErrorHandler(500, 'Failed to Save Gate.');
@@ -65,6 +81,7 @@ const getGate = async (req, res, next) => {
     }
 };
 
+//race condition problem existed
 const editGate = async (req, res, next) => {
     winston.info('Function=editGate req.params.gateID=' + req.params.gateID);
 
@@ -87,11 +104,11 @@ const editGate = async (req, res, next) => {
         const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, {
             id: req.body.GateID,
             timestamp: Date.now(),
-            profilePhoto: filename,
-            question: req.body.question
-        });
+            profilePhoto: req.body.profilePhoto,
+            questions: req.body.questions
+        }, { new: true }).lean();
         //silly gate
-        winston.silly('Edited Gate=' + editedGate);
+        winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));
         //verbose timestamp | name | profilePhoto
         winston.verbose('timestamp=' + editedGate.timestamp + ' name=' + editedGate.name + ' profilePhoto=' + editedGate.profilePhoto);
         res.status(200).json(editedGate);

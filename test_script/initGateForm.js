@@ -604,6 +604,7 @@ db.once('open', function () {
         ]
     };
 
+    
     form.create(batch).
         then(function (doc) {
             //doc.events.push({ kind: 'Purchased', product: 'action-figure-2' });

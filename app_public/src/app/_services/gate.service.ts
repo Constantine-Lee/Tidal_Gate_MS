@@ -3,9 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
 import { Gate } from '../_models/gate';
-import { QuestionBase } from '../_models/questionType';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -24,12 +22,8 @@ export class GateService {
     return this.http.post<any>(`${environment.apiUrl}/gates`, gate);
   }
 
-  getGates(): Observable<Gate[]> {
-    return this.http.get<Gate[]>(`${environment.apiUrl}/gates`);
-  }
-
-  async getGatesPromise(): Promise<Gate[]> {
-    return await this.http.get<Gate[]>(`${environment.apiUrl}/gates`).toPromise();
+  getGates(page: number): Observable<{pager:{}, gates:[]}> {
+    return this.http.get<{pager:{}, gates:[]}>(`${environment.apiUrl}/gates?page=${page}`);
   }
 
   getGateByID(id: string): Observable<Gate> {

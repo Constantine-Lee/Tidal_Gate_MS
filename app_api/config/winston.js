@@ -19,7 +19,7 @@ var options = {
     },
     console: {
       format: winston.format.combine(winston.format.colorize(), logFormat),
-      level: 'info',
+      level: 'verbose',
       handleExceptions: true,
       json: false,
       colorize: true,

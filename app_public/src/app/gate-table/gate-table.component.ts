@@ -17,102 +17,35 @@ declare var $: any;
   animations: [fadeInAnimation]
 })
 export class GateTableComponent implements OnInit {
-  gates: Array<Gate>;
   showDetails = false;
 
-  pageOfItems: Array<Gate>;
+  pageOfItems: Gate[];
   searchTerm: string = "";
-  initialPage = 1;
-  pageSize = 10;
-  maxPages = 10;
-
-  logIdAscending: boolean = true;
   pager: any = {};
 
   currentUser: User;
   receive: boolean;
-
   _idToDelete: string;
 
   constructor(private gateService: GateService,
     private authenticationService: AuthenticationService,
-    private logger: LoggingService) {
-    this.logger.info("Lifecycle: constructor(private gateService: GateService, private authenticationService: AuthenticationService, private logger: NGXLogger");
-    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
-  }
+    private logger: LoggingService) { }
 
   ngOnInit(): void {
     this.logger.info("Lifecycle: ngOnInit()");
-
-    this.getGates();
-    // set page if items array isn't empty
-    if (this.gates && this.gates.length) {
-      this.setPage(this.initialPage);
-    }
-    this.receive = true;
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    this.getGates(1);
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.logger.info("Lifecycle: ngOnChanges(changes: SimpleChanges)");
-
-    // reset page if items array has changed
-    if (changes.gates.currentValue !== changes.gates.previousValue) {
-      this.setPage(this.initialPage);
-    }
-  }
-
-  generatePager(array: Array<Gate>, page: number) {
-    this.logger.info("Function: generatePager(array: Array<Gate>, page:number)");
-
-    // get new pager object for specified page
-    this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
-    // get new page of items from items array
-    let pageOfItems = array.slice(this.pager.startIndex, this.pager.endIndex + 1);
-    // call change page function in parent component
-    this.onChangePage(pageOfItems);
-  }
-
-  setPage(page: number) {
-    this.logger.info("Function: setPage(page: number)");
-
-    let arrayFilter = this.gates;
-    if (this.searchTerm != "") {
-      arrayFilter = this.gates
-        //.filter(i =>
-          //i.id.toString().includes(this.searchTerm) ||
-          //i.name.includes(this.searchTerm));
-    }
-    this.generatePager(arrayFilter, page);
-  }
-
-  sortLogId() {
-    this.logger.info("Function: sortLogId()");
-
-    let idSorted: Array<Gate> = [];
-    if (this.logIdAscending == true) {
-      //idSorted = this.gates.slice().sort((a, b) => b.id - a.id);
-    }
-    else {
-      //idSorted = this.gates.slice().sort((a, b) => a.id - b.id);
-    }
-    this.logIdAscending = !this.logIdAscending;
-    this.generatePager(idSorted, 1);
-  }
-
-  onChangePage(pageOfItems: Array<any>) {
-    this.logger.info("Function: onChangePage(pageOfItems: Array<any>");
-
-    // update current page of items
-    this.pageOfItems = pageOfItems;
-  }
-
-  getGates() {
+  getGates(page: number) {
     this.logger.info("Function: getGates()");
-
-    this.gateService.getGates().subscribe(data => {
-      this.gates = data;
-      this.setPage(1);
-    });
+    this.gateService.getGates(page).subscribe(
+      x => {
+        this.pageOfItems = x.gates;
+        this.pager = x.pager;
+        this.receive = true;
+      }
+    )
   }
 
   showConfirmationModal(id: string) {
@@ -125,10 +58,10 @@ export class GateTableComponent implements OnInit {
 
   delete(): void {
     this.logger.info("Function: delete()");
-
-    this.gates = this.gates.filter(l => l._id !== this._idToDelete);
-    this.setPage(1);
-    this.gateService.deleteGate(this._idToDelete).subscribe();
+    this.gateService.deleteGate(this._idToDelete).subscribe(_ => {
+      this.pageOfItems = this.pageOfItems.filter(l => l._id !== this._idToDelete);
+      this.getGates(this.pager.currentPage);
+    });
   }
 
   get isAdmin() {

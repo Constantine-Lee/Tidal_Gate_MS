@@ -7,7 +7,7 @@ import { LogLevel } from 'src/app/_models/CONSTANT';
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
-  testBrowser: 'ChromeHeadless',
+  testBrowser: 'Chrome',
   log: LogLevel.Debug
 };
 
