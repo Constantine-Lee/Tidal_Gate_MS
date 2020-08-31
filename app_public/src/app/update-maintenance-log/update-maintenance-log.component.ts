@@ -8,7 +8,7 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { fadeInAnimation } from '../_animations';
 import { QuestionBase, CheckBoxQuestion } from '../_models/questionType';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 declare var $: any;
 
 @Component({

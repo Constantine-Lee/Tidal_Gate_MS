@@ -6,7 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { fadeInAnimation } from '../_animations';
 import { Role } from '../_models/role';
 import { Router } from '@angular/router';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 
 //for modal
 declare var $: any;

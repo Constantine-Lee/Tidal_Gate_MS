@@ -8,7 +8,7 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
 import { QuestionBase } from '../_models/questionType';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 declare var $: any;
 
 @Component({

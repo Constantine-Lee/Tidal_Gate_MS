@@ -3,10 +3,9 @@ import { User } from '.././_models/user';
 import { Role } from '.././_models/role';
 import { AuthenticationService } from '.././_services/authentication.service';
 import { Gate } from '../_models/gate';
-import paginate = require('jw-paginate');
 import { GateService } from '../_services/gate.service';
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 declare var $: any;
 
 @Component({

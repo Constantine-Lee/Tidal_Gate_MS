@@ -1,11 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 import { MaintenanceLog } from '../_models/maintenanceLog';
-import paginate = require('jw-paginate');
 import { map } from 'rxjs/operators';
 import { generate } from 'rxjs';
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 declare var $: any;
 
 @Component({
@@ -90,8 +89,6 @@ export class MaintenanceLogTableComponent implements OnInit {
   generatePager(array: Array<MaintenanceLog>, page: number) {
     this.logger.info("Function: generatePager");
 
-    // get new pager object for specified page
-    this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
     this.logger.info("this.pager: " + this.pager);
 
     // get new page of items from items array

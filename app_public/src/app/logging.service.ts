@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { LogLevel } from '../_models/CONSTANT';
-
+import { LogLevel } from './_models/CONSTANT';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoggingService {
-  constructor() { }
 
+  constructor() { }
   level: LogLevel = environment.log ;  
   
   private shouldLog(level: LogLevel): boolean {   

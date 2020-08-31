@@ -9,7 +9,7 @@ import { Role } from '../_models/role';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { QuestionBase } from '../_models/questionType';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 import { Gate } from '../_models/gate';
 
 declare var $: any;

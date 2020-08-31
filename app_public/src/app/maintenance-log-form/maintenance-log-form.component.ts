@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
 import { QuestionBase } from '../_models/questionType';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 
 //for modal
 declare var $: any;

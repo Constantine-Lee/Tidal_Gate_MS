@@ -1,9 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
-import paginate = require('jw-paginate');
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 declare var $: any;
 
 @Component({
@@ -51,8 +50,8 @@ export class InspectionLogTableComponent implements OnInit {
   }
 
   generatePager(array: Array<InspectionLog>, page: number) {
-    // get new pager object for specified page
-    this.pager = paginate(array.length, page, this.pageSize, this.maxPages);
+
+    
     // get new page of items from items array
     let pageOfItems = array.slice(this.pager.startIndex, this.pager.endIndex + 1);
     // call change page function in parent component

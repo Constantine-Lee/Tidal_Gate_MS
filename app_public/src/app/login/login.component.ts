@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../_services/authentication.service';
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../_services/logging.service';
+import { LoggingService } from '../logging.service';
 
 @Component({
     templateUrl: 'login.component.html',
