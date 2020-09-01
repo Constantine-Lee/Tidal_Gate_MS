@@ -78,7 +78,7 @@ export class InspectionLogQuestionService {
  
     this.getGates(); 
 
-    let questions: QuestionBase<string>[] = [
+    let questions: QuestionBase[] = [
         new TextboxQuestion({
             key: 'Nama Penjaga',
             label: 'Nama Penjaga',                

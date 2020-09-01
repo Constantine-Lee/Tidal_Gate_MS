@@ -88,7 +88,7 @@ export class MaintenanceLogQuestionService {
 
         this.getGates();
 
-        let questions: QuestionBase<string>[] = [
+        let questions: QuestionBase[] = [
             new CategoryLabel({
                 key: '0.0 GATE INFORMATION',
                 label: '0.0 GATE INFORMATION',

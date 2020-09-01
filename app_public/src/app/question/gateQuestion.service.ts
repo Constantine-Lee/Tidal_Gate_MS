@@ -24,7 +24,7 @@ export class GateQuestionService {
     // TODO: get from a remote source of question metadata
     getGates() {
 
-        let questions: QuestionBase<string>[] = [
+        let questions: QuestionBase[] = [
             new CategoryLabel({
                 key: 'GATE INFORMATION',
                 label: 'GATE INFORMATION',
