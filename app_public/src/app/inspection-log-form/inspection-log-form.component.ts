@@ -20,7 +20,7 @@ declare var $: any;
   animations: [fadeInAnimation]
 })
 export class InspectionLogFormComponent implements OnInit {
-  questions: QuestionBase<string>[] = [];
+  questions: QuestionBase[] = [];
   form: FormGroup;
   receive: boolean;
   loading = false;

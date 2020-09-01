@@ -4,7 +4,7 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { map } from 'rxjs/operators';
 import { generate } from 'rxjs';
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({

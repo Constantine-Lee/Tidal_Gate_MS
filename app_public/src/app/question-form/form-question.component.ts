@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { QuestionBase, CheckBoxQuestion } from '../_models/questionType.js';
-import { LoggingService } from '../logging.service.js';
+import { LoggingService } from '../_services/logging.service.js';
 import { GateService } from '../_services/gate.service.js';
 
 @Component({
@@ -14,7 +14,7 @@ export class FormQuestionComponent {
     private logger: LoggingService
   ) { }
 
-  @Input() question: QuestionBase<string>;
+  @Input() question: QuestionBase;
   @Input() form: FormGroup;
   quillEditorRef;
   modules = { toolbar: [{ header: 1 }, { list: 'ordered' }, { image: 1 }] };

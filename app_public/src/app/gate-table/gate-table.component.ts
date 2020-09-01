@@ -5,7 +5,7 @@ import { AuthenticationService } from '.././_services/authentication.service';
 import { Gate } from '../_models/gate';
 import { GateService } from '../_services/gate.service';
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({

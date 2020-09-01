@@ -2,7 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({

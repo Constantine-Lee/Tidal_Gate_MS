@@ -1,6 +1,6 @@
-export class QuestionBase<T> {
+export class QuestionBase {
   controlType: string;
-  value: T;
+  value: string;
   key: string;
   label: string;
   required: boolean;
@@ -11,7 +11,7 @@ export class QuestionBase<T> {
     order?: number,
     required?: boolean,
     label?: string,
-    value?: T,
+    value?: string,
   }
   ) {
     this.key = init.key;
@@ -22,28 +22,28 @@ export class QuestionBase<T> {
   }
 }
 
-export class TextboxQuestion extends QuestionBase<string> {
+export class TextboxQuestion extends QuestionBase {
   controlType = 'textbox';
   constructor(init: {}) {
     super(init);
   }
 }
 
-export class CategoryLabel extends QuestionBase<string> {
+export class CategoryLabel extends QuestionBase {
   controlType = 'groupLabel';
   constructor(init: {}) {
     super(init);
   }
 }
 
-export class DateQuestion extends QuestionBase<string> {
+export class DateQuestion extends QuestionBase {
   controlType = 'date';
   constructor(init: {}) {
     super(init);
   }
 }
 
-export class DropdownQuestion extends QuestionBase<string> {
+export class DropdownQuestion extends QuestionBase {
   controlType = 'dropdown';
   options: { key: string, value: string }[];
   constructor(init: {}) {
@@ -52,14 +52,14 @@ export class DropdownQuestion extends QuestionBase<string> {
   }
 }
 
-export class RTXQuestion extends QuestionBase<string> {
+export class RTXQuestion extends QuestionBase {
   controlType = 'RTX';
   constructor(options: {} = {}) {
     super(options);
   }
 }
 
-export class CheckBoxQuestion extends QuestionBase<string> {
+export class CheckBoxQuestion extends QuestionBase {
   controlType = 'checkbox';
   checkboxes: { key: string, label: string, value: boolean }[] = [];
   constructor(options: {} = {}) {
@@ -68,7 +68,7 @@ export class CheckBoxQuestion extends QuestionBase<string> {
   }
 }
 
-export class FullTextboxQuestion extends QuestionBase<string> {
+export class FullTextboxQuestion extends QuestionBase {
   controlType = 'fullTextbox';
   constructor(options: {} = {}) {
     super(options);    

@@ -81,11 +81,11 @@ router
 router
     .route('/inspectionLogs')
     .get(inspectionLog.getInspectionLogs)
-    .post(inspectionLog.addInspectionLog)
+    .post(passport.authenticate('jwt', { session: false }),inspectionLog.addInspectionLog)
 
 router
     .route('/form/:formID')
-    .get(passport.authenticate('jwt', { session: false }),form.getForm)
+    .get(form.getForm)
 
 router
     .route('/maintenanceLogs/:maintenanceLogID')

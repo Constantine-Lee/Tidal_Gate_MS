@@ -43,6 +43,6 @@ export class MaintenanceLogService {
   }
 
   getForms() {
-    return this.http.get<QuestionBase<string>[]>(baseUrl + `/form/maintenanceLogForm`);
+    return this.http.get<QuestionBase[]>(baseUrl + `/form/maintenanceLogForm`);
   }
 }

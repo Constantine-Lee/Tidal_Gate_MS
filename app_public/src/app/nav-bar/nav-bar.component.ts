@@ -5,7 +5,7 @@ import { AuthenticationService } from '.././_services/authentication.service';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { filter, map } from 'rxjs/operators';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 
 @Component({
   selector: 'app-nav-bar',

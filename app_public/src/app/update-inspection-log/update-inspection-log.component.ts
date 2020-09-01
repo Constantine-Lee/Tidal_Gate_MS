@@ -8,7 +8,7 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
 import { QuestionBase } from '../_models/questionType';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({
@@ -20,7 +20,7 @@ declare var $: any;
 })
 export class UpdateInspectionLogComponent implements OnInit {
   inspectionLog: InspectionLog;
-  questions: QuestionBase<string>[] = [];
+  questions: QuestionBase[] = [];
   form: FormGroup;
   receive: boolean;
   loading = false;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormArray, ValidatorFn } from '@angular/forms';
 import { QuestionBase, CheckBoxQuestion } from '../_models/questionType';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 
 
 @Injectable(
@@ -12,7 +12,7 @@ import { LoggingService } from '../logging.service';
 export class QuestionControlService {
   constructor(private logger: LoggingService) { }
 
-  toFormGroup(questions: QuestionBase<string>[]) {
+  toFormGroup(questions: QuestionBase[]) {
     let group: any = {};    
 
     questions.forEach(question => {

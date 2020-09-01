@@ -19,7 +19,7 @@ import { UpdateInspectionLogComponent } from './update-inspection-log/update-ins
 import { CanDeactivateGuard } from './_helpers/can-deactivate.guard';
 
 const routes: Routes = [
-  { path: '', component: UserProfileComponent, canActivate: [AuthGuard], data: { title: 'Tidal Gate Management System' } },
+  { path: '', component: UserProfileComponent, canActivate: [AuthGuard], data: { title: 'Tidal Gate Management System', breadcrumb: [] } },
   {
     path: 'home', component: UserProfileComponent, canActivate: [AuthGuard],
     data: {
@@ -27,7 +27,7 @@ const routes: Routes = [
       breadcrumb: []
     }
   },
-  { path: 'login', component: LoginComponent, data: { title: 'Tidal Gate Management System' } },
+  { path: 'login', component: LoginComponent, data: { title: 'Tidal Gate Management System', breadcrumb: [] } },
   {
     path: 'admin', component: AdminComponent, canActivate: [AuthGuard],
     data: {

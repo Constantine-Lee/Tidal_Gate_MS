@@ -37,7 +37,7 @@ const login = (req, res, next) => {
     const err = new ErrorHandler(400, "All fields required");
     return next(err); 
   }
-  return passport.authenticate('local', (err, user, info) => {    
+  passport.authenticate('local', (err, user, info) => {    
     if (err) {      
       const error = new ErrorHandler(404, err);
       return next(error);           
@@ -48,11 +48,11 @@ const login = (req, res, next) => {
       const username = user.username;
       const role = user.role;
       winston.info('Found User: id='+id+' username='+username+' role='+role);  
-      res.status(200).json(user._id, user.username, user.role, token);
+      res.status(200).json({id: user._id, username: user.username, role: user.role, token: token});
     } else {      
       res.status(401).json(info);
     }
-  });  
+  })(req, res, next);  
 };
 
 module.exports = {

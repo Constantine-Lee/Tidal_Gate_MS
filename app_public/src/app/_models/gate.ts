@@ -4,13 +4,13 @@ export class Gate {
     _id: string;
     profilePhoto: string;
     timestamp: number;       
-    questions: QuestionBase<string>[];
+    questions: QuestionBase[];
 
     constructor(options: {
         _id?: string,
         profilePhoto?: string,
         timestamp?: number,
-        questions?: QuestionBase<string>[],
+        questions?: QuestionBase[],
     } = {}) {
         this._id = options._id;
         this.profilePhoto = options.profilePhoto;

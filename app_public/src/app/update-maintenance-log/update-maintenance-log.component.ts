@@ -8,7 +8,7 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { fadeInAnimation } from '../_animations';
 import { QuestionBase, CheckBoxQuestion } from '../_models/questionType';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 declare var $: any;
 
 @Component({
@@ -20,7 +20,7 @@ declare var $: any;
 })
 export class UpdateMaintenanceLogComponent implements OnInit {
   maintenanceLog: MaintenanceLog;
-  questions: QuestionBase<string>[] = [];
+  questions: QuestionBase[] = [];
   form: FormGroup;
   receive: boolean;
   loading = false;

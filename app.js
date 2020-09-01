@@ -24,7 +24,7 @@ app.use(morgan('combined', { stream: winston.stream }));
 
 const passport = require('passport');
 app.use(passport.initialize());
-require('./app_api/config/passport')(passport, winston);
+require('./app_api/config/passport');
 
 
 

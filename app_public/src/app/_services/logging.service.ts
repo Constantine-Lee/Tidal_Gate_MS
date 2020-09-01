@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { LogLevel } from './_models/CONSTANT';
+import { LogLevel } from '../_models/CONSTANT';
 
 
 @Injectable({

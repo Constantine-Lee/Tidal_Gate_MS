@@ -9,7 +9,7 @@ import { Role } from '../_models/role';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { QuestionBase } from '../_models/questionType';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 import { Gate } from '../_models/gate';
 
 declare var $: any;
@@ -24,7 +24,7 @@ declare var $: any;
 export class GateFormComponent implements OnInit {
 
   previewUrl: string;
-  questions: QuestionBase<string>[] = [];
+  questions: QuestionBase[] = [];
   form: FormGroup;
   currentUser: User;
   submitting = false;
@@ -65,11 +65,13 @@ export class GateFormComponent implements OnInit {
   }
 
   initForm(g: Gate, buttonLabel: string) {
+    this.logger.info("Function: initForm(g: Gate, buttonLabel: string)");
     this.gate = g;
     this.previewUrl = this.gate.profilePhoto;
     this.questions = this.gate.questions;
     this.form = this.qcs.toFormGroup(this.questions);
     this.submitButtonLabel = buttonLabel;
+    this.logger.info("this.gate: " + JSON.stringify(this.gate, null, 2) + "this.previewUrl: " + this.previewUrl + "this.submitButtonLabel: " + this.submitButtonLabel);
   }
 
   onSubmit() {
@@ -83,8 +85,9 @@ export class GateFormComponent implements OnInit {
     };
     this.submitting = true;
     const formValue = this.form.getRawValue();
-
-    this.gate.questions.map(question => question.value = formValue[question.key]);
+    this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));
+    this.logger.info("this.gate.questions: " + JSON.stringify(this.gate.questions, null, 2));
+    this.gate.questions.map(q => q.value = formValue[q.key]);
 
     if (this.submitButtonLabel == 'Submit') {
       this.gateService.addGate(this.gate)

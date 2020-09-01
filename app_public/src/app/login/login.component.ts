@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../_services/authentication.service';
 import { fadeInAnimation } from '../_animations';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 
 @Component({
     templateUrl: 'login.component.html',
@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
         });
 
         // get return url from route parameters or default to '/'
-        this.logger.info("this.route.snapshot.queryParams['returnUrl']"+this.route.snapshot.queryParams['returnUrl']);
+        this.logger.info("this.route.snapshot.queryParams['returnUrl']: "+this.route.snapshot.queryParams['returnUrl']);
         
         this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
         this.receive = true;

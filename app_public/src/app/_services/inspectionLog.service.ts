@@ -42,12 +42,12 @@ export class InspectionLogService {
     return this.http.put<InspectionLog>(baseUrl + `/inspectionLogs/${inspectionLog._id}`, inspectionLog, httpOptions);
   }
 
-  getForm(): Promise<QuestionBase<string>[]> {
-    return this.http.get<QuestionBase<string>[]>(baseUrl + `/form/inspectionLog`).toPromise();
+  getForm(): Promise<QuestionBase[]> {
+    return this.http.get<QuestionBase[]>(baseUrl + `/form/inspectionLog`).toPromise();
   }
 
   getForms() {
-    return this.http.get<QuestionBase<string>[]>(baseUrl + `/form/inspectionLogForm`);
+    return this.http.get<QuestionBase[]>(baseUrl + `/form/inspectionLogForm`);
   }
 
 }

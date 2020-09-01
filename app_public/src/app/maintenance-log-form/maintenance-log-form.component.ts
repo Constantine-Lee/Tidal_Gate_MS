@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
 import { QuestionBase } from '../_models/questionType';
-import { LoggingService } from '../logging.service';
+import { LoggingService } from '../_services/logging.service';
 
 //for modal
 declare var $: any;
@@ -20,7 +20,7 @@ declare var $: any;
   animations: [fadeInAnimation]
 })
 export class MaintenanceLogFormComponent implements OnInit {
-  questions: QuestionBase<string>[] = [];
+  questions: QuestionBase[] = [];
   form: FormGroup;
   receive: boolean;
   loading = false;
