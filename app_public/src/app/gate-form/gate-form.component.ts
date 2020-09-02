@@ -49,9 +49,9 @@ export class GateFormComponent implements OnInit {
     this.logger.info("Function: ngOnInit()");
 
     this.authenticationService.currentUser.subscribe(x => {
-        this.currentUser = x;
-        this.logger.debug(JSON.stringify(this.currentUser));
-      }
+      this.currentUser = x;
+      this.logger.debug(JSON.stringify(this.currentUser));
+    }
     );
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.has('gateID')) {
@@ -127,7 +127,7 @@ export class GateFormComponent implements OnInit {
     }
 
     const img = new Image();
-    img.src = URL.createObjectURL(fileInput.target.files[0]);      
+    img.src = URL.createObjectURL(fileInput.target.files[0]);
     img.onload = () => {
       const elem = document.createElement('canvas');
       elem.width = width;

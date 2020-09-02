@@ -1,12 +1,11 @@
 <div>
     <div @fadeInAnimation *ngIf="receive" class="container mt-4">
-        <div *ngIf="!showDetails">
+        <div>
             <div class="d-flex flex-row-reverse">
                 <div class="input-group input-group-lg mb-3">
-                    <input type="text" [(ngModel)]="searchTerm" class="form-control" placeholder="Search"
+                    <input type="text" (keyup)="search($event.target.value)" [(ngModel)]="searchTerm" class="form-control" placeholder="Search"
                         aria-label="Recipient's username" aria-describedby="basic-addon2">
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">Search</button>
+                    <div class="input-group-append">                        
                         <button *ngIf="isAdmin" type="button" class="btn btn-outline-secondary" routerLink="/addGate"><i
                                 class="fa fa-plus-circle" aria-hidden="true"></i> Add</button>
                     </div>

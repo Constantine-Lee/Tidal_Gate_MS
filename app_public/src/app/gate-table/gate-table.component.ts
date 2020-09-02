@@ -6,6 +6,8 @@ import { Gate } from '../_models/gate';
 import { GateService } from '../_services/gate.service';
 import { fadeInAnimation } from '../_animations';
 import { LoggingService } from '../_services/logging.service';
+import { Observable, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 declare var $: any;
 
 @Component({
@@ -16,10 +18,9 @@ declare var $: any;
   animations: [fadeInAnimation]
 })
 export class GateTableComponent implements OnInit {
-  showDetails = false;
-
-  pageOfItems: Gate[];
+  private searchText$ = new Subject<string>();
   searchTerm: string = "";
+  pageOfItems: Gate[];
   pager: any = {};
 
   currentUser: User;
@@ -34,17 +35,33 @@ export class GateTableComponent implements OnInit {
     this.logger.info("Lifecycle: ngOnInit()");
     this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
     this.getGates(1);
+    this.searchText$
+      .pipe(
+        debounceTime(500),
+        distinctUntilChanged(),
+        switchMap(searchText => this.gateService.getGates(1, searchText))
+      )
+      .subscribe(x => {
+        this.logger.info("succeed");
+        this.pageOfItems = x.gates;
+        this.pager = x.pager;
+      }
+      )
   }
 
   getGates(page: number) {
     this.logger.info("Function: getGates()");
-    this.gateService.getGates(page).subscribe(
-      x => {
+    this.gateService.getGates(page, this.searchTerm)
+      .subscribe(x => {
         this.pageOfItems = x.gates;
         this.pager = x.pager;
         this.receive = true;
       }
-    )
+      )
+  }
+
+  search(searchText: string) {
+    this.searchText$.next(searchText);
   }
 
   showConfirmationModal(id: string) {

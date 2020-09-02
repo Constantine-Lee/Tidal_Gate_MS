@@ -9,40 +9,35 @@ const { ErrorHandler } = require('../models/error')
 const getGates = async (req, res, next) => {
     winston.info('Function=getGates');
     try {
-        winston.verbose('req.query.limit: ' + req.query.limit + ' req.query.skip: ' + req.query.skip);
+        winston.verbose('req.query.page: ' + req.query.page + ' req.query.searchText: ' + req.query.searchText);
         const skip = (parseInt(req.query.page) - 1) * 10;
-        const gates = await Gate.aggregate([
-            {
-                "$facet": {
-                    "totalCount": [
-                        {
-                            "$group": {
-                                "_id": null,
-                                "count": { "$sum": 1 }
-                            }
+        let pipeline = [];
+        if (req.query.searchText && req.query.searchText != "''") {
+            pipeline.push({ $match: { $text: { $search: req.query.searchText } } });
+        }
+        pipeline.push({
+            "$facet": {
+                "totalCount": [
+                    {
+                        "$group": {
+                            "_id": null,
+                            "count": { "$sum": 1 }
                         }
-                    ],
-                    "searchResult": [
-                        { $skip: skip },
-                        { $limit: 10 },
-                        {
-                            $addFields: {
-                                id: { $arrayElemAt: ["$questions", 2] },
-                                name: { $arrayElemAt: ["$questions", 1] }
-                            }
-                        },
-                        {
-                            $addFields: {
-                                id: "$id.value",
-                                name: "$name.value"
-                            }
-                        },
-                        { $project: { _id: 1, "id": 1, "name": 1 } }
-                    ]
-                }
+                    }
+                ],
+                "searchResult": [
+                    { $skip: skip },
+                    { $limit: 10 },
+                    { $project: { _id: 1, "id": "$gateID.value", "name": "$gateName.value" } }
+                ]
             }
-        ]);
-        const pager = paginate.paginate(gates[0].totalCount[0].count, parseInt(req.query.page), 10, 10);
+        })
+        const gates = await Gate.aggregate(pipeline);
+        if(gates[0].totalCount.length == 0){
+            length = 0;
+        }
+        else { winston.verbose("Total Count: " + gates[0].totalCount.length); length = gates[0].totalCount[0].count ; }
+        const pager = paginate.paginate(length, parseInt(req.query.page), 10, 10);
         delete gates[0].totalCount;
         winston.debug('gates: ' + JSON.stringify(gates[0], null, 2));
         res.status(200).json({ 'pager': pager, 'gates': gates[0].searchResult });
@@ -125,7 +120,7 @@ const editGate = async (req, res, next) => {
         delete req.body.questions;
         req.body.timestamp = Date.now();
 
-        const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, req.body , { new: false }).lean();
+        const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, req.body, { new: false }).lean();
         //silly gate
         winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));
         //verbose timestamp | name | profilePhoto

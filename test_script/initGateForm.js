@@ -8,7 +8,7 @@ mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-    var baseQuestionSchema = new Schema({
+    const baseQuestionSchema = new Schema({
         key: String,
         controlType: String,
         order: Number,
@@ -668,10 +668,6 @@ db.once('open', function () {
 
     
     form.create(batch).
-        then(function (doc) {
-            //doc.events.push({ kind: 'Purchased', product: 'action-figure-2' });
-            //return doc.save();
-        }).
         then(function (doc) {
         }).
         catch();
