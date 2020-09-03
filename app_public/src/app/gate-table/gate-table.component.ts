@@ -6,8 +6,10 @@ import { Gate } from '../_models/gate';
 import { GateService } from '../_services/gate.service';
 import { fadeInAnimation } from '../_animations';
 import { LoggingService } from '../_services/logging.service';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, throwError } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import * as FileSaver from 'file-saver';
+
 declare var $: any;
 
 @Component({
@@ -47,6 +49,14 @@ export class GateTableComponent implements OnInit {
         this.pager = x.pager;
       }
       )
+  }
+
+  downloadPDF(id: string){
+    this.gateService.downloadPDF(id).subscribe((response) => {
+      var blob = new Blob([response], { type: 'application/pdf' });
+      FileSaver.saveAs(blob, 'report.pdf');
+    },
+      e => { throwError(e); });
   }
 
   getGates(page: number) {

@@ -11,6 +11,8 @@ import { fadeInAnimation } from '../_animations';
 import { QuestionBase } from '../_models/questionType';
 import { LoggingService } from '../_services/logging.service';
 import { Gate } from '../_models/gate';
+import * as FileSaver from 'file-saver';
+import { throwError } from 'rxjs';
 
 declare var $: any;
 
