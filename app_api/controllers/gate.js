@@ -48,7 +48,7 @@ const download = async (req, res, next) => {
                 doc.text(questions[i].label + ' : ');
                 doc.x = 325;
                 doc.moveUp();
-                doc.text(questions[i].value + ' ');                
+                doc.text(questions[i].value);                
                 doc.moveUp();
                 doc.x = 325;
                 doc.text('                                                          ', { underline: true });

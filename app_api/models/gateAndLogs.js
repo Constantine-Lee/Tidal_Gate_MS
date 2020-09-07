@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
-const { baseQuestionSchema,
+const {
+  baseQuestionSchema,
   textQuestionSchema,
   dropDownQuestionSchema,
   dateQuestionSchema,
-  categoryLabelSchema}  = require('./form');
+  categoryLabelSchema,
+  refGateQuestionSchema } = require('./form');
 
 //Gate
 const gateSchema = new mongoose.Schema({
@@ -104,7 +106,7 @@ const inspectionLogSchema = new mongoose.Schema({
   timestamp: Number,
   namaPenjaga: textQuestionSchema,
   noRujukan: textQuestionSchema,
-  lokasiPintuAir: dropDownQuestionSchema,
+  lokasiPintuAir: refGateQuestionSchema,
   jenisGearbox: textQuestionSchema,
   tarikh: dateQuestionSchema,
   strukturPintu: categoryLabelSchema,

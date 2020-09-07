@@ -26,6 +26,10 @@ var dropDownQuestionSchema = new Schema({
 }, { _id: false });
 dropDownQuestionSchema.add(baseQuestionSchema);
 
+let refGateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
+  value: { type: Schema.Types.ObjectId, ref: 'Gate' },
+})
+
 var dateQuestionSchema = new Schema({
   value: { type: Date, default: Date.now }
 }, { _id: false });
@@ -39,7 +43,8 @@ module.exports = {
   textQuestionSchema,
   dropDownQuestionSchema,
   dateQuestionSchema,
-  categoryLabelSchema
+  categoryLabelSchema,
+  refGateQuestionSchema
 }
 
 

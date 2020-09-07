@@ -58,7 +58,7 @@
         </div>
     </nav>
     <nav aria-label="breadcrumb ">
-        <ol class="breadcrumb ">
+        <ol class="breadcrumb">
             <li class="breadcrumb-item"><a routerLink="/home">Home</a></li>
             <li class="breadcrumb-item" [class.active]="bc.current" *ngFor="let bc of breadcrumb"><a
                     [routerLink]="bc.link" [class.disabled]="bc.current ? true: false">{{bc.label}}</a> </li>

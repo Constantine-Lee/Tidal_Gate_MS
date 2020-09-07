@@ -11,6 +11,14 @@
             <label [attr.for]="question.key" class="col-form-label col-sm-6 ">{{question.label}}
             </label>
             <input [ngClass]="{ 'is-invalid': !isValid}" [formControlName]="question.key" [id]="question.key"
+                [type]="question.controlType" class="col-sm-6 form-control bg-white" placeholder="Your answer">
+        </div>
+
+        <!--Disabled-->
+        <div class="container form-row mb-1 mt-2 pr-4 pl-4 " *ngSwitchCase="'disabled'">
+            <label [attr.for]="question.key" class="col-form-label col-sm-6 ">{{question.label}}
+            </label>
+            <input disabled [ngClass]="{ 'is-invalid': !isValid}" [formControlName]="question.key" [id]="question.key"
                 [type]="question.controlType" class="col-sm-6 form-control bg-light" placeholder="Your answer">
         </div>
 
@@ -19,16 +27,16 @@
             <label [attr.for]="question.key" class="col-form-label col-sm-6 ">{{question.label}}
             </label>
             <input [ngClass]="{ 'is-invalid': !isValid}" [formControlName]="question.key" [id]="question.key"
-                [type]="question.controlType" class="col-sm-6 form-control bg-light" placeholder="Your answer">
+                [type]="question.controlType" class="col-sm-6 form-control bg-white" placeholder="Your answer">
         </div>
 
         <!--DropDown-->
         <div class="container form-row mb-1 mt-2 pr-4 pl-4" *ngSwitchCase="'dropdown'">
             <label [attr.for]="question.key" class="col-form-label col-sm-6">{{question.label}}
             </label>
-            <select [ngClass]="{ 'is-invalid': !isValid}" class="custom-select col-sm-6 bg-light" [id]="question.key"
+            <select [ngClass]="{ 'is-invalid': !isValid}" class="custom-select col-sm-6 bg-white" [id]="question.key"
                 [formControlName]="question.key">
-                <option *ngFor="let opt of $any(question).options" [value]="opt.value">{{opt.value}}</option>
+                <option *ngFor="let opt of $any(question).options" [value]="opt.key">{{opt.value}}</option>
             </select>
         </div>
 

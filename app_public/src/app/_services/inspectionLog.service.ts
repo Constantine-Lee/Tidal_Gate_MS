@@ -29,8 +29,9 @@ export class InspectionLogService {
     return this.http.post<InspectionLog>(baseUrl + `/inspectionLogs`, inspectionLog, httpOptions);
   }
 
-  getInspectionLogs(page: number, searchText: string): Observable<{ pager: {}, inspectionLogs: [] }> {
-    return this.http.get<{ pager: {}, inspectionLogs: [] }>(`${environment.apiUrl}/inspectionLogs?page=${page}&searchText=${searchText}`);
+  getInspectionLogs(page: number, searchText: string, sortImportance: string[], iDSort: number): Observable<{ pager: {}, inspectionLogs: [] }> {
+    console.log(iDSort);
+    return this.http.get<{ pager: {}, inspectionLogs: [] }>(`${environment.apiUrl}/inspectionLogs?page=${page}&searchText=${searchText}&sortImportance=${sortImportance}&iDSort=${iDSort}`);
   }
 
   getInspectionLogByID(id: string): Observable<InspectionLog> {

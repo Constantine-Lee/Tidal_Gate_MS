@@ -19,9 +19,11 @@ export class InspectionLogTableComponent implements OnInit {
   searchTerm: string = "";
   pageOfItems: InspectionLog[];
   pager: any = {};
-
+  sortImportance: string[] = [];
 
   logIdAscending: boolean = true;
+  get iDSort(): number { return this.logIdAscending ? 1 : -1 }
+
   dateIsAscending: boolean = true;
 
   receive: boolean;
@@ -37,24 +39,34 @@ export class InspectionLogTableComponent implements OnInit {
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(searchText => this.inspectionLogService.getInspectionLogs(1, searchText))
+        switchMap(searchText => this.inspectionLogService.getInspectionLogs(1, searchText, this.sortImportance, this.iDSort))
       )
       .subscribe(x => {
-        this.logger.info("succeed: " + JSON.stringify(x));
         this.pageOfItems = x.inspectionLogs;
         this.pager = x.pager;
       })
   }
 
-
   getInspectionLogs(page: number) {
     this.logger.info("Function: getInspectionLogs()");
-    this.inspectionLogService.getInspectionLogs(page, this.searchTerm)
+    this.inspectionLogService.getInspectionLogs(page, this.searchTerm, this.sortImportance, this.iDSort)
       .subscribe(x => {
         this.pageOfItems = x.inspectionLogs;
         this.pager = x.pager;
-        this.receive = true;
       })
+  }
+
+  toggleIDSort(){
+    this.logIdAscending = !this.logIdAscending;
+    if(this.sortImportance[0] != 'ID'){
+      this.sortImportance.pop();
+      this.sortImportance.unshift('ID');
+    }
+    this.getInspectionLogs(1);
+  }
+
+  toggleDateSort(){
+    
   }
 
   search(searchText: string) {
