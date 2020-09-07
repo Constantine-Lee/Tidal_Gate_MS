@@ -30,6 +30,7 @@ const download = async (req, res, next) => {
         doc.pipe(res);
         const gate = await findGate(req.params.gateID);
         const questions = gate.questions;
+        winston.info("questions: " + JSON.stringify(questions, null, 2));
         doc.fontSize(14);
         doc.text("Jabatan Pengairan dan Saliran Sarawak - Gate");
         doc.moveDown(1);
@@ -47,7 +48,10 @@ const download = async (req, res, next) => {
                 doc.text(questions[i].label + ' : ');
                 doc.x = 325;
                 doc.moveUp();
-                doc.text(questions[i].value, { underline: true });
+                doc.text(questions[i].value + ' ');                
+                doc.moveUp();
+                doc.x = 325;
+                doc.text('                                                          ', { underline: true });
             }
             if (questions[i].controlType == "fullTextbox") {
                 doc.fontSize(10);
