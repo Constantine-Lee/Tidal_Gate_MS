@@ -87,8 +87,7 @@ export class GateFormComponent implements OnInit {
     };
     this.submitting = true;
     const formValue = this.form.getRawValue();
-    this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));
-    this.logger.info("this.gate.questions: " + JSON.stringify(this.gate.questions, null, 2));
+    this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));    
     this.gate.questions.map(q => q.value = formValue[q.key]);
 
     if (this.submitButtonLabel == 'Submit') {

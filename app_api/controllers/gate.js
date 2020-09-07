@@ -4,7 +4,65 @@ const multer = require('multer')
 const path = require('path');
 const winston = require('../config/winston');
 const paginate = require('./paginate');
-const { ErrorHandler } = require('../models/error')
+const { ErrorHandler } = require('../models/error');
+const PDFDocument = require('pdfkit');
+
+async function findGate(id) {
+    let gate = await Gate.findById(id).select('-__v').lean();
+
+    let questions = [];
+    const keys = Object.keys(gate);
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        if (!['_id', 'profilePhoto', 'timestamp'].includes(key)) {
+            questions.push(gate[key]);
+            delete gate[key];
+        }
+    }
+    gate.questions = questions;
+    return gate;
+}
+
+const download = async (req, res, next) => {
+    winston.info('Function=download');
+    try {
+        const doc = new PDFDocument;
+        doc.pipe(res);
+        const gate = await findGate(req.params.gateID);
+        const questions = gate.questions;
+        doc.fontSize(14);
+        doc.text("Jabatan Pengairan dan Saliran Sarawak - Gate");
+        doc.moveDown(1);
+        for (let i = 0; i < questions.length; i++) {
+            if (questions[i].controlType == "groupLabel") {
+                doc.moveDown(1);
+                doc.fontSize(12);
+                doc.x = 75;
+                doc.text(questions[i].label);
+                doc.moveDown(0.5);
+            }
+            if (questions[i].controlType == "textbox") {
+                doc.fontSize(10);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 325;
+                doc.moveUp();
+                doc.text(questions[i].value, { underline: true });
+            }
+            if (questions[i].controlType == "fullTextbox") {
+                doc.fontSize(10);
+                doc.x = 75;
+                doc.text(questions[i].value, { underline: true });
+            }
+        }
+        doc.end();
+    }
+    catch (err) {
+        winston.error('Generate PDF Error=' + err);
+        err = new ErrorHandler(404, 'Failed to Generate PDF.');
+        return next(err);
+    }
+}
 
 const getGates = async (req, res, next) => {
     winston.info('Function=getGates');
@@ -33,10 +91,10 @@ const getGates = async (req, res, next) => {
             }
         })
         const gates = await Gate.aggregate(pipeline);
-        if(gates[0].totalCount.length == 0){
+        if (gates[0].totalCount.length == 0) {
             length = 0;
         }
-        else { winston.verbose("Total Count: " + gates[0].totalCount.length); length = gates[0].totalCount[0].count ; }
+        else { winston.verbose("Total Count: " + gates[0].totalCount.length); length = gates[0].totalCount[0].count; }
         const pager = paginate.paginate(length, parseInt(req.query.page), 10, 10);
         delete gates[0].totalCount;
         winston.debug('gates: ' + JSON.stringify(gates[0], null, 2));
@@ -53,8 +111,7 @@ const addGate = async (req, res, next) => {
     try {
         let questions = req.body.questions;
         for (let i = 0; i < questions.length; i++) {
-            req.body[questions[i].key] = questions[i];
-            winston.verbose('req.body[questions[i].key: ' + JSON.stringify(req.body[questions[i].key], null, 2));
+            req.body[questions[i].key] = questions[i];            
         }
         delete req.body.questions;
         req.body.timestamp = Date.now();
@@ -72,17 +129,7 @@ const addGate = async (req, res, next) => {
 const getGate = async (req, res, next) => {
     winston.info('Function=getGate req.params.gateID=' + req.params.gateID);
     try {
-        const gate = await Gate.findById(req.params.gateID).select('-__v').lean();
-        let questions = [];
-        const keys = Object.keys(gate);
-        for (let i = 0; i < keys.length; i++) {
-            let key = keys[i];
-            if (!['_id', 'profilePhoto', 'timestamp'].includes(key)) {
-                questions.push(gate[key]);
-                delete gate[key];
-            }
-        }
-        gate.questions = questions;
+        const gate = await findGate(req.params.gateID);
         winston.verbose('Fetched a Gate=' + JSON.stringify(gate, null, 2));
         res.status(200).json(gate);
     } catch (err) {
@@ -92,7 +139,7 @@ const getGate = async (req, res, next) => {
     }
 };
 
-//race condition problem existed
+//TODO: race condition problem existed
 const editGate = async (req, res, next) => {
     winston.info('Function=editGate req.params.gateID=' + req.params.gateID);
 
@@ -100,9 +147,6 @@ const editGate = async (req, res, next) => {
         const gate = await Gate.findById(req.params.gateID).lean();
         //debug gate
         winston.debug('Fetched a Gate to Edit=' + gate);
-        //info req.body.timestamp | gate.timestamp
-        winston.info('req.body.timestamp=' + req.body.timestamp + ' gate.timestamp=' + gate.timestamp);
-
         if (gate.timestamp != req.body.timestamp) {
             throw new ErrorHandler(404, "The Gate had been edited by others.");
         }
@@ -114,17 +158,14 @@ const editGate = async (req, res, next) => {
     try {
         let questions = req.body.questions;
         for (let i = 0; i < questions.length; i++) {
-            req.body[questions[i].key] = questions[i];
-            winston.verbose('req.body[questions[i].key: ' + JSON.stringify(req.body[questions[i].key], null, 2));
+            req.body[questions[i].key] = questions[i];            
         }
         delete req.body.questions;
         req.body.timestamp = Date.now();
 
         const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, req.body, { new: false }).lean();
         //silly gate
-        winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));
-        //verbose timestamp | name | profilePhoto
-        winston.verbose('timestamp=' + editedGate.timestamp + ' name=' + editedGate.name + ' profilePhoto=' + editedGate.profilePhoto);
+        winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));        
         res.status(200).json(editedGate);
     }
     catch (err) {
@@ -154,5 +195,6 @@ module.exports = {
     addGate,
     getGate,
     editGate,
-    deleteGate
+    deleteGate,
+    download
 };

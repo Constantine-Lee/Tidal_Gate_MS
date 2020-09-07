@@ -21,7 +21,7 @@ const addCounter = async (req, res, next) => {
 
     try {
         const counter = new Counter({
-            _id: req.body.name,
+            _id: req.body._id,
             seq: req.body.seq
         });
         winston.verbose('create a counter='+JSON.stringify(counter));

@@ -20,9 +20,9 @@ export class AuthenticationService {
         return this.currentUserSubject.value;
     }
 
-    login(username: string, password: string) {
+    login(username: string, password: string) : Observable<User>{
         let url = `${environment.apiUrl}/login`;
-        return this.http.post<any>(url, { username, password })
+        return this.http.post<User>(url, { username, password })
             .pipe(map(user => {
                 // login successful if there's a jwt token in the response
                 console.log(user);

@@ -7,6 +7,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap, retry } from 'rxjs/operators';
 import { InspectionLog } from '../_models/inspectionLog';
 import { QuestionBase } from '../_models/questionType';
+import { LoggingService } from './logging.service';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -20,14 +21,16 @@ const baseUrl = `${environment.apiUrl}`;
 export class InspectionLogService {
 
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private logger: LoggingService) { }
 
   addInspectionLog(inspectionLog: InspectionLog): Observable<InspectionLog> {
     return this.http.post<InspectionLog>(baseUrl + `/inspectionLogs`, inspectionLog, httpOptions);
   }
 
-  getInspectionLogs(): Observable<InspectionLog[]> {
-    return this.http.get<InspectionLog[]>(baseUrl + `/inspectionLogs`);
+  getInspectionLogs(page: number, searchText: string): Observable<{ pager: {}, inspectionLogs: [] }> {
+    return this.http.get<{ pager: {}, inspectionLogs: [] }>(`${environment.apiUrl}/inspectionLogs?page=${page}&searchText=${searchText}`);
   }
 
   getInspectionLogByID(id: string): Observable<InspectionLog> {
@@ -42,12 +45,7 @@ export class InspectionLogService {
     return this.http.put<InspectionLog>(baseUrl + `/inspectionLogs/${inspectionLog._id}`, inspectionLog, httpOptions);
   }
 
-  getForm(): Promise<QuestionBase[]> {
-    return this.http.get<QuestionBase[]>(baseUrl + `/form/inspectionLog`).toPromise();
+  getForms(): Observable<InspectionLog> {
+    return this.http.get<InspectionLog>(baseUrl + `/form/inspectionLogForm`);
   }
-
-  getForms() {
-    return this.http.get<QuestionBase[]>(baseUrl + `/form/inspectionLogForm`);
-  }
-
 }

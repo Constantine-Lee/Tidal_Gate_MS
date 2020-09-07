@@ -28,6 +28,9 @@ export class GateTableComponent implements OnInit {
   currentUser: User;
   receive: boolean;
   _idToDelete: string;
+  get isAdmin() {
+    return this.currentUser && this.currentUser.role === Role.Admin;
+  }
 
   constructor(private gateService: GateService,
     private authenticationService: AuthenticationService,
@@ -88,9 +91,5 @@ export class GateTableComponent implements OnInit {
       this.pageOfItems = this.pageOfItems.filter(l => l._id !== this._idToDelete);
       this.getGates(this.pager.currentPage);
     });
-  }
-
-  get isAdmin() {
-    return this.currentUser && this.currentUser.role === Role.Admin;
   }
 }

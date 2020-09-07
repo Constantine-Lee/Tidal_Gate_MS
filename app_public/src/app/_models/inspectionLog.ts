@@ -1,22 +1,18 @@
+import { QuestionBase } from './questionType';
+
 export class InspectionLog {
     _id: number;
     id: number;
     timestamp: number;
-    gate: String;
-    date_inspection: string;
-    question: string;  
+    questions: QuestionBase[];
 
     constructor(options: {
         _id?: number,
         timestamp?: number;
-        gate?: String;
-        date_inspection?: string;
-        question?: string;
+        questions?: QuestionBase[];
     } = {}) {
         this._id = options._id;
-        this.timestamp = options.timestamp;
-        this.gate = options.gate;
-        this.date_inspection = options.date_inspection;
-        this.question = options.question;
+        this.timestamp = options.timestamp;        
+        this.questions = options.questions;
     }
 }

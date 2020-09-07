@@ -5,10 +5,11 @@ import { QuestionControlService } from '.././question/questionControl.service';
 import { InspectionLogQuestionService } from '../question/inspectionLogQuestion.service';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 // import fade in animation
 import { fadeInAnimation } from '../_animations/index';
 import { QuestionBase } from '../_models/questionType';
+import { LoggingService } from '../_services/logging.service';
 
 declare var $: any;
 
@@ -23,22 +24,37 @@ export class InspectionLogFormComponent implements OnInit {
   questions: QuestionBase[] = [];
   form: FormGroup;
   receive: boolean;
-  loading = false;
+  submitting = false;
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
+  submitButtonLabel: string;
+  inspectionLog: InspectionLog;
 
   constructor(
     private qcs: QuestionControlService,
     private inspectionLogService: InspectionLogService,
-    private router: Router) { }
+    private router: Router,
+    private logger: LoggingService,
+    private route: ActivatedRoute) { }
 
-  ngOnInit() {    
-    this.inspectionLogService.getForms().subscribe(
-      questions => {
-        this.questions = questions;
-        this.form = this.qcs.toFormGroup(questions);
-        this.receive = true;
+  ngOnInit() {
+    this.logger.info("Function: ngOnInit()");
+    this.route.paramMap.subscribe((params: ParamMap) => {
+      if (params.has('inspectionLogID')) {
+        this.inspectionLogService.getInspectionLogByID(params.get('inspectionLogID')).subscribe(i => this.initForm(i, 'Update'));
       }
-    );
+      else {
+        this.inspectionLogService.getForms().subscribe(i => this.initForm(i, 'Submit'));
+      }
+    });
+  }
+
+  initForm(i: InspectionLog, buttonLabel: string) {
+    this.logger.info("Function: initForm(i: InspectionLog, buttonLabel: string)");
+    this.inspectionLog = i;
+    this.questions = this.inspectionLog.questions;
+    this.form = this.qcs.toFormGroup(this.questions);
+    this.submitButtonLabel = buttonLabel;
+    this.logger.info("this.inspectionLog: " + JSON.stringify(this.inspectionLog, null, 2) + "this.submitButtonLabel: " + this.submitButtonLabel);
   }
 
   onSubmit(): void {
@@ -50,27 +66,34 @@ export class InspectionLogFormComponent implements OnInit {
       return;
     };
 
-    this.loading = true;
+    this.submitting = true;
     const formValue = this.form.getRawValue();
-    this.questions.map(question => question.value = formValue[question.key]);
+    this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));
+    this.inspectionLog.questions.map(q => q.value = formValue[q.key]);
 
-    const newInspectionLog = new InspectionLog({
-      gate: formValue['Lokasi_Pintu_Air'],
-      date_inspection: formValue['Tarikh'],
-      question: JSON.stringify(this.questions)
-    });
+    if (this.submitButtonLabel == 'Submit') {
+      this.inspectionLogService.addInspectionLog(this.inspectionLog)
+        .subscribe(
+          _ => this.router.navigate(['/inspectionLog']),
+          err => this.submitErrHandling(err));
+    }
+    else if (this.submitButtonLabel == 'Update') {
+      this.inspectionLogService.updateInspectionLog(this.inspectionLog)
+        .subscribe(
+          _ => this.router.navigate(['/inspectionLog']),
+          err => this.submitErrHandling(err));
+    }
+  }
 
-    this.inspectionLogService.addInspectionLog(newInspectionLog).subscribe(_ => this.router.navigate(['/inspectionLog']),
-      err => {
-        console.log(err);
-        if (err != undefined) {
-          this.errorString = err;
-        }
-        else {
-          this.errorString = 'Unknown Error Occurs... Operation Failed.';
-        }
-        this.loading = false;
-        $('#errorModal').modal('show');
-      });
+  submitErrHandling(err) {
+    console.log(err);
+    if (err != undefined) {
+      this.errorString = err.error;
+    }
+    else {
+      this.errorString = 'Unknown Error Occurs... Operation Failed.';
+    }
+    this.submitting = false;
+    $('#errorModal').modal('show');
   }
 }

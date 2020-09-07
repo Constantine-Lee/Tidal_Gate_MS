@@ -18,7 +18,29 @@ var form = new Schema({
 
 mongoose.model('form', form);
 
-module.exports = baseQuestionSchema;
+var textQuestionSchema = new Schema({}, { _id: false });
+textQuestionSchema.add(baseQuestionSchema);
+
+var dropDownQuestionSchema = new Schema({
+  options: []
+}, { _id: false });
+dropDownQuestionSchema.add(baseQuestionSchema);
+
+var dateQuestionSchema = new Schema({
+  value: { type: Date, default: Date.now }
+}, { _id: false });
+dateQuestionSchema.add(baseQuestionSchema);
+
+var categoryLabelSchema = new Schema({}, { _id: false });
+categoryLabelSchema.add(baseQuestionSchema);
+
+module.exports = {
+  baseQuestionSchema,
+  textQuestionSchema,
+  dropDownQuestionSchema,
+  dateQuestionSchema,
+  categoryLabelSchema
+}
 
 
 

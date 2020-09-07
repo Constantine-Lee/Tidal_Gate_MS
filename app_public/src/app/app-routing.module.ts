@@ -15,7 +15,6 @@ import { Role } from './_models/role';
 import { UpdateMaintenanceLogComponent } from './update-maintenance-log/update-maintenance-log.component';
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
-import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
 import { CanDeactivateGuard } from './_helpers/can-deactivate.guard';
 
 const routes: Routes = [
@@ -86,7 +85,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'updateMaintenanceLog/:maintenanceLogID', component: UpdateMaintenanceLogComponent, canActivate: [AuthGuard], data: {
+    path: 'updateMaintenanceLog/:maintenanceLogID', component: MaintenanceLogFormComponent, canActivate: [AuthGuard], data: {
       title: 'Update Maintenance Log',
       breadcrumb: [
         { link: '/maintenanceLog', label: 'Maintenance Log', order: 1, current: false },
@@ -111,7 +110,7 @@ const routes: Routes = [
     }
   },
   {
-    path: 'updateInspectionLog/:inspectionLogID', component: UpdateInspectionLogComponent, data: {
+    path: 'updateInspectionLog/:inspectionLogID', component:InspectionLogFormComponent, data: {
       title: 'Update Inspection Log', breadcrumb: [
         { link: '/inspectionLog', label: 'Inspection Log', order: 1, current: false },
         { link: '', label: 'Update', order: 2, current: true }

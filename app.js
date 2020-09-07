@@ -13,6 +13,7 @@ app.use(express.urlencoded({
 require('./app_api/models/databaseInit');
 
 const path = require('path');
+global.appRoot = path.resolve(__dirname);
 app.use(express.static(path.join(__dirname, 'app_public', 'build')));
 
 const cookieParser = require('cookie-parser');
@@ -25,9 +26,6 @@ app.use(morgan('combined', { stream: winston.stream }));
 const passport = require('passport');
 app.use(passport.initialize());
 require('./app_api/config/passport');
-
-
-
 
 const { handleError } = require('./app_api/models/error');
 

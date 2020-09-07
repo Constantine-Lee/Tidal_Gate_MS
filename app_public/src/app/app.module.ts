@@ -27,7 +27,6 @@ import { JwPaginationComponent } from './jw-pagination/jw-pagination.component';
 import { FormsModule } from '@angular/forms';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
-import { UpdateInspectionLogComponent } from './update-inspection-log/update-inspection-log.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { QuillModule } from 'ngx-quill';
@@ -54,8 +53,7 @@ export const httpInterceptorProviders = [
     UpdateMaintenanceLogComponent,
     JwPaginationComponent,
     InspectionLogFormComponent,
-    InspectionLogTableComponent,
-    UpdateInspectionLogComponent
+    InspectionLogTableComponent
   ],
   imports: [
     QuillModule.forRoot(),

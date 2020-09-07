@@ -5,7 +5,7 @@ const path = require('path');
 const winston = require('../config/winston');
 const passport = require('passport')
 
-const auth = require('../controllers/authentication');
+const auth = require('./authentication');
 const user = require('../controllers/user');
 const inspectionLog = require('../controllers/inspectionLog');
 const maintenanceLog = require('../controllers/maintenanceLog');
@@ -56,6 +56,10 @@ router
     .route('/upload')
     .post(upload.uploadImage);
 
+router
+    .route('/download/:gateID')
+    .get(gate.download);
+
 router.post('/register', auth.register);
 router.post('/login', auth.login);
 router.get('/users', user.getUsers);
@@ -81,7 +85,7 @@ router
 router
     .route('/inspectionLogs')
     .get(inspectionLog.getInspectionLogs)
-    .post(passport.authenticate('jwt', { session: false }),inspectionLog.addInspectionLog)
+    .post(inspectionLog.addInspectionLog)
 
 router
     .route('/form/:formID')
@@ -95,7 +99,7 @@ router
 
 router
     .route('/maintenanceLogs')
-    .get(maintenanceLog.getMaintenanceLogs)
+    .get(passport.authenticate('jwt', { session: false }),maintenanceLog.getMaintenanceLogs)
     .post(maintenanceLog.addMaintenanceLog)
 
 router

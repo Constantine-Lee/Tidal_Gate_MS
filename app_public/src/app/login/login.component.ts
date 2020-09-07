@@ -29,14 +29,15 @@ export class LoginComponent implements OnInit {
         private authenticationService: AuthenticationService,
         private logger: LoggingService
     ) {
+        
+    }
+
+    ngOnInit() {
         this.logger.info('AuthenticationSerice.currentUserValue: '+this.authenticationService.currentUserValue);
         // redirect to home if already logged in
         if (this.authenticationService.currentUserValue) {
             this.router.navigate(['/']);
         }
-    }
-
-    ngOnInit() {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
             password: ['', Validators.required]
