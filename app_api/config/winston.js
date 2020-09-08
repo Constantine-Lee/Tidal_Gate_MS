@@ -7,6 +7,16 @@ const logFormat = format.printf(function(info) {
   return `${date}-${info.level}:` + info.message;
 });
 
+const levels = { 
+  error: 'error',
+  warn: 'warn',
+  info: 'info',
+  http: 'http',
+  verbose: 'verbose',
+  debug: 'debug',
+  silly: 'silly'
+};
+
 var options = {
     file: {
       level: 'info',
@@ -19,7 +29,7 @@ var options = {
     },
     console: {
       format: winston.format.combine(winston.format.colorize(), logFormat),
-      level: 'verbose',
+      level: levels.verbose,
       handleExceptions: true,
       json: false,
       colorize: true,

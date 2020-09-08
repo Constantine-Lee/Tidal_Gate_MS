@@ -26,14 +26,11 @@ var dropDownQuestionSchema = new Schema({
 }, { _id: false });
 dropDownQuestionSchema.add(baseQuestionSchema);
 
-let refGateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
-  value: { type: Schema.Types.ObjectId, ref: 'Gate' },
-})
+let refGateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema);
 
-var dateQuestionSchema = new Schema({
+var dateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
   value: { type: Date, default: Date.now }
-}, { _id: false });
-dateQuestionSchema.add(baseQuestionSchema);
+}, );
 
 var categoryLabelSchema = new Schema({}, { _id: false });
 categoryLabelSchema.add(baseQuestionSchema);

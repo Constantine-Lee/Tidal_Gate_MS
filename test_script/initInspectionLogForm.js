@@ -44,7 +44,7 @@ db.once('open', function () {
     var inspectionLogSchema = new Schema({
         _id: String,
         id: Number,
-        timestamp: Number,
+        timestamp: { type: Date, default: new Date().toLocaleString },
         namaPenjaga: textQuestionSchema,
         noRujukan: textQuestionSchema,
         lokasiPintuAir: dropDownQuestionSchema,

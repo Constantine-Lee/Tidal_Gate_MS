@@ -21,15 +21,16 @@ export class InspectionLogTableComponent implements OnInit {
   pager: any = {};
   sortImportance: string[] = [];
 
-  logIdAscending: boolean = true;
-  get iDSort(): number { return this.logIdAscending ? 1 : -1 }
+  iDAscending: boolean = true;
+  get iDSort(): number { return this.iDAscending ? 1 : -1 }
 
-  dateIsAscending: boolean = true;
+  dateAscending: boolean = true;
+  get dateSort(): number { return this.dateAscending ? 1 : -1 }
 
-  receive: boolean;
   _idToDelete: number;
 
-  constructor(private inspectionLogService: InspectionLogService,
+  constructor(
+    private inspectionLogService: InspectionLogService,
     private logger: LoggingService) { }
 
   ngOnInit(): void {
@@ -56,17 +57,22 @@ export class InspectionLogTableComponent implements OnInit {
       })
   }
 
-  toggleIDSort(){
-    this.logIdAscending = !this.logIdAscending;
-    if(this.sortImportance[0] != 'ID'){
-      this.sortImportance.pop();
+  toggleIDSort() {
+    this.iDAscending = !this.iDAscending;
+    if (this.sortImportance[0] != 'ID') {
+      if (this.sortImportance.length > 1) { this.sortImportance.pop(); }
       this.sortImportance.unshift('ID');
     }
     this.getInspectionLogs(1);
   }
 
-  toggleDateSort(){
-    
+  toggleDateSort() {
+    this.dateAscending = !this.dateAscending;
+    if (this.sortImportance[0] != 'DATE') {
+      if (this.sortImportance.length > 1) { this.sortImportance.pop(); }
+      this.sortImportance.unshift('DATE'); 
+    }    
+    this.getInspectionLogs(1);
   }
 
   search(searchText: string) {

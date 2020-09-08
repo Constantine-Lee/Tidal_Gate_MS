@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const InspectionLog = mongoose.model('InspectionLog');
+const InspectionLog = mongoose.model('inspectionlog');
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error')
 const paginate = require('./paginate');
 
 async function findInspectionLog(id) {
-    let inspectionLog = await InspectionLog.findById(id).populate('lokasiPintuAir.value', {_id: 0, 'gateName.value': 1}).select('-__v').lean();
-    inspectionLog.lokasiPintuAir.value = inspectionLog.lokasiPintuAir.value.gateName.value;
+    winston.info('Function=findInspectionLog(id)');
+    let inspectionLog = await InspectionLog.findById(id).select('-__v').lean();
     let questions = [];
     const keys = Object.keys(inspectionLog);
     for (let i = 0; i < keys.length; i++) {
@@ -31,7 +31,7 @@ const getInspectionLogs = async (req, res, next) => {
         let pipeline = [];
         if (req.query.searchText && req.query.searchText != "''") {
             pipeline.push({ $match: { $text: { $search: req.query.searchText } } });
-        }        
+        }
         pipeline.push({
             "$facet": {
                 "totalCount": [
@@ -43,15 +43,14 @@ const getInspectionLogs = async (req, res, next) => {
                     }
                 ],
                 "searchResult": [
-                    { $sort : { id: 1 } },
+                    { $sort: { id: 1 } },
                     { $skip: skip },
                     { $limit: 10 },
-                    { $lookup: { from: 'gates', localField: 'lokasiPintuAir.value', foreignField: '_id', as: 'gateArr' }},
-                    { $project: { _id: 1, "id": "$id", "gate": { $arrayElemAt: ["$gateArr.gateName.value",0]}, "date": "$tarikh.value" } },                    
+                    { $project: { _id: 1, "id": "$id", "gate": '$lokasiPintuAir.value', "date": "$tarikh.value" } },
                 ]
             }
         });
-        
+
         const inspectionLogs = await InspectionLog.aggregate(pipeline);
         if (inspectionLogs[0].totalCount.length == 0) {
             length = 0;
@@ -80,7 +79,6 @@ const addInspectionLog = async (req, res, next) => {
             req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
-        req.body.timestamp = Date.now();
         req.body.lokasiPintuAir.controlType = 'disabled';
         winston.verbose('Inspection Log to be saved: ' + JSON.stringify(req.body, null, 2));
         const savedInspectionLog = await InspectionLog.create(req.body);
@@ -93,7 +91,7 @@ const addInspectionLog = async (req, res, next) => {
     }
 };
 
-const getInspectionLog = async (req, res, next) => {    
+const getInspectionLog = async (req, res, next) => {
     winston.info('Function=getInspectionLog req.params.inspectionLogID=' + req.params.inspectionLogID);
     try {
         const inspectionLog = await findInspectionLog(req.params.inspectionLogID);
@@ -106,17 +104,18 @@ const getInspectionLog = async (req, res, next) => {
     }
 };
 
-const editInspectionLog = async (req, res, next) => {    
+const editInspectionLog = async (req, res, next) => {
     winston.info('Function=editInspectionLog req.params.inspectionLogID=' + req.params.inspectionLogID);
     let inspectionLog;
     try {
         inspectionLog = await InspectionLog.findById(req.params.inspectionLogID).lean();
         winston.debug('Fetched an InspectionLog=' + JSON.stringify(inspectionLog, null, 2));
+        winston.info('inspectionLog.timestamp: ' + new Date(inspectionLog.timestamp).toLocaleString() + ' req.body.timestamp: ' + new Date(req.body.timestamp).toLocaleString());
+        if (new Date(inspectionLog.timestamp).toLocaleString() != new Date(req.body.timestamp).toLocaleString()) {
 
-        if (inspectionLog.timestamp != req.body.timestamp) {
             throw new ErrorHandler(404, "The Inspection Log had been edited by others.");
         }
-    
+
     } catch (err) {
         winston.error('Edit Inspection Log Error=' + err);
         return next(err);
@@ -125,12 +124,11 @@ const editInspectionLog = async (req, res, next) => {
     try {
         let questions = req.body.questions;
         for (let i = 0; i < questions.length; i++) {
-            req.body[questions[i].key] = questions[i];            
+            req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
-        req.body.timestamp = Date.now();
-        req.body.lokasiPintuAir.value = inspectionLog.lokasiPintuAir.value;
-        const editedInspectionLog = await InspectionLog.findOneAndUpdate({ _id: req.params.inspectionLogID }, req.body, { new: false}).lean();
+        req.body.timestamp = new Date();
+        const editedInspectionLog = await InspectionLog.findOneAndUpdate({ _id: req.params.inspectionLogID }, req.body, { new: false }).lean();
         //silly inspectionLog
         winston.silly('Edited Inspection Log=' + editedInspectionLog);
         res.status(200).json(editedInspectionLog);
