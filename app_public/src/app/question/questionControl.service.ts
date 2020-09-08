@@ -13,7 +13,7 @@ export class QuestionControlService {
   constructor(private logger: LoggingService) { }
 
   toFormGroup(questions: QuestionBase[]) {
-    let group: any = {};    
+    let group: any = {};
 
     questions.forEach(question => {
 
@@ -26,30 +26,29 @@ export class QuestionControlService {
         group[question.key] = new FormArray(fG, this.minSelectedCheckboxes(1));
       }
       // other control
-      else if (question.controlType == 'date'){
-        group[question.key] = question.required ?         
-                              new FormControl(new Date(question.value).toISOString().slice(0, -14) || '', Validators.required) : 
-                              new FormControl(new Date(question.value).toISOString().slice(0, -14) || '');
+      else if (question.controlType == 'date') {
+        group[question.key] = question.required ?
+          new FormControl(new Date(question.value).toISOString().slice(0, -14) || '', Validators.required) :
+          new FormControl(new Date(question.value).toISOString().slice(0, -14) || '');
       }
-      else
-      {
-        group[question.key] = question.required ?         
-                              new FormControl(question.value || '', Validators.required) : 
-                              new FormControl(question.value || '');
+      else {
+        group[question.key] = question.required ?
+          new FormControl(question.value || '', Validators.required) :
+          new FormControl(question.value || '');
       };
     });
-    
+
     let formGroup = new FormGroup(group);
     let seen = [];
-    this.logger.debug(JSON.stringify(formGroup, function(key, val) {
+    this.logger.debug(JSON.stringify(formGroup, function (key, val) {
       if (val != null && typeof val == "object") {
-           if (seen.indexOf(val) >= 0) {
-               return;
-           }
-           seen.push(val);
-       }
-       return val;
-   }));
+        if (seen.indexOf(val) >= 0) {
+          return;
+        }
+        seen.push(val);
+      }
+      return val;
+    }));
     return formGroup;
   }
 
