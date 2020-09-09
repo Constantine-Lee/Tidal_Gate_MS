@@ -71,7 +71,7 @@ export class GateFormComponent implements OnInit {
     this.questions = this.gate.questions;
     this.form = this.qcs.toFormGroup(this.questions);
     this.submitButtonLabel = buttonLabel;
-    this.logger.info("this.gate: " + JSON.stringify(this.gate, null, 2) + "this.previewUrl: " + this.previewUrl + "this.submitButtonLabel: " + this.submitButtonLabel);
+    this.logger.debug("this.gate: " + JSON.stringify(this.gate, null, 2) + "this.previewUrl: " + this.previewUrl + "this.submitButtonLabel: " + this.submitButtonLabel);
   }
 
   onSubmit() {
@@ -85,8 +85,9 @@ export class GateFormComponent implements OnInit {
     };
     this.submitting = true;
     const formValue = this.form.getRawValue();
-    this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));    
-    this.gate.questions.map(q => q.value = formValue[q.key]);
+    this.logger.debug("formValue: " + JSON.stringify(formValue, null, 2));    
+    
+    this.gate.questions = this.questions;
 
     if (this.submitButtonLabel == 'Submit') {
       this.gateService.addGate(this.gate)
@@ -135,7 +136,6 @@ export class GateFormComponent implements OnInit {
       ctx.drawImage(img, 0, 0, width, height);
 
       let base64: string = ctx.canvas.toDataURL('image/jpeg', 1);
-      this.logger.debug(base64);
       this.gateService.upload({ base64String: base64 }).subscribe(url => {
         this.previewUrl = url;
         this.gate.profilePhoto = url;

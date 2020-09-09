@@ -7,7 +7,7 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
-import { QuestionBase, CheckBoxQuestion } from '../_models/questionType';
+import { QuestionBase} from '../_models/questionType';
 import { LoggingService } from '../_services/logging.service';
 
 //for modal
@@ -72,18 +72,6 @@ export class MaintenanceLogFormComponent implements OnInit {
     this.submitting = true;
     const formValue = this.form.getRawValue();
     this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));
-    this.questions.forEach(q => {
-      if(q.controlType == 'checkbox') {
-        (<CheckBoxQuestion>q).checkboxes.forEach((checkbox, i) => {
-          checkbox.value = formValue[q.key][i];
-        });
-      }
-      else if(q.controlType == 'RTX'){       
-      }
-      else {
-        q.value = formValue[q.key];
-      }
-    })
 
     this.maintenanceLog.questions = this.questions;
 

@@ -65,7 +65,8 @@ export class InspectionLogFormComponent implements OnInit {
     this.submitting = true;
     const formValue = this.form.getRawValue();
     this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));
-    this.inspectionLog.questions.map(q => q.value = formValue[q.key]);
+
+    this.inspectionLog.questions = this.questions;
 
     if (this.submitButtonLabel == 'Submit') {
       this.inspectionLogService.addInspectionLog(this.inspectionLog)

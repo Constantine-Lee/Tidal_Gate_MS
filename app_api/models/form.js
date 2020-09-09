@@ -37,7 +37,7 @@ categoryLabelSchema.add(baseQuestionSchema);
 
 let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add( { checkboxes: [] });
 
-let rtxQuestionSchema = new Schema({ _id: false}).add(baseQuestionSchema);
+let rtxQuestionSchema = new Schema({ _id: false}).add(baseQuestionSchema).add({ value: {}});
 
 module.exports = {
   baseQuestionSchema,

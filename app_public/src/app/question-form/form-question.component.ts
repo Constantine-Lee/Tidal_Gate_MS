@@ -9,7 +9,7 @@ import { GateService } from '../_services/gate.service.js';
   templateUrl: './form-question.component.html',
 })
 export class FormQuestionComponent {
-  constructor(    
+  constructor(
     private gateService: GateService,
     private logger: LoggingService
   ) { }
@@ -20,82 +20,79 @@ export class FormQuestionComponent {
   modules = { toolbar: [{ header: 1 }, { list: 'ordered' }, { image: 1 }] };
 
   get isValid() { return this.form.controls[this.question.key].valid; }
-  get isCheckBox() { return (<CheckBoxQuestion>this.question).controlType == 'checkbox'; }
   get getCheckBoxFormArray() { return this.form.get(this.question.key)['controls']; }
+  get getFormControl() { return this.form.get(this.question.key); }
 
   getContentChanged(change: any) {
-    this.question.value = change.html;
+    this.question.value = this.quillEditorRef.getContents();;
   }
 
   getEditorInstance(editorInstance: any) {
     this.quillEditorRef = editorInstance;
-    console.log(this.quillEditorRef)
     const toolbar = editorInstance.getModule('toolbar');
     toolbar.addHandler('image', this.imageHandler);
+    editorInstance.setContents(this.question.value);
   }
 
   imageHandler = (image, callback) => {
     const input = document.createElement('input');
-      input.setAttribute('type', 'file');
-      input.setAttribute('accept', 'image/png, image/jpeg');
-      input.click();
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/png, image/jpeg');
+    input.click();
 
-      // Listen upload local image and save to server
-      input.onchange = () => {
-        const fileInput = input.files[0];
+    // Listen upload local image and save to server
+    input.onchange = () => {
+      const fileInput = input.files[0];
 
-        // file type is only image.
-        if (/^image\//.test(fileInput.type)) {
-          let width: number = 150;
-          let height: number = 150;
+      // file type is only image.
+      if (/^image\//.test(fileInput.type)) {
+        let width: number = 150;
+        let height: number = 150;
 
-          const img = new Image();
-          img.src = URL.createObjectURL(fileInput);
-          img.onload = () => {
-            const elem = document.createElement('canvas');
-            elem.width = width;
-            elem.height = height;
-            const ctx = elem.getContext('2d');
-            ctx.drawImage(img, 0, 0, width, height);
-      
-            let base64: string = ctx.canvas.toDataURL('image/jpeg', 0.5 );
-            this.gateService.upload({ base64String: base64 }).subscribe(url => {
-              const range = this.quillEditorRef.getSelection();
-              this.quillEditorRef.insertEmbed(range.index, 'image', url);
-            }
-            );
+        const img = new Image();
+        img.src = URL.createObjectURL(fileInput);
+        img.onload = () => {
+          const elem = document.createElement('canvas');
+          elem.width = width;
+          elem.height = height;
+          const ctx = elem.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          let base64: string = ctx.canvas.toDataURL('image/jpeg', 0.5);
+          this.gateService.upload({ base64String: base64 }).subscribe(url => {
+            const range = this.quillEditorRef.getSelection();
+            this.quillEditorRef.insertEmbed(range.index, 'image', url);
           }
-        } else {
-          console.warn('You could only upload images.');
+          );
         }
-      };
+      } else {
+        console.warn('You could only upload images.');
+      }
+    };
   }
 
   ngOnInit() {
-    //TO DO: Refactor
+   
     //check is CheckBox then disable first four checkbox, then subscribe to value changes, disable first four checkbox if 5th checkbox is true
-    if (this.isCheckBox) {
-
+    if (this.question.controlType == 'checkbox') {
+      for(let i = 0; i < 4; i++){
+        this.getCheckBoxFormArray[i].valueChanges.subscribe(v => (<CheckBoxQuestion>this.question).checkboxes[i].value = v);
+      }
       if ((<CheckBoxQuestion>this.question).checkboxes.length == 5) {
-        if (this.getCheckBoxFormArray[4].value) {
-          this.getCheckBoxFormArray[0].disable();
-          this.getCheckBoxFormArray[1].disable();
-          this.getCheckBoxFormArray[2].disable();
-          this.getCheckBoxFormArray[3].disable();
+        for (let i = 0; i < 4 ; i++) {
+          if (this.getCheckBoxFormArray[4].value) {
+            this.getCheckBoxFormArray[i].disable();
+          }
+          else { this.getCheckBoxFormArray[i].enable(); }
         }
-        else {
-          this.getCheckBoxFormArray[0].enable();
-          this.getCheckBoxFormArray[1].enable();
-          this.getCheckBoxFormArray[2].enable();
-          this.getCheckBoxFormArray[3].enable();
-        }
-        this.getCheckBoxFormArray[(<CheckBoxQuestion>this.question).checkboxes.length - 1].valueChanges.subscribe((v) => {
+
+        this.getCheckBoxFormArray[(<CheckBoxQuestion>this.question).checkboxes.length - 1].valueChanges.subscribe(v => {
           for (let i = 0; i < (<CheckBoxQuestion>this.question).checkboxes.length - 1; i++) {
-            console.log(this.getCheckBoxFormArray[i].value);
             if (v) {
               this.getCheckBoxFormArray[i].disable();
               this.getCheckBoxFormArray[i].setValue(false);
-              //console.log('second ' + this.getCheckBoxFormArray[i].value);
+              (<CheckBoxQuestion>this.question).checkboxes[i].value = false;
+              (<CheckBoxQuestion>this.question).checkboxes[4].value = true;
             }
             else {
               this.getCheckBoxFormArray[i].enable();
@@ -103,7 +100,11 @@ export class FormQuestionComponent {
           }
         })
       }
-      //console.log( this.form.get(this.question.key)['controls'][4].disable() );
+    }
+    else if (this.question.controlType == 'RTX') {}
+    // others control
+    else {
+      this.getFormControl.valueChanges.subscribe(v => this.question.value = v);
     }
   }
 }
