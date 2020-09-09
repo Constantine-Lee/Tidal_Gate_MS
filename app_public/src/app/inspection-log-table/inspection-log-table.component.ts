@@ -10,8 +10,6 @@ declare var $: any;
 @Component({
   selector: 'app-inspection-log-table',
   templateUrl: './inspection-log-table.component.html',
-
-  // make fade in animation available to this component
   animations: [fadeInAnimation]
 })
 export class InspectionLogTableComponent implements OnInit {
@@ -19,7 +17,7 @@ export class InspectionLogTableComponent implements OnInit {
   searchTerm: string = "";
   pageOfItems: InspectionLog[];
   pager: any = {};
-  sortImportance: string[] = [];
+  sortImportance: string[] = ['ID', 'DATE'];
 
   iDAscending: boolean = true;
   get iDSort(): number { return this.iDAscending ? 1 : -1 }
@@ -40,7 +38,7 @@ export class InspectionLogTableComponent implements OnInit {
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(searchText => this.inspectionLogService.getInspectionLogs(1, searchText, this.sortImportance, this.iDSort))
+        switchMap(searchText => this.inspectionLogService.getInspectionLogs(1, searchText, this.sortImportance, this.iDSort, this.dateSort))
       )
       .subscribe(x => {
         this.pageOfItems = x.inspectionLogs;
@@ -50,7 +48,7 @@ export class InspectionLogTableComponent implements OnInit {
 
   getInspectionLogs(page: number) {
     this.logger.info("Function: getInspectionLogs()");
-    this.inspectionLogService.getInspectionLogs(page, this.searchTerm, this.sortImportance, this.iDSort)
+    this.inspectionLogService.getInspectionLogs(page, this.searchTerm, this.sortImportance, this.iDSort, this.dateSort)
       .subscribe(x => {
         this.pageOfItems = x.inspectionLogs;
         this.pager = x.pager;
@@ -60,18 +58,21 @@ export class InspectionLogTableComponent implements OnInit {
   toggleIDSort() {
     this.iDAscending = !this.iDAscending;
     if (this.sortImportance[0] != 'ID') {
-      if (this.sortImportance.length > 1) { this.sortImportance.pop(); }
+      this.sortImportance.pop(); 
       this.sortImportance.unshift('ID');
     }
     this.getInspectionLogs(1);
   }
 
   toggleDateSort() {
-    this.dateAscending = !this.dateAscending;
-    if (this.sortImportance[0] != 'DATE') {
-      if (this.sortImportance.length > 1) { this.sortImportance.pop(); }
-      this.sortImportance.unshift('DATE'); 
-    }    
+    this.dateAscending = !this.dateAscending;   
+    if (this.sortImportance[0] == 'ID'){
+      console.log('before ' + this.sortImportance);
+      let temp = this.sortImportance[0];
+      this.sortImportance[0] = this.sortImportance[1];
+      this.sortImportance[1] = temp;
+      console.log('after ' + this.sortImportance);
+    }
     this.getInspectionLogs(1);
   }
 

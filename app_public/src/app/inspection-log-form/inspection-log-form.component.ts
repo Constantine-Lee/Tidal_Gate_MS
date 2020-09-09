@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
-import { QuestionControlService } from '.././question/questionControl.service';
-import { InspectionLogQuestionService } from '../question/inspectionLogQuestion.service';
+import { QuestionControlService } from '../_services/questionControl.service';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -16,14 +15,11 @@ declare var $: any;
 @Component({
   selector: 'app-inspection-log-form',
   templateUrl: './inspection-log-form.component.html',
-
-  // make fade in animation available to this component
   animations: [fadeInAnimation]
 })
 export class InspectionLogFormComponent implements OnInit {
   questions: QuestionBase[] = [];
   form: FormGroup;
-  receive: boolean;
   submitting = false;
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
   submitButtonLabel: string;
@@ -58,7 +54,7 @@ export class InspectionLogFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-
+    this.logger.info("Function: onSubmit()");
     // stop here if form is invalid
     if (this.form.invalid) {
       this.errorString = 'Please fill in all the required fields.';

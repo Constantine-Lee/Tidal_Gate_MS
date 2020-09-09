@@ -12,7 +12,6 @@ import { AuthGuard } from './_helpers/auth.guard';
 import { AdminComponent } from './admin/admin.component';
 import { Role } from './_models/role';
 
-import { UpdateMaintenanceLogComponent } from './update-maintenance-log/update-maintenance-log.component';
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { CanDeactivateGuard } from './_helpers/can-deactivate.guard';

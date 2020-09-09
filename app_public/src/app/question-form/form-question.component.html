@@ -58,21 +58,24 @@
             </div>
         </div>
 
-        <div class="container pr-4 pl-3 mt-2" *ngSwitchCase="'RTX'">
-            <quill-editor [modules]="modules" (onEditorCreated)="getEditorInstance($event)"
-                (onEditorChanged)="getContentChanged($event)" class="bg-light" [formControlName]="question.key">
-                <div quill-editor-toolbar>
-                    <span class="ql-formats">
-                        <button class="ql-bold"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-list" value="ordered"></button>
-                    </span>
-                    <span class="ql-formats">
-                        <button class="ql-image"></button>
-                    </span>
-                </div>
-            </quill-editor>
+        <!--RTX-->
+        <div class="container pr-4 pl-3 mt-2 " *ngSwitchCase="'RTX'">
+            <div class="bg-white">
+                <quill-editor [modules]="modules" (onEditorCreated)="getEditorInstance($event)"
+                    (onEditorChanged)="getContentChanged($event)" [formControlName]="question.key">
+                    <div quill-editor-toolbar>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-image"></button>
+                        </span>
+                    </div>
+                </quill-editor>
+            </div>
         </div>
 
         <!--FullTextBox-->

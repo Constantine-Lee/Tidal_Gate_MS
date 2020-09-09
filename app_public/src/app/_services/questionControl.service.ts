@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormArray, ValidatorFn } from '@angular/forms';
 import { QuestionBase, CheckBoxQuestion } from '../_models/questionType';
-import { LoggingService } from '../_services/logging.service';
-import { formatDate } from '@angular/common';
+import { LoggingService } from './logging.service';
 
 @Injectable(
   {
@@ -16,21 +15,27 @@ export class QuestionControlService {
     let group: any = {};
 
     questions.forEach(question => {
-
       // checkbox control
       if (question.controlType == 'checkbox') {
-
         let fG = (<CheckBoxQuestion>question).checkboxes.map((checkbox) =>
           new FormControl(checkbox.value)
         )
         group[question.key] = new FormArray(fG, this.minSelectedCheckboxes(1));
       }
-      // other control
+      // date control
       else if (question.controlType == 'date') {
-        group[question.key] = question.required ?
-          new FormControl(new Date(question.value).toISOString().slice(0, -14) || '', Validators.required) :
-          new FormControl(new Date(question.value).toISOString().slice(0, -14) || '');
+        if (question.value) {
+          group[question.key] = question.required ?
+            new FormControl(new Date(question.value).toISOString().slice(0, -14) || '', Validators.required) :
+            new FormControl(new Date(question.value).toISOString().slice(0, -14) || '');
+        }
+        else {
+          group[question.key] = question.required ?
+            new FormControl(new Date().toISOString().slice(0, -14) || '', Validators.required) :
+            new FormControl(new Date().toISOString().slice(0, -14) || '');
+        }
       }
+      //other control
       else {
         group[question.key] = question.required ?
           new FormControl(question.value || '', Validators.required) :

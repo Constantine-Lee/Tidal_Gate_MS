@@ -34,7 +34,7 @@ const getForm = async (req, res, next) => {
         form.lokasiPintuAir.options = gate;
       }  
       else if(req.params.formID == 'maintenanceLogForm'){
-
+        form.gateName.options = gate;
       }
       
       let questions = [];

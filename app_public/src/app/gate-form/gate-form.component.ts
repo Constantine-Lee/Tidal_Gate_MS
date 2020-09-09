@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { QuestionControlService } from '.././question/questionControl.service';
+import { QuestionControlService } from '../_services/questionControl.service';
 import { environment } from '../../environments/environment';
 import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';

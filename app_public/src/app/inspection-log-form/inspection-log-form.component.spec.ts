@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppRoutingModule } from '../app-routing.module';
 import { InspectionLogQuestionService } from '../question/inspectionLogQuestion.service';
-import { QuestionControlService } from '../question/questionControl.service';
+import { QuestionControlService } from '../_services/questionControl.service';
 import { InspectionLogService } from '../_services/inspectionLog.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormQuestionComponent } from '../question-form/form-question.component';

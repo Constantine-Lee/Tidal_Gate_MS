@@ -6,7 +6,6 @@ import { User } from '../_models/user';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, tap, retry } from 'rxjs/operators';
 import { InspectionLog } from '../_models/inspectionLog';
-import { QuestionBase } from '../_models/questionType';
 import { LoggingService } from './logging.service';
 
 const httpOptions = {
@@ -20,7 +19,6 @@ const baseUrl = `${environment.apiUrl}`;
 @Injectable({ providedIn: 'root' })
 export class InspectionLogService {
 
-
   constructor(
     private http: HttpClient,
     private logger: LoggingService) { }
@@ -29,9 +27,8 @@ export class InspectionLogService {
     return this.http.post<InspectionLog>(baseUrl + `/inspectionLogs`, inspectionLog, httpOptions);
   }
 
-  getInspectionLogs(page: number, searchText: string, sortImportance: string[], iDSort: number): Observable<{ pager: {}, inspectionLogs: [] }> {
-    console.log(sortImportance);
-    return this.http.get<{ pager: {}, inspectionLogs: [] }>(baseUrl + `/inspectionLogs?page=${page}&searchText=${searchText}&sortImportance=${sortImportance}&iDSort=${iDSort}`);
+  getInspectionLogs(page: number, searchText: string, sortImportance: string[], iDSort: number, dateSort: number): Observable<{ pager: {}, inspectionLogs: [] }> {
+    return this.http.get<{ pager: {}, inspectionLogs: [] }>(baseUrl + `/inspectionLogs?page=${page}&searchText=${searchText}&sortImportance=${sortImportance}&iDSort=${iDSort}&dateSort=${dateSort}`);
   }
 
   getInspectionLogByID(id: string): Observable<InspectionLog> {

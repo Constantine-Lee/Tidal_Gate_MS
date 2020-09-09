@@ -21,7 +21,6 @@ import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { LogInterceptor } from './_helpers/log.interceptor';
 import { AdminComponent } from './admin/admin.component';
-import { UpdateMaintenanceLogComponent } from './update-maintenance-log/update-maintenance-log.component';
 
 import { JwPaginationComponent } from './jw-pagination/jw-pagination.component';
 import { FormsModule } from '@angular/forms';
@@ -50,7 +49,6 @@ export const httpInterceptorProviders = [
     LoginComponent,
     UserProfileComponent,
     AdminComponent,
-    UpdateMaintenanceLogComponent,
     JwPaginationComponent,
     InspectionLogFormComponent,
     InspectionLogTableComponent

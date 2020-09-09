@@ -103,7 +103,7 @@ const counter = mongoose.model('Counter', CounterSchema);
 //Inspection Log
 const inspectionLogSchema = new mongoose.Schema({
   id: Number,
-  timestamp: { type: Date, default: new Date().toLocaleString },
+  timestamp: { type: Number, default: new Date() },
   namaPenjaga: textQuestionSchema,
   noRujukan: textQuestionSchema,
   lokasiPintuAir: refGateQuestionSchema,

@@ -3,10 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-
 import { MaintenanceLog } from '../_models/maintenanceLog';
-import { QuestionBase } from '../_models/questionType';
-
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -20,29 +17,27 @@ const baseUrl = `${environment.apiUrl}`;
 export class MaintenanceLogService {
   constructor(private http: HttpClient) { }
 
-  addMaintenanceLog(questions: MaintenanceLog): Observable<MaintenanceLog> {
-    return this.http.post<MaintenanceLog>(`${environment.apiUrl}/maintenanceLogs`, questions, httpOptions);
+  addMaintenanceLog(maintenanceLog: MaintenanceLog): Observable<MaintenanceLog> {
+    return this.http.post<MaintenanceLog>(baseUrl + `/maintenanceLogs`, maintenanceLog, httpOptions);
   }
 
-  getMaintenanceLogs(): Observable<MaintenanceLog[]> {
-    return this.http.get<MaintenanceLog[]>(`${environment.apiUrl}/maintenanceLogs`);
+  getMaintenanceLogs(page: number, searchText: string, sortImportance: string[], iDSort: number, dateSort: number): Observable<{ pager: {}, maintenanceLogs: [] }> {
+    return this.http.get<{ pager: {}, maintenanceLogs: [] }>(baseUrl + `/maintenanceLogs?page=${page}&searchText=${searchText}&sortImportance=${sortImportance}&iDSort=${iDSort}&dateSort=${dateSort}`);
   }
 
-  async getMaintenanceLogByID(id: string): Promise<MaintenanceLog> {
-    return await this.http.get<MaintenanceLog>(`${environment.apiUrl}/maintenanceLogs/${id}`).toPromise();
+  getMaintenanceLogByID(id: string): Observable<MaintenanceLog> {
+    return this.http.get<MaintenanceLog>(baseUrl + `/maintenanceLogs/${id}`);
   }
 
   deleteMaintenanceLog(id: number) {
-    const url = `${environment.apiUrl}/maintenanceLogs/${id}`;
-    return this.http.delete<MaintenanceLog>(url, httpOptions);
+    return this.http.delete<MaintenanceLog>(baseUrl + `/maintenanceLogs/${id}`);
   }
 
   updateMaintenanceLog(maintenanceLog: MaintenanceLog): Observable<MaintenanceLog> {
-    const url = `${environment.apiUrl}/maintenanceLogs/${maintenanceLog._id}`;
-    return this.http.put<MaintenanceLog>(url, maintenanceLog, httpOptions);
+    return this.http.put<MaintenanceLog>(baseUrl + `/maintenanceLogs/${maintenanceLog._id}`, maintenanceLog, httpOptions);
   }
 
-  getForms() {
-    return this.http.get<QuestionBase[]>(baseUrl + `/form/maintenanceLogForm`);
+  getForms(): Observable<MaintenanceLog> {
+    return this.http.get<MaintenanceLog>(baseUrl + `/form/maintenanceLogForm`);
   }
 }

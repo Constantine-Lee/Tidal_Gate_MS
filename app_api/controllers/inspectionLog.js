@@ -23,14 +23,19 @@ async function findInspectionLog(id) {
 const getInspectionLogs = async (req, res, next) => {
     winston.info('Function=getInspectionLogs');
     try {
-        winston.verbose('req.query.page: ' + req.query.page + ' req.query.searchText: ' + req.query.searchText);
-        const skip = (parseInt(req.query.page) - 1) * 10;
-        const ID = parseInt(req.query.iDSort);
-        console.log("ID: " + ID);
-        console.log(req.query.sortImportance);
+        winston.verbose('req.query.page: ' + req.query.page + ' req.query.searchText: ' + req.query.searchText);        
         let pipeline = [];
         if (req.query.searchText && req.query.searchText != "''") {
             pipeline.push({ $match: { $text: { $search: req.query.searchText } } });
+        }
+        let sortCriteria;
+        if (req.query.sortImportance == 'ID,DATE'){
+            console.log('first');
+            sortCriteria = { id : parseInt(req.query.iDSort) };
+        }
+        else {
+            console.log('Second')
+            sortCriteria = { 'tarikh.value' : parseInt(req.query.dateSort), id: parseInt(req.query.iDSort)};
         }
         pipeline.push({
             "$facet": {
@@ -43,8 +48,8 @@ const getInspectionLogs = async (req, res, next) => {
                     }
                 ],
                 "searchResult": [
-                    { $sort: { id: 1 } },
-                    { $skip: skip },
+                    { $sort: sortCriteria },
+                    { $skip: (parseInt(req.query.page) - 1) * 10 },
                     { $limit: 10 },
                     { $project: { _id: 1, "id": "$id", "gate": '$lokasiPintuAir.value', "date": "$tarikh.value" } },
                 ]
@@ -109,13 +114,10 @@ const editInspectionLog = async (req, res, next) => {
     let inspectionLog;
     try {
         inspectionLog = await InspectionLog.findById(req.params.inspectionLogID).lean();
-        winston.debug('Fetched an InspectionLog=' + JSON.stringify(inspectionLog, null, 2));
-        winston.info('inspectionLog.timestamp: ' + new Date(inspectionLog.timestamp).toLocaleString() + ' req.body.timestamp: ' + new Date(req.body.timestamp).toLocaleString());
-        if (new Date(inspectionLog.timestamp).toLocaleString() != new Date(req.body.timestamp).toLocaleString()) {
-
+        winston.debug('Fetched an InspectionLog=' + JSON.stringify(inspectionLog, null, 2));        
+        if (inspectionLog.timestamp != req.body.timestamp) {
             throw new ErrorHandler(404, "The Inspection Log had been edited by others.");
         }
-
     } catch (err) {
         winston.error('Edit Inspection Log Error=' + err);
         return next(err);

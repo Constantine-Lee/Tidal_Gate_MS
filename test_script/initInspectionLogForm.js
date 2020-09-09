@@ -34,7 +34,7 @@ db.once('open', function () {
     dropDownQuestionSchema.add(baseQuestionSchema);
 
     var dateQuestionSchema = new Schema({
-        value: { type: Date, default: Date.now }
+        value: { type: Date }
     }, { _id: false });
     dateQuestionSchema.add(baseQuestionSchema);
 
@@ -44,7 +44,6 @@ db.once('open', function () {
     var inspectionLogSchema = new Schema({
         _id: String,
         id: Number,
-        timestamp: { type: Date, default: new Date().toLocaleString },
         namaPenjaga: textQuestionSchema,
         noRujukan: textQuestionSchema,
         lokasiPintuAir: dropDownQuestionSchema,
@@ -118,7 +117,7 @@ db.once('open', function () {
         options: []
     }, { _id: false }));
     var DateQuestion = docArray.discriminator('date', new Schema({
-        value: { type: Date, default: Date.now }
+        value: { type: Date }
     }, { _id: false }));
     var CategoryLabel = docArray.discriminator('groupLabel', new Schema({}, { _id: false }));
 
