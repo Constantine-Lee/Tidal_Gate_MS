@@ -24,7 +24,7 @@ export class FormQuestionComponent {
   get getCheckBoxFormArray() { return this.form.get(this.question.key)['controls']; }
 
   getContentChanged(change: any) {
-    console.log(change);
+    this.question.value = change.html;
   }
 
   getEditorInstance(editorInstance: any) {
@@ -37,6 +37,7 @@ export class FormQuestionComponent {
   imageHandler = (image, callback) => {
     const input = document.createElement('input');
       input.setAttribute('type', 'file');
+      input.setAttribute('accept', 'image/png, image/jpeg');
       input.click();
 
       // Listen upload local image and save to server
@@ -52,16 +53,15 @@ export class FormQuestionComponent {
           img.src = URL.createObjectURL(fileInput);
           img.onload = () => {
             const elem = document.createElement('canvas');
-            elem.width = img.width;
-            elem.height = img.height;
+            elem.width = width;
+            elem.height = height;
             const ctx = elem.getContext('2d');
-            ctx.drawImage(img, 0, 0, img.width, img.height);
+            ctx.drawImage(img, 0, 0, width, height);
       
             let base64: string = ctx.canvas.toDataURL('image/jpeg', 0.5 );
-            this.logger.debug(base64);
-            this.gateService.upload({ base64String: base64 }).subscribe(_ => {
+            this.gateService.upload({ base64String: base64 }).subscribe(url => {
               const range = this.quillEditorRef.getSelection();
-              this.quillEditorRef.insertEmbed(range.index, 'image', base64);
+              this.quillEditorRef.insertEmbed(range.index, 'image', url);
             }
             );
           }

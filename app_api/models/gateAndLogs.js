@@ -5,7 +5,9 @@ const {
   dropDownQuestionSchema,
   dateQuestionSchema,
   categoryLabelSchema,
-  refGateQuestionSchema } = require('./form');
+  refGateQuestionSchema,
+  checkboxQuestionSchema,
+  rtxQuestionSchema } = require('./form');
 
 //Gate
 const gateSchema = new mongoose.Schema({
@@ -184,17 +186,80 @@ mongoose.model('inspectionlog', inspectionLogSchema);
 const maintenanceLogSchema = new mongoose.Schema({
   id: Number,
   timestamp: Number,
-  gate: String,
-  date_maintenance: String,
-  action_taken: String,
-  action_needed: String,
-  question: String
+  gateInfo: categoryLabelSchema,
+  gateName: dropDownQuestionSchema,
+  date: dateQuestionSchema,
+  powerSupply415: categoryLabelSchema,
+  redBlueTest: textQuestionSchema,
+  redYellowTest: textQuestionSchema,
+  yellowBlueTest: textQuestionSchema,
+  rCCBReclose: dropDownQuestionSchema,
+  rCCBFunc: dropDownQuestionSchema,
+  powerSupply240: categoryLabelSchema,
+  redNeutral: textQuestionSchema,
+  yellowNeutral: textQuestionSchema,
+  blueNeutral: textQuestionSchema,
+  powerSupply24: textQuestionSchema,
+  pwrSupply5: textQuestionSchema,
+  solarPwrLbl: categoryLabelSchema,
+  solarPwrTest: dropDownQuestionSchema,
+  solarPwrTestVal: textQuestionSchema,
+  solarPwrAmpTest: dropDownQuestionSchema,
+  solarPwrAmpTestVal: textQuestionSchema,
+  secondPwr: categoryLabelSchema,
+  uPSBack: dropDownQuestionSchema,
+  pwrResume: dropDownQuestionSchema,
+  uPSBackTime: dropDownQuestionSchema,
+  durationBack: textQuestionSchema,
+  gateOper: categoryLabelSchema,
+  actuatorOpen: dropDownQuestionSchema,
+  actuatorClose: dropDownQuestionSchema,
+  gateManual: dropDownQuestionSchema,
+  gateAuto: dropDownQuestionSchema,
+  emergency: dropDownQuestionSchema,
+  waterLvl: categoryLabelSchema,
+  upWaterLvl: textQuestionSchema,
+  downWaterLvl: textQuestionSchema,
+  veriUpRead: dropDownQuestionSchema,
+  veriDownRead: dropDownQuestionSchema,
+  touch: categoryLabelSchema,
+  userLog: dropDownQuestionSchema,
+  btnVeri: dropDownQuestionSchema,
+  gateInfoVeri: dropDownQuestionSchema,
+  sysEmerAlert: categoryLabelSchema,
+  locEmerAlert: dropDownQuestionSchema,
+  emerSMSAlert: dropDownQuestionSchema,
+  gateInfoReq: dropDownQuestionSchema,
+  gateInfoReqText: textQuestionSchema,
+  actuatorFunc: categoryLabelSchema,
+  actuatorLocRem: dropDownQuestionSchema,
+  gateLoc: dropDownQuestionSchema,
+  rep9VBattery: dropDownQuestionSchema,
+  no9VBattery: textQuestionSchema,
+  floodSurv: categoryLabelSchema,
+  PTZCam: dropDownQuestionSchema,
+  PTZCamFunc: dropDownQuestionSchema,
+  rainGauge: categoryLabelSchema,
+  rainGaugeFunc: dropDownQuestionSchema,
+  ctrlPan: categoryLabelSchema,
+  ctrlPanClean: dropDownQuestionSchema,
+  ctrlPanMain: dropDownQuestionSchema,
+  ctrlPanComp: dropDownQuestionSchema,
+  summary: categoryLabelSchema,
+  actionTaken: checkboxQuestionSchema,
+  actionTakenRTX: rtxQuestionSchema,
+  actionNeed: checkboxQuestionSchema,
+  actionNeedRTX: rtxQuestionSchema,
+  complete: dropDownQuestionSchema,
+  testedBy: textQuestionSchema,
+  witnessedBy: textQuestionSchema,
+  reviewBy: textQuestionSchema,
+  approveBy: textQuestionSchema
 });
 maintenanceLogSchema.pre('save', function (next) {
   var doc = this;
-  counter.findByIdAndUpdate({ _id: 'maintenanceLog' }, { $inc: { seq: 1 } }, function (error, counter) {
-    if (error)
-      return next(error);
+  counter.findOneAndUpdate({ _id: 'maintenanceLog'}, {$inc: { seq: 1} }, { new: true, upsert: true}, function (error, counter) {
+    if (error) { return next(error); }
     doc.id = counter.seq;
     next();
   });

@@ -23,19 +23,19 @@ async function findInspectionLog(id) {
 const getInspectionLogs = async (req, res, next) => {
     winston.info('Function=getInspectionLogs');
     try {
-        winston.verbose('req.query.page: ' + req.query.page + ' req.query.searchText: ' + req.query.searchText);        
+        winston.verbose('req.query.page: ' + req.query.page + ' req.query.searchText: ' + req.query.searchText);
         let pipeline = [];
         if (req.query.searchText && req.query.searchText != "''") {
             pipeline.push({ $match: { $text: { $search: req.query.searchText } } });
         }
         let sortCriteria;
-        if (req.query.sortImportance == 'ID,DATE'){
+        if (req.query.sortImportance == 'ID,DATE') {
             console.log('first');
-            sortCriteria = { id : parseInt(req.query.iDSort) };
+            sortCriteria = { id: parseInt(req.query.iDSort) };
         }
         else {
             console.log('Second')
-            sortCriteria = { 'tarikh.value' : parseInt(req.query.dateSort), id: parseInt(req.query.iDSort)};
+            sortCriteria = { 'tarikh.value': parseInt(req.query.dateSort), id: parseInt(req.query.iDSort) };
         }
         pipeline.push({
             "$facet": {
@@ -51,7 +51,7 @@ const getInspectionLogs = async (req, res, next) => {
                     { $sort: sortCriteria },
                     { $skip: (parseInt(req.query.page) - 1) * 10 },
                     { $limit: 10 },
-                    { $project: { _id: 1, "id": "$id", "gate": '$lokasiPintuAir.value', "date": "$tarikh.value" } },
+                    { $project: { _id: 1, "id": "$id", "gate": "$lokasiPintuAir.value", "date": "$tarikh.value" } },
                 ]
             }
         });
@@ -87,11 +87,11 @@ const addInspectionLog = async (req, res, next) => {
         req.body.lokasiPintuAir.controlType = 'disabled';
         winston.verbose('Inspection Log to be saved: ' + JSON.stringify(req.body, null, 2));
         const savedInspectionLog = await InspectionLog.create(req.body);
-        winston.debug('Saved a InspectionLog=' + savedInspectionLog);
+        winston.debug('Saved a InspectionLog: ' + savedInspectionLog);
         res.status(200).json(savedInspectionLog);
     } catch (err) {
-        winston.error('Save Inspection Log Error=' + err);
-        err = new ErrorHandler(500, 'Failed to Save Inspection Log.');
+        winston.error('Add Inspection Log Error=' + err);
+        err = new ErrorHandler(500, 'Failed to Add Inspection Log.');
         return next(err);
     }
 };
@@ -114,7 +114,7 @@ const editInspectionLog = async (req, res, next) => {
     let inspectionLog;
     try {
         inspectionLog = await InspectionLog.findById(req.params.inspectionLogID).lean();
-        winston.debug('Fetched an InspectionLog=' + JSON.stringify(inspectionLog, null, 2));        
+        winston.debug('Fetched an InspectionLog: ' + JSON.stringify(inspectionLog, null, 2));
         if (inspectionLog.timestamp != req.body.timestamp) {
             throw new ErrorHandler(404, "The Inspection Log had been edited by others.");
         }
@@ -147,7 +147,7 @@ const deleteInspectionLog = async (req, res) => {
     winston.info('Function=deleteInspectionLog req.params.inspectionLogID=' + inspectionLogID);
 
     try {
-        const deleteResult = await InspectionLog.deleteOne({ _id: req.params.inspectionLogID }).exec();
+        const deleteResult = await InspectionLog.deleteOne({ _id: req.params.inspectionLogID }).lean();
         winston.info('Deleted Inspection Log=' + inspectionLogID);
         res.status(200).json(deleteResult);
     } catch (err) {

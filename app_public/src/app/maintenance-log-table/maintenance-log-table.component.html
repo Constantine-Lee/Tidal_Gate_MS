@@ -4,13 +4,12 @@
             <input type="text" (keyup)="search($event.target.value)" [(ngModel)]="searchTerm" class="form-control"
                 placeholder="Search">
             <div class="input-group-append">
-                <button type="button" class="btn btn-outline-secondary" routerLink="/addMaintenanceLog"><i
-                        class="fa fa-plus-circle" aria-hidden="true"></i> Add</button>
+                <button type="button" class="btn btn-outline-secondary" routerLink="/addMaintenanceLog">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i> Add</button>
             </div>
         </div>
     </div>
     <div class="bg-light card">
-
         <table class="table table-sm mb-0">
             <thead class="thead-light text-center">
                 <tr>

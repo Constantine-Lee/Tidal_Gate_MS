@@ -48,7 +48,7 @@ db.once('open', function () {
 
     let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ checkboxes: [] });
 
-    var rtxQuestionSchema = new Schema({
+    var rtxQuestionSchema = new Schema({ _id: false 
     })
     rtxQuestionSchema.add(baseQuestionSchema);
 

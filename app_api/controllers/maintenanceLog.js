@@ -2,20 +2,70 @@ const mongoose = require('mongoose');
 const MaintenanceLog = mongoose.model('MaintenanceLog');
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error');
+const paginate = require('./paginate');
+
+async function findMaintenanceLog(id) {
+    winston.info('Function=findMaintenanceLog(id)');
+    let maintenanceLog = await MaintenanceLog.findById(id).select('-__v').lean();
+    let questions = [];
+    const keys = Object.keys(maintenanceLog);
+    for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        if (!['_id', 'profilePhoto', 'timestamp', 'id'].includes(key)) {
+            questions.push(maintenanceLog[key]);
+            delete maintenanceLog[key];
+        }
+    }
+    maintenanceLog.questions = questions;
+    return maintenanceLog;
+}
 
 const getMaintenanceLogs = async (req, res, next) => {
     winston.info('Function=getMaintenanceLogs');
     try {
-        const maintenanceLogsRaw = await MaintenanceLog.find().exec();
-        winston.silly('maintenanceLogsRaw=' + JSON.stringify(maintenanceLogsRaw));
-
-        const maintenanceLogsOpt = maintenanceLogsRaw.map(log => {
-            let { _id, id, gate, date_maintenance, action_needed, action_taken } = log;
-            return { _id, id, gate, date_maintenance, action_needed, action_taken };
+        winston.info('req.query.page: ' + req.query.page + ' req.query.searchText: ' + req.query.searchText);
+        let pipeline = [];
+        if (req.query.searchText && req.query.searchText != "''") {
+            pipeline.push({ $match: { $text: { $search: req.query.serchText } } });
+        }
+        let sortCriteria;
+        if (req.query.sortImportance == 'ID,DATE') {
+            sortCriteria = { id: parseInt(req.query.iDSort) };
+        }
+        else {
+            sortCriteria = { 'date': parseInt(req.query.dateSort), id: parseInt(req.query.iDSort) };
+        }
+        pipeline.push({
+            "$facet": {
+                "totalCount": [
+                    {
+                        "$group": {
+                            "_id": null,
+                            "count": { "$sum": 1 }
+                        }
+                    }
+                ],
+                "searchResult": [
+                    { $sort: sortCriteria },
+                    { $skip: (parseInt(req.query.page) - 1) * 10 },
+                    { $limit: 10 },
+                    { $project: { _id: 1, "id": "$id", "gate": "$gateName.value", "date": "$date.value" } },
+                ]
+            }
         });
-        winston.verbose('maintenanceLogsOpt=' + JSON.stringify(maintenanceLogsOpt));
 
-        res.status(200).json(maintenanceLogsOpt);
+        const maintenanceLogs = await MaintenanceLog.aggregate(pipeline);
+        if (maintenanceLogs[0].totalCount.length == 0) {
+            length = 0;
+        }
+        else {
+            winston.info("Total Count: " + maintenanceLogs[0].totalCount.length);
+            length = maintenanceLogs[0].totalCount[0].count;
+        }
+        const pager = paginate.paginate(length, parseInt(req.query.page), 10, 10);
+        delete maintenanceLogs[0].totalCount;
+        winston.info('inspectionLogs: ' + JSON.stringify(maintenanceLogs[0], null, 2));
+        res.status(200).json({ 'pager': pager, 'maintenanceLogs': maintenanceLogs[0].searchResult });
     } catch (err) {
         winston.error('Get Maintenance Logs Error=' + err);
         err = new ErrorHandler(404, 'Failed to get Maintenance Logs.');
@@ -27,33 +77,27 @@ const addMaintenanceLog = async (req, res, next) => {
     winston.info('Function=addMaintenanceLog');
 
     try {
-        const maintenanceLog = new MaintenanceLog({
-            timestamp: Date.now(),
-            gate: req.body.gate,
-            date_maintenance: req.body.date_maintenance,
-            action_taken: req.body.action_taken,
-            action_needed: req.body.action_needed,
-            question: req.body.question
-        });
-        winston.silly('create a maintenanceLog=' + JSON.stringify(maintenanceLog));
-        winston.verbose('timestamp=' + maintenanceLog.timestamp + ' gate=' + maintenanceLog.gate + ' date_maintenance=' + maintenanceLog.date_maintenance + ' action_taken=' + maintenanceLog.action_taken + ' action_needed=' + maintenanceLog.action_needed);
-
-        const savedMaintenanceLog = await maintenanceLog.save();
-        winston.debug('savedMaintenanceLog=' + maintenanceLog);
+        let questions = req.body.questions;
+        for (let i = 0; i < questions.length; i++) {
+            req.body[questions[i].key] = questions[i];
+        }
+        delete req.body.questions;
+        req.body.gateName.controlType = 'disabled';
+        winston.verbose('Maintenance Log to be saved=' + JSON.stringify(req.body, null, 2));
+        const savedMaintenanceLog = await MaintenanceLog.create(req.body);
+        winston.debug('Saved a MaintenanceLog: ' + savedMaintenanceLog);
         res.status(200).json(savedMaintenanceLog);
     } catch (err) {
-        winston.error('Add Maintenance Log Error='+err);
-        err = new ErrorHandler(500, 'Failed to Save Maintenance Log.');
+        winston.error('Add Maintenance Log Error=' + err);
+        err = new ErrorHandler(500, 'Failed to Add Maintenance Log.');
         return next(err);
     }
 };
 
 const getMaintenanceLog = async (req, res, next) => {
-    const maintenanceLogID = req.params.maintenanceLogID;
-    winston.info('Function=getMaintenanceLog req.params.maintenanceLogID=' + maintenanceLogID);
+    winston.info('Function=getMaintenanceLog req.params.maintenanceLogID=' + req.params.maintenanceLogID);
     try {
-        const maintenanceLog = await MaintenanceLog.findById(maintenanceLogID).exec();
-        winston.debug('Fetched a Maintenance Log from database=' + JSON.stringify(maintenanceLog));
+        const maintenanceLog = await findMaintenanceLog(req.params.maintenanceLogID);
         res.status(200).json(maintenanceLog);
     } catch (err) {
         winston.error('Get MaintenanceLog Error=' + err);
@@ -63,15 +107,11 @@ const getMaintenanceLog = async (req, res, next) => {
 };
 
 const editMaintenanceLog = async (req, res, next) => {
-    const maintenanceLogID = req.params.maintenanceLogID;
-    winston.info('Function=editMaintenanceLog req.params.maintenanceLogID=' + maintenanceLogID);
+    winston.info('Function=editMaintenanceLog req.params.maintenanceLogID=' + req.params.maintenanceLogID);
+    let maintenanceLog;
     try {
-        const maintenanceLog = await MaintenanceLog.findById(maintenanceLogID).exec();
-        //debug MaintenanceLog
-        winston.debug('Fetched a MaintenanceLog from database to Edit=' + maintenanceLog);
-        //info req.body.timestamp | gate.timestamp
-        winston.info('req.body.timestamp=' + req.body.timestamp + ' maintenanceLog.timestamp=' + maintenanceLog.timestamp);
-
+        maintenanceLog = await MaintenanceLog.findById(req.params.maintenanceLogID).lean();
+        winston.debug('Fetched a MaintenanceLog: ' + JSON.stringify(maintenanceLog, null, 2));
         if (maintenanceLog.timestamp != req.body.timestamp) {
             throw new ErrorHandler(404, "The Maintenance Log had been edited by others.");
         }
@@ -81,38 +121,33 @@ const editMaintenanceLog = async (req, res, next) => {
     }
 
     try {
-        const editedMaintenanceLog = await MaintenanceLog.updateOne({ _id: maintenanceLogID }, {
-            timestamp: Date.now(),
-            gate: req.body.gate,
-            date_maintenance: req.body.date_maintenance,
-            action_taken: req.body.action_taken,
-            action_needed: req.body.action_needed,
-            question: req.body.question
-        });
-        //silly maintenanceLog
-        winston.silly('Edited Maintenance Log='+editedMaintenanceLog);
-        //verbose timestamp | gate | date_maintenance | action_taken | action_needed
-        winston.verbose('timestamp='+editedMaintenanceLog.timestamp+' gate='+editedMaintenanceLog.name+' date_maintenance='+editedMaintenanceLog.date_maintenance+' action_taken='+editedMaintenanceLog.action_taken+' action_needed='+editedMaintenanceLog.action_needed);
-
+        let questions = req.body.questions;
+        for (let i = 0; i < questions.length; i++) {
+            req.body[questions[i].key] = questions[i];
+        }
+        delete req.body.questions;
+        req.body.timestamp = new Date();
+        const editedMaintenanceLog = await MaintenanceLog.findOneAndUpdate({ _id: req.params.maintenanceLogID }, req.body, { new: false }).lean();
+        winston.silly('Edited Maintenance Log=' + editedMaintenanceLog);
         res.status(200).json(editedMaintenanceLog);
     } catch (err) {
-        winston.error('Edit Maintenance Log Error='+err);
-        err = new ErrorHandler(500, 'Failed to edit the Maintenance Log: '+maintenanceLogID);
+        winston.error('Edit Maintenance Log Error=' + err);
+        err = new ErrorHandler(500, 'Failed to edit the Maintenance Log: ' + maintenanceLogID);
         return next(err);
     }
 };
 
 const deleteMaintenanceLog = async (req, res, next) => {
     const maintenanceLogID = req.params.maintenanceLogID;
-    winston.info('Function=deleteMaintenanceLog req.params.maintenanceLogID='+maintenanceLogID);
+    winston.info('Function=deleteMaintenanceLog req.params.maintenanceLogID=' + maintenanceLogID);
 
     try {
-        const deleteResult = await MaintenanceLog.deleteOne({ _id: maintenanceLogID }).exec();
-        winston.info('Deleted Maintenance Log='+maintenanceLogID);
+        const deleteResult = await MaintenanceLog.deleteOne({ _id: maintenanceLogID }).lean();
+        winston.info('Deleted Maintenance Log=' + maintenanceLogID);
         res.status(200).json(deleteResult);
     } catch (err) {
-        winston.error('Delete Maintenance Log Error='+err);
-        err = new ErrorHandler(500, 'Failed to delete Maintenance Log: '+maintenanceLogID);
+        winston.error('Delete Maintenance Log Error=' + err);
+        err = new ErrorHandler(500, 'Failed to delete Maintenance Log: ' + maintenanceLogID);
         return next(err);
     }
 };

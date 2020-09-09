@@ -27,7 +27,6 @@ export class MaintenanceLogFormComponent implements OnInit {
   maintenanceLog: MaintenanceLog;
 
   constructor(
-
     private qcs: QuestionControlService,
     private maintenanceLogService: MaintenanceLogService,
     private router: Router,
@@ -67,31 +66,37 @@ export class MaintenanceLogFormComponent implements OnInit {
       return;
     };
 
+    console.log("QUESTIONS: " + JSON.stringify(this.questions, null, 2));
+
     // start spinning on the button 
     this.submitting = true;
     const formValue = this.form.getRawValue();
     this.logger.info("formValue: " + JSON.stringify(formValue, null, 2));
-    this.maintenanceLog.questions.forEach(q => {
+    this.questions.forEach(q => {
       if(q.controlType == 'checkbox') {
         (<CheckBoxQuestion>q).checkboxes.forEach((checkbox, i) => {
           checkbox.value = formValue[q.key][i];
         });
+      }
+      else if(q.controlType == 'RTX'){       
       }
       else {
         q.value = formValue[q.key];
       }
     })
 
+    this.maintenanceLog.questions = this.questions;
+
     if (this.submitButtonLabel == 'Submit') {
       this.maintenanceLogService.addMaintenanceLog(this.maintenanceLog)
         .subscribe(
-          _ => this.router.navigate(['/inspectionLog']),
+          _ => this.router.navigate(['/maintenanceLog']),
           err => this.submitErrHandling(err));
     }
     else if (this.submitButtonLabel == 'Update') {
       this.maintenanceLogService.updateMaintenanceLog(this.maintenanceLog)
         .subscribe(
-          _ => this.router.navigate(['/inspectionLog']),
+          _ => this.router.navigate(['/maintenanceLog']),
           err => this.submitErrHandling(err));
     }
   }

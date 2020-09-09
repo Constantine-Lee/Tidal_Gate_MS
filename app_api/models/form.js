@@ -35,13 +35,19 @@ var dateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add(
 var categoryLabelSchema = new Schema({}, { _id: false });
 categoryLabelSchema.add(baseQuestionSchema);
 
+let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add( { checkboxes: [] });
+
+let rtxQuestionSchema = new Schema({ _id: false}).add(baseQuestionSchema);
+
 module.exports = {
   baseQuestionSchema,
   textQuestionSchema,
   dropDownQuestionSchema,
   dateQuestionSchema,
   categoryLabelSchema,
-  refGateQuestionSchema
+  refGateQuestionSchema,
+  checkboxQuestionSchema,
+  rtxQuestionSchema
 }
 
 

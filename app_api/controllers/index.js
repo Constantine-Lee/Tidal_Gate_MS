@@ -72,7 +72,7 @@ router
 
 router
     .route('/counters/:counterID')
-    .get(counter.getCounter)
+    .get(passport.authenticate('jwt', { session: false }),counter.getCounter)
     .put(counter.editCounter)
     .delete(counter.deleteCounter)
 
@@ -99,18 +99,18 @@ router
 
 router
     .route('/maintenanceLogs')
-    .get(passport.authenticate('jwt', { session: false }),maintenanceLog.getMaintenanceLogs)
+    .get(maintenanceLog.getMaintenanceLogs)
     .post(maintenanceLog.addMaintenanceLog)
 
 router
     .route('/gates/:gateID')
     .get(gate.getGate)
-    .put(multerUpload.single('image'), gate.editGate)
+    .put(gate.editGate)
     .delete(gate.deleteGate)
 
 router
     .route('/gates')
     .get(gate.getGates)
-    .post(multerUpload.single('image'), gate.addGate)
+    .post(gate.addGate)
 
 module.exports = router;
