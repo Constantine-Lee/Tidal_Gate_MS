@@ -65,9 +65,7 @@ export class MaintenanceLogFormComponent implements OnInit {
       $('#errorModal').modal('show');
       return;
     };
-
-    console.log("QUESTIONS: " + JSON.stringify(this.questions, null, 2));
-
+    
     // start spinning on the button 
     this.submitting = true;
     const formValue = this.form.getRawValue();

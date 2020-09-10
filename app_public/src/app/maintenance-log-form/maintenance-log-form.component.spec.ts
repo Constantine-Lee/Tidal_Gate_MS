@@ -4,7 +4,6 @@ import { MaintenanceLogFormComponent } from './maintenance-log-form.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AppRoutingModule } from '../app-routing.module';
-import { MaintenanceLogQuestionService } from '../question/maintenanceLogQuestion.service';
 import { QuestionControlService } from '../_services/questionControl.service';
 import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 import { Router } from '@angular/router';
@@ -28,7 +27,6 @@ describe('MaintenanceLogFormComponent', () => {
       ],
       declarations: [FormQuestionComponent, MaintenanceLogFormComponent],
       providers: [
-        MaintenanceLogQuestionService,
         QuestionControlService,
         MaintenanceLogService        
       ]

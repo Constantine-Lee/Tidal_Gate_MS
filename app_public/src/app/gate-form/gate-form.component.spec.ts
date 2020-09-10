@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { GateQuestionService } from '../question/gateQuestion.service';
 import { QuestionControlService } from '../_services/questionControl.service';
 import { GateService } from '../_services/gate.service';
 import { AuthenticationService } from '../_services/authentication.service';
@@ -27,7 +26,6 @@ describe('GateFormComponent', () => {
       ],
       declarations: [FormQuestionComponent, GateFormComponent ],
       providers: [
-        GateQuestionService, 
         QuestionControlService, 
         GateService, 
         AuthenticationService

@@ -6,7 +6,7 @@ import { MaintenanceLogTableComponent } from './maintenance-log-table/maintenanc
 import { GateTableComponent } from './gate-table/gate-table.component';
 import { GateFormComponent } from './gate-form/gate-form.component';
 
-import { UserProfileComponent } from './home/user.profile.component';
+import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './_helpers/auth.guard';
 import { AdminComponent } from './admin/admin.component';
@@ -17,9 +17,9 @@ import { InspectionLogFormComponent } from './inspection-log-form/inspection-log
 import { CanDeactivateGuard } from './_helpers/can-deactivate.guard';
 
 const routes: Routes = [
-  { path: '', component: UserProfileComponent, canActivate: [AuthGuard], data: { title: 'Tidal Gate Management System', breadcrumb: [] } },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard], data: { title: 'Tidal Gate Management System', breadcrumb: [] } },
   {
-    path: 'home', component: UserProfileComponent, canActivate: [AuthGuard],
+    path: 'home', component: HomeComponent, canActivate: [AuthGuard],
     data: {
       title: 'Tidal Gate Management System',
       breadcrumb: []

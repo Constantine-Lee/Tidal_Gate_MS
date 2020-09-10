@@ -21,6 +21,7 @@ export class FormQuestionComponent {
 
   get isValid() { return this.form.controls[this.question.key].valid; }
   get getCheckBoxFormArray() { return this.form.get(this.question.key)['controls']; }
+  get isCheckBox() { return this.question.controlType == 'checkbox'; }
   get getFormControl() { return this.form.get(this.question.key); }
 
   getContentChanged(change: any) {
@@ -96,6 +97,7 @@ export class FormQuestionComponent {
             }
             else {
               this.getCheckBoxFormArray[i].enable();
+              (<CheckBoxQuestion>this.question).checkboxes[4].value = false;
             }
           }
         })

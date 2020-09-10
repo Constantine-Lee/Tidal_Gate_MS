@@ -173,7 +173,7 @@ const inspectionLogSchema = new mongoose.Schema({
 });
 inspectionLogSchema.pre('save', function (next) {
   var doc = this;
-  counter.findByIdAndUpdate({ _id: 'inspectionLog' }, { $inc: { seq: 1 } }, function (error, counter) {
+  counter.findByIdAndUpdate({ _id: 'inspectionLog' }, { $inc: { seq: 1 } }, { new: true, upsert: true}, function (error, counter) {
     if (error)
       return next(error);
     doc.id = counter.seq;

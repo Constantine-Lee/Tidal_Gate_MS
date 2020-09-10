@@ -16,7 +16,7 @@ import { GateFormComponent } from './gate-form/gate-form.component';
 
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { LoginComponent } from './login/login.component';
-import { UserProfileComponent } from './home/user.profile.component';
+import { HomeComponent } from './home/home.component';
 import { JwtInterceptor } from './_helpers/jwt.interceptor';
 import { ErrorInterceptor } from './_helpers/error.interceptor';
 import { LogInterceptor } from './_helpers/log.interceptor';
@@ -47,7 +47,7 @@ export const httpInterceptorProviders = [
     GateTableComponent,
     GateFormComponent,
     LoginComponent,
-    UserProfileComponent,
+    HomeComponent,
     AdminComponent,
     JwPaginationComponent,
     InspectionLogFormComponent,

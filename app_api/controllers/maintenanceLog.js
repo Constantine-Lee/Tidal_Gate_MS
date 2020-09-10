@@ -49,22 +49,33 @@ const getMaintenanceLogs = async (req, res, next) => {
                     { $sort: sortCriteria },
                     { $skip: (parseInt(req.query.page) - 1) * 10 },
                     { $limit: 10 },
-                    { $project: { _id: 1, "id": "$id", "gate": "$gateName.value", "date": "$date.value" } },
+                    { $project: { _id: 1, "id": "$id", "gate": "$gateName.value", "date": "$date.value", "actionTakenCheckbox": "$actionTaken", "actionNeededCheckbox": "$actionNeed" } }
                 ]
             }
         });
 
-        const maintenanceLogs = await MaintenanceLog.aggregate(pipeline);
+        let maintenanceLogs = await MaintenanceLog.aggregate(pipeline);
         if (maintenanceLogs[0].totalCount.length == 0) {
             length = 0;
         }
         else {
             winston.info("Total Count: " + maintenanceLogs[0].totalCount.length);
             length = maintenanceLogs[0].totalCount[0].count;
+            for (let i = 0; i < length; i++) {
+                maintenanceLogs[0].searchResult[i].actionTaken = maintenanceLogs[0].searchResult[i].actionTakenCheckbox.checkboxes.filter(c => c.value == true).reduce((first, second) => {                    
+                    return first.label + ', ' + second.label
+                });
+                delete maintenanceLogs[0].searchResult[i].actionTakenCheckbox;
+                maintenanceLogs[0].searchResult[i].actionNeeded = maintenanceLogs[0].searchResult[i].actionNeededCheckbox.checkboxes.filter(c => c.value == true).map(c => c.label).reduce((first, second) => {
+                    console.log('first ' + first);
+                    return first + ', ' + second;
+                });
+                delete maintenanceLogs[0].searchResult[i].actionNeededCheckbox;
+            }
         }
         const pager = paginate.paginate(length, parseInt(req.query.page), 10, 10);
         delete maintenanceLogs[0].totalCount;
-        winston.info('inspectionLogs: ' + JSON.stringify(maintenanceLogs[0], null, 2));
+        winston.info('maintenanceLogs: ' + JSON.stringify(maintenanceLogs[0], null, 2));
         res.status(200).json({ 'pager': pager, 'maintenanceLogs': maintenanceLogs[0].searchResult });
     } catch (err) {
         winston.error('Get Maintenance Logs Error=' + err);
