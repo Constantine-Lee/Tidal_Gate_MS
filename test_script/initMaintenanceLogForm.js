@@ -114,9 +114,9 @@ db.once('open', function () {
         ctrlPanMain: dropDownQuestionSchema,
         ctrlPanComp: dropDownQuestionSchema,
         summary: categoryLabelSchema,
-        actionTaken: checkboxQuestionSchema,
+        actionTakenCB: checkboxQuestionSchema,
         actionTakenRTX: rtxQuestionSchema,
-        actionNeed: checkboxQuestionSchema,
+        actionNeedCB: checkboxQuestionSchema,
         actionNeedRTX: rtxQuestionSchema,
         complete: dropDownQuestionSchema,
         testedBy: textQuestionSchema,
@@ -636,8 +636,8 @@ db.once('open', function () {
             required: false,
             order: thirteenth
         }),        
-        actionTaken: new CheckBoxQuestion({
-            key: 'actionTaken',
+        actionTakenCB: new CheckBoxQuestion({
+            key: 'actionTakenCB',
             label: 'Action Taken',
             checkboxes: [
                 { key: 'AT_Maintenance', label: 'Maintenance', value: false },
@@ -653,8 +653,8 @@ db.once('open', function () {
             required: false,
             order: thirteenth
         }),        
-        actionNeed: new CheckBoxQuestion({
-            key: 'actionNeed',
+        actionNeedCB: new CheckBoxQuestion({
+            key: 'actionNeedCB',
             label: 'Action Needed',
             checkboxes: [
                 { key: 'AN_Maintenance', label: 'Maintenance', value: false },

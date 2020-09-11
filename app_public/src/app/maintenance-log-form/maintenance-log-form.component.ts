@@ -53,7 +53,7 @@ export class MaintenanceLogFormComponent implements OnInit {
     this.questions = m.questions;
     this.form = this.qcs.toFormGroup(this.questions);
     this.submitButtonLabel = buttonLabel;
-    this.logger.debug("this.maintenanceLog: " + JSON.stringify(this.maintenanceLog, null, 2) + "this.submitButtonLabel: " + this.submitButtonLabel);
+    this.logger.info("this.maintenanceLog: " + JSON.stringify(this.maintenanceLog, null, 2) + "this.submitButtonLabel: " + this.submitButtonLabel);
   }
 
   onSubmit(): void {
@@ -65,7 +65,7 @@ export class MaintenanceLogFormComponent implements OnInit {
       $('#errorModal').modal('show');
       return;
     };
-    
+
     // start spinning on the button 
     this.submitting = true;
     const formValue = this.form.getRawValue();
