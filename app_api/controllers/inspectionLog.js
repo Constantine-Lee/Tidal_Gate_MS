@@ -3,6 +3,7 @@ const InspectionLog = mongoose.model('inspectionlog');
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error')
 const paginate = require('./paginate');
+const PDFDocument = require('pdfkit');
 
 async function findInspectionLog(id) {
     winston.info('Function=findInspectionLog(id)');
@@ -18,6 +19,25 @@ async function findInspectionLog(id) {
     }
     inspectionLog.questions = questions;
     return inspectionLog;
+}
+
+const download = async (req, res, next) => {
+    winston.info('Function=download');
+    try {
+        const doc = new PDFDocument;
+        doc.pipe(res);
+        const inspectionLog = await findInspectionLog(req.params.inspectionLogID);
+        const questions = inspectionLog.questions;
+        winston.info("questions: " + JSON.stringify(questions, null, 2));
+        doc.fontSize(14);
+        doc.text("Jabatan Pengairan dan Saliran Sarawak - Inspection Log");        
+        doc.end();
+    }
+    catch (err) {
+        winston.error('Generate PDF Error=' + err);
+        err = new ErrorHandler(404, 'Failed to Generate PDF.');
+        return next(err);
+    }
 }
 
 const getInspectionLogs = async (req, res, next) => {
@@ -162,5 +182,6 @@ module.exports = {
     addInspectionLog,
     getInspectionLog,
     editInspectionLog,
-    deleteInspectionLog
+    deleteInspectionLog,
+    download
 };

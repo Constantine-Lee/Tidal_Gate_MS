@@ -3,8 +3,9 @@ import { InspectionLogService } from '../_services/inspectionLog.service';
 import { InspectionLog } from '../_models/inspectionLog';
 import { fadeInAnimation } from '../_animations';
 import { LoggingService } from '../_services/logging.service';
-import { Subject } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import * as FileSaver from 'file-saver';
 declare var $: any;
 
 @Component({
@@ -44,6 +45,14 @@ export class InspectionLogTableComponent implements OnInit {
         this.pageOfItems = x.inspectionLogs;
         this.pager = x.pager;
       })
+  }
+
+  downloadPDF(id: string){
+    this.inspectionLogService.downloadPDF(id).subscribe((response) => {
+      var blob = new Blob([response], { type: 'application/pdf' });
+      FileSaver.saveAs(blob, 'report.pdf');
+    },
+      e => { throwError(e); });
   }
 
   getInspectionLogs(page: number) {

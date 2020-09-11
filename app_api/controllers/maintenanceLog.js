@@ -3,6 +3,7 @@ const MaintenanceLog = mongoose.model('MaintenanceLog');
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error');
 const paginate = require('./paginate');
+const PDFDocument = require('pdfkit');
 
 async function findMaintenanceLog(id) {
     winston.info('Function=findMaintenanceLog(id)');
@@ -18,6 +19,25 @@ async function findMaintenanceLog(id) {
     }
     maintenanceLog.questions = questions;
     return maintenanceLog;
+}
+
+const download = async (req, res, next) => {
+    winston.info('Function=download');
+    try {
+        const doc = new PDFDocument;
+        doc.pipe(res);
+        const maintenanceLog = await findMaintenanceLog(req.params.maintenanceLogID);
+        const questions = maintenanceLog.questions;
+        winston.info("questions: " + JSON.stringify(questions, null, 2));
+        doc.fontSize(14);
+        doc.text("Jabatan Pengairan dan Saliran Sarawak - Maintenance Log");        
+        doc.end();
+    }
+    catch (err) {
+        winston.error('Generate PDF Error=' + err);
+        err = new ErrorHandler(404, 'Failed to Generate PDF.');
+        return next(err);
+    }
 }
 
 const getMaintenanceLogs = async (req, res, next) => {
@@ -163,5 +183,6 @@ module.exports = {
     addMaintenanceLog,
     getMaintenanceLog,
     editMaintenanceLog,
-    deleteMaintenanceLog
+    deleteMaintenanceLog,
+    download
 };

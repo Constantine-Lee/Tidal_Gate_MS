@@ -34,6 +34,7 @@ const download = async (req, res, next) => {
         doc.fontSize(14);
         doc.text("Jabatan Pengairan dan Saliran Sarawak - Gate");
         doc.moveDown(1);
+        doc.image(gate.profilePhoto.split('api/')[1], {width: 100});
         for (let i = 0; i < questions.length; i++) {
             if (questions[i].controlType == "groupLabel") {
                 doc.moveDown(1);
@@ -47,11 +48,15 @@ const download = async (req, res, next) => {
                 doc.x = 75;
                 doc.text(questions[i].label + ' : ');
                 doc.x = 325;
-                doc.moveUp();
-                doc.text(questions[i].value);                
-                doc.moveUp();
+                
+                if(questions[i].value!= ''){
+                    doc.moveUp();
+                    doc.text(questions[i].value);        
+                    
+                }   
+                doc.moveUp();             
                 doc.x = 325;
-                doc.text('                                                          ', { underline: true });
+                doc.text('                                                            ', { underline: true });
             }
             if (questions[i].controlType == "fullTextbox") {
                 doc.fontSize(10);

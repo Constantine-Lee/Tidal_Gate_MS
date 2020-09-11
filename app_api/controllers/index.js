@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
         const timestamp = Date.now();
         winston.verbose('timestamp=' + timestamp);
 
-        const fileName = 'gate-' + timestamp + fileExtName;        
+        const fileName = 'gate-' + timestamp + fileExtName;
 
         winston.verbose('fileName=' + fileName);
         cb(null, fileName);
@@ -57,8 +57,16 @@ router
     .post(upload.uploadImage);
 
 router
-    .route('/download/:gateID')
+    .route('/gates/download/:gateID')
     .get(gate.download);
+
+router
+    .route('/inspectionLogs/download/:inspectionLogID')
+    .get(inspectionLog.download);
+
+router
+    .route('/maintenanceLogs/download/:maintenanceLogID')
+    .get(maintenanceLog.download);
 
 router.post('/register', auth.register);
 router.post('/login', auth.login);
@@ -72,7 +80,7 @@ router
 
 router
     .route('/counters/:counterID')
-    .get(passport.authenticate('jwt', { session: false }),counter.getCounter)
+    .get(passport.authenticate('jwt', { session: false }), counter.getCounter)
     .put(counter.editCounter)
     .delete(counter.deleteCounter)
 

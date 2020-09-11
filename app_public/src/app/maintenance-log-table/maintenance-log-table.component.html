@@ -48,6 +48,8 @@
                             <button class="btn btn-light"
                                 [routerLink]="['/updateMaintenanceLog/',maintenanceLog._id]"><i
                                     class="fa fa-search"></i></button>
+                            <button class="btn btn-light " (click)="downloadPDF(maintenanceLog._id)"><i
+                                    class="fa fa-file-pdf-o"></i></button>
                             <button (click)="showConfirmationModal(maintenanceLog._id)" class="btn btn-light"><i
                                     class="fa fa-trash"></i></button>
                             <!-- Modal -->
@@ -55,7 +57,7 @@
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content">
                                         <div class="modal-body">
-                                            <h4>Confirm Delete the Gate ?</h4>
+                                            <h4>Confirm Delete the Maintenance Log ?</h4>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-outline-primary"

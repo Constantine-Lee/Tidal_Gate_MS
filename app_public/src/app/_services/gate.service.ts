@@ -57,6 +57,6 @@ export class GateService {
   }
 
   downloadPDF(id: string): Observable<any> {
-    return this.http.get(baseUrl + `/download/${id}`, { responseType: 'blob'});
+    return this.http.get(baseUrl + `/gates/download/${id}`, { responseType: 'blob'});
   }
 }

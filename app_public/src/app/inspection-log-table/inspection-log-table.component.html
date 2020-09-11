@@ -37,6 +37,8 @@
                         <div class="d-flex justify-content-center">
                             <button class="btn btn-light" [routerLink]="['/updateInspectionLog/',inspectionLog._id]"><i
                                     class="fa fa-search"></i></button>
+                            <button class="btn btn-light " (click)="downloadPDF(inspectionLog._id)"><i
+                                    class="fa fa-file-pdf-o"></i></button>
                             <button (click)="showConfirmationModal(inspectionLog._id)" class="btn btn-light"><i
                                     class="fa fa-trash"></i></button>
                             <!-- Modal -->

@@ -2,10 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange
 import { MaintenanceLogService } from '../_services/maintenanceLog.service';
 import { MaintenanceLog } from '../_models/maintenanceLog';
 import { map, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { generate, Subject } from 'rxjs';
+import { generate, Subject, throwError } from 'rxjs';
 import { fadeInAnimation } from '../_animations';
 import { LoggingService } from '../_services/logging.service';
-import { InspectionLog } from '../_models/inspectionLog';
+import * as FileSaver from 'file-saver';
 declare var $: any;
 
 @Component({
@@ -45,6 +45,14 @@ export class MaintenanceLogTableComponent implements OnInit {
           this.pageOfItems = x.maintenanceLogs;
           this.pager = x.pager;
         })
+    }
+
+    downloadPDF(id: string){
+      this.maintenanceLogService.downloadPDF(id).subscribe((response) => {
+        var blob = new Blob([response], { type: 'application/pdf' });
+        FileSaver.saveAs(blob, 'report.pdf');
+      },
+        e => { throwError(e); });
     }
 
     getMaintenanceLogs(page: number) {

@@ -32,9 +32,9 @@
                     <td class="align-middle">{{gate.name}}</td>
                     <td>
                         <div class="d-flex justify-content-center">
-                            <button class="btn btn-light mr-2" [routerLink]="['/updateGate/',gate._id]"><i
+                            <button class="btn btn-light " [routerLink]="['/updateGate/',gate._id]"><i
                                     class="fa fa-search"></i></button>
-                            <button class="btn btn-light mr-2" (click)="downloadPDF(gate._id)"><i
+                            <button class="btn btn-light " (click)="downloadPDF(gate._id)"><i
                                     class="fa fa-file-pdf-o"></i></button>
                             <button *ngIf="isAdmin" (click)="showConfirmationModal(gate._id)" class="btn btn-light"><i
                                     class="fa fa-trash"></i></button>

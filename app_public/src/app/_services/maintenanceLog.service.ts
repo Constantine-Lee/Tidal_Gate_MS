@@ -40,4 +40,8 @@ export class MaintenanceLogService {
   getForms(): Observable<MaintenanceLog> {
     return this.http.get<MaintenanceLog>(baseUrl + `/form/maintenanceLogForm`);
   }
+
+  downloadPDF(id: string): Observable<any> {
+    return this.http.get(baseUrl + `/maintenanceLogs/download/${id}`, { responseType: 'blob'});
+  }
 }

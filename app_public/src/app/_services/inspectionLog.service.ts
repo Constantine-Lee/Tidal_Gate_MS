@@ -46,4 +46,8 @@ export class InspectionLogService {
   getForms(): Observable<InspectionLog> {
     return this.http.get<InspectionLog>(baseUrl + `/form/inspectionLogForm`);
   }
+
+  downloadPDF(id: string): Observable<any> {
+    return this.http.get(baseUrl + `/inspectionLogs/download/${id}`, { responseType: 'blob'});
+  }
 }
