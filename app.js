@@ -1,4 +1,7 @@
+//entry to server
 require('dotenv').config();
+
+const cron = require("node-cron");
 
 const express = require('express');
 const app = express();
@@ -10,6 +13,7 @@ app.use(express.urlencoded({
   extended: false
 }));
 
+//connect to the database and inititalize Schema
 require('./app_api/models/databaseInit');
 
 const path = require('path');
@@ -76,6 +80,46 @@ app.use((err, req, res, next) => {
   //res.status(err.status || 500).json(err.message);
 
 });
+
+const { FileIndex, ImageRefCounter } = require('./app_api/models/fileIndexing');
+const fs = require('fs');
+
+// schedule tasks to be run on the server
+cron.schedule("* * * * *", function () {
+
+});
+
+console.log("running a task every minute");
+
+let dateOffset = (24*60*60*1000) * 1; // 1 day
+// find non-submit ImageRefCounter, and 0 reference fileIndex
+Promise.all([
+  ImageRefCounter.find({ submit: false, timestamp: {$lt: Date.now() - dateOffset } }).lean(),
+  FileIndex.find({ pointer: 0 }).select('-__v -pointer').lean()
+]).then(([iRC, fI]) => {
+  winston.info('false imageRefCounter: ' + JSON.stringify(iRC, null, 2) + ', 0 reference fileIndex: ' + JSON.stringify(fI, null, 2));
+
+  //form an array from non-submit images
+  let imgArr = [];
+  for (let i = 0; i < iRC.length; i++) {
+    for (let j = 0; j < iRC[i].images.length; j++) {
+      winston.info('image: ' + iRC[i].images[j]);
+      imgArr.push(iRC[i].images[j]);
+    }
+  }
+  let deleteFileIndex = fI.map(image => image._id);
+  deleteFileIndex.map(image => fs.unlink(image.split('api/').pop(), () => ''));
+
+  // Delete 0 reference fileIndex and decrement non-submit images by 1
+  return Promise.all([
+    FileIndex.update({ _id: imgArr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
+    FileIndex.deleteMany({ _id: deleteFileIndex }),
+    ImageRefCounter.deleteMany({ submit: false, timestamp: {$lt: Date.now() - dateOffset } })
+  ])
+}).then(([fI]) => {
+  winston.info('Updated FileIndex: ' + JSON.stringify(fI, null, 2));
+});
+
 
 
 app.listen(3000, () => console.log(`listening at http://localhost:3000`))

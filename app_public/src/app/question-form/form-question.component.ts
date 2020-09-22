@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 import { QuestionBase, CheckBoxQuestion } from '../_models/questionType.js';
 import { LoggingService } from '../_services/logging.service.js';
 import { GateService } from '../_services/gate.service.js';
+import { MaintenanceLogService } from '../_services/maintenanceLog.service.js';
 
 @Component({
   selector: 'app-form-question',
@@ -10,7 +11,7 @@ import { GateService } from '../_services/gate.service.js';
 })
 export class FormQuestionComponent {
   constructor(
-    private gateService: GateService,
+    private maintenanceLogService: MaintenanceLogService,
     private logger: LoggingService
   ) { }
 
@@ -25,7 +26,7 @@ export class FormQuestionComponent {
   get getFormControl() { return this.form.get(this.question.key); }
 
   getContentChanged(change: any) {
-    this.question.value = this.quillEditorRef.getContents();;
+    this.question.value = this.quillEditorRef.getContents();
   }
 
   getEditorInstance(editorInstance: any) {
@@ -60,7 +61,7 @@ export class FormQuestionComponent {
           ctx.drawImage(img, 0, 0, width, height);
 
           let base64: string = ctx.canvas.toDataURL('image/jpeg', 0.5);
-          this.gateService.upload({ base64String: base64 }).subscribe(url => {
+          this.maintenanceLogService.upload({ base64String: base64 }).subscribe(url => {
             const range = this.quillEditorRef.getSelection();
             this.quillEditorRef.insertEmbed(range.index, 'image', url);
           }
@@ -74,7 +75,7 @@ export class FormQuestionComponent {
 
   ngOnInit() {
    
-    //check is CheckBox then disable first four checkbox, then subscribe to value changes, disable first four checkbox if 5th checkbox is true
+    //check is CheckBox then disable first four checkbox if the fifth is checked, then subscribe to value changes
     if (this.question.controlType == 'checkbox') {
       for(let i = 0; i < 4; i++){
         this.getCheckBoxFormArray[i].valueChanges.subscribe(v => (<CheckBoxQuestion>this.question).checkboxes[i].value = v);

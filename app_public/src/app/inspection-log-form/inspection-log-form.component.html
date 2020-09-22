@@ -2,12 +2,14 @@
     <div @fadeInAnimation *ngIf="form" class="container ">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
+            <!--Questions-->
             <div class=" mt-4 mb-2 ">
                 <div *ngFor="let question of questions">
                     <app-form-question [question]="question" [form]="form"></app-form-question>
                 </div>
             </div>
             
+            <!--Submit Button-->
             <div class="d-flex justify-content-center align-items-center container ">
                 <button type="button" [disabled]="submitting" class="btn btn-outline-info btn-lg btn-block mb-4 mt-4"
                     data-toggle="modal" data-target="#exampleModal"><span *ngIf="submitting"

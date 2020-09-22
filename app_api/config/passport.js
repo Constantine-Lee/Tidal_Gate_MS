@@ -5,7 +5,7 @@ const User = require('mongoose').model('User');
 const passport = require('passport');
 const winston = require('../config/winston');
 
-
+//LocalStrategy to check whether user existed in the database or not
 passport.use(new LocalStrategy({},
   (username, password, done) => {
     User.findOne({ username: username }, (err, user) => {

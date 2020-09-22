@@ -47,9 +47,9 @@ export class GateService {
     return this.http.put<any>(url, gate);
   }
 
-  upload(base64: any): Observable<string> {
+  upload(base64: string, id: string): Observable<string> {
     const url = `${environment.apiUrl}/upload`;
-    return this.http.post<string>(url, base64);
+    return this.http.post<string>(url, { 'base64String': base64, 'id': id });
   }
 
   getForms(): Observable<Gate> {
@@ -57,6 +57,6 @@ export class GateService {
   }
 
   downloadPDF(id: string): Observable<any> {
-    return this.http.get(baseUrl + `/gates/download/${id}`, { responseType: 'blob'});
+    return this.http.get(baseUrl + `/gates/download/${id}`, { responseType: 'blob' });
   }
 }

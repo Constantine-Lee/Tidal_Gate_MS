@@ -44,4 +44,9 @@ export class MaintenanceLogService {
   downloadPDF(id: string): Observable<any> {
     return this.http.get(baseUrl + `/maintenanceLogs/download/${id}`, { responseType: 'blob'});
   }
+
+  upload(base64: any): Observable<string> {
+    const url = `${environment.apiUrl}/upload`;
+    return this.http.post<string>(url, base64);
+  }
 }

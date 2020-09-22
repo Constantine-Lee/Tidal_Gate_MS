@@ -30,7 +30,8 @@ const download = async (req, res, next) => {
         const questions = inspectionLog.questions;
         winston.info("questions: " + JSON.stringify(questions, null, 2));
         doc.fontSize(14);
-        doc.text("Jabatan Pengairan dan Saliran Sarawak - Inspection Log");        
+        doc.text("Jabatan Pengairan dan Saliran Sarawak - Inspection Log");
+        //TODO: Write to pdf from json
         doc.end();
     }
     catch (err) {

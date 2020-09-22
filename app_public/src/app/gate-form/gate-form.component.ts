@@ -121,6 +121,7 @@ export class GateFormComponent implements OnInit {
     let height: number = 190;
 
     var mimeType = fileInput.target.files[0].type;
+    //check format
     if (mimeType.match(/image\/*/) == null) {
       alert("Please upload image of PNG and JPG format.");
       return;
@@ -136,7 +137,7 @@ export class GateFormComponent implements OnInit {
       ctx.drawImage(img, 0, 0, width, height);
 
       let base64: string = ctx.canvas.toDataURL('image/jpeg', 1);
-      this.gateService.upload({ base64String: base64 }).subscribe(url => {
+      this.gateService.upload(base64, this.gate._id ).subscribe(url => {
         this.previewUrl = url;
         this.gate.profilePhoto = url;
       }

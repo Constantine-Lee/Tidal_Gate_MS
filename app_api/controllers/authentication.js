@@ -37,6 +37,7 @@ const login = (req, res, next) => {
     const err = new ErrorHandler(400, "All fields required");
     return next(err); 
   }
+  //use local strategy to fetch the user 
   passport.authenticate('local', (err, user, info) => {    
     if (err) {      
       const error = new ErrorHandler(404, err);

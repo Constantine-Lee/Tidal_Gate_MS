@@ -3,24 +3,16 @@ const Form = mongoose.model('form');
 const winston = require('../config/winston');
 const Gate = mongoose.model('Gate');
 const { ErrorHandler } = require('../models/error')
+const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
 
-const imageRefCounterSchema = new mongoose.Schema({
-  counter: {
-    type: Map,
-    of: {
-      location: String,
-      ref: Number
-    }
-  }
-})
-
-const ImageRefCounter = mongoose.model('ImageRefCounter', imageRefCounterSchema);
 
 const getForm = async (req, res, next) => {
   winston.info('Function=getForm req.params.formID=' + req.params.formID);
   const formID = req.params.formID;
   try {
-    const imageRefCounter = await ImageRefCounter.create({});
+    let dateOffset = (24*60*60*1000) * 1; // 1 day
+    let date = Date.now();    
+    const imageRefCounter = await ImageRefCounter.create({ timestamp: date - dateOffset });
     winston.info('ImageRefCounter: ' + imageRefCounter);
 
     Promise.all([
@@ -51,6 +43,7 @@ const getForm = async (req, res, next) => {
       form._id = imageRefCounter._id;
       res.status(200).json(form);
     });
+
   } catch (err) {
     winston.error('Get Form Error=' + err);
     err - new ErrorHandler(404, 'Failed to get Form.');

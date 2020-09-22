@@ -171,6 +171,7 @@ const inspectionLogSchema = new mongoose.Schema({
   reviewedBy: textQuestionSchema,
   approvedBy: textQuestionSchema
 });
+// increment the counter before save
 inspectionLogSchema.pre('save', function (next) {
   var doc = this;
   counter.findByIdAndUpdate({ _id: 'inspectionLog' }, { $inc: { seq: 1 } }, { new: true, upsert: true}, function (error, counter) {
@@ -256,6 +257,7 @@ const maintenanceLogSchema = new mongoose.Schema({
   reviewBy: textQuestionSchema,
   approveBy: textQuestionSchema
 });
+// increment the counter before save
 maintenanceLogSchema.pre('save', function (next) {
   var doc = this;
   counter.findOneAndUpdate({ _id: 'maintenanceLog'}, {$inc: { seq: 1} }, { new: true, upsert: true}, function (error, counter) {

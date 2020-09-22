@@ -31,6 +31,7 @@ const download = async (req, res, next) => {
         winston.info("questions: " + JSON.stringify(questions, null, 2));
         doc.fontSize(14);
         doc.text("Jabatan Pengairan dan Saliran Sarawak - Maintenance Log");        
+        //TODO: Write to pdf from JSON
         doc.end();
     }
     catch (err) {
@@ -138,6 +139,7 @@ const editMaintenanceLog = async (req, res, next) => {
     try {
         maintenanceLog = await MaintenanceLog.findById(req.params.maintenanceLogID).lean();
         winston.debug('Fetched a MaintenanceLog: ' + JSON.stringify(maintenanceLog, null, 2));
+        //check if the record had been modified by others
         if (maintenanceLog.timestamp != req.body.timestamp) {
             throw new ErrorHandler(404, "The Maintenance Log had been edited by others.");
         }

@@ -2,11 +2,20 @@ const mongoose = require('mongoose');
 
 var fileIndex = new mongoose.Schema({
     _id: String,
-    keyValue: {
-        type: Map,
-        of: String
-    }
+    pointer: Number
 });
+const FileIndex = mongoose.model('FileIndex', fileIndex);
 
-mongoose.model('FileIndex', fileIndex);
+const imageRefCounterSchema = new mongoose.Schema({
+    timestamp: { type: Date, default: Date.now },
+    submit: { type: Boolean, default: false},
+    images: [String]
+})
+const ImageRefCounter = mongoose.model('ImageRefCounter', imageRefCounterSchema);
+
+module.exports = {
+    FileIndex,
+    ImageRefCounter
+}
+
 

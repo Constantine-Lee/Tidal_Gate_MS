@@ -6,6 +6,8 @@ const winston = require('../config/winston');
 const paginate = require('./paginate');
 const { ErrorHandler } = require('../models/error');
 const PDFDocument = require('pdfkit');
+const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
+const fs = require('fs');
 
 async function findGate(id) {
     let gate = await Gate.findById(id).select('-__v').lean();
@@ -34,7 +36,7 @@ const download = async (req, res, next) => {
         doc.fontSize(14);
         doc.text("Jabatan Pengairan dan Saliran Sarawak - Gate");
         doc.moveDown(1);
-        doc.image(gate.profilePhoto.split('api/')[1], {width: 100});
+        doc.image(gate.profilePhoto.split('api/')[1], { width: 100 });
         for (let i = 0; i < questions.length; i++) {
             if (questions[i].controlType == "groupLabel") {
                 doc.moveDown(1);
@@ -48,13 +50,13 @@ const download = async (req, res, next) => {
                 doc.x = 75;
                 doc.text(questions[i].label + ' : ');
                 doc.x = 325;
-                
-                if(questions[i].value!= ''){
+
+                if (questions[i].value != '') {
                     doc.moveUp();
-                    doc.text(questions[i].value);        
-                    
-                }   
-                doc.moveUp();             
+                    doc.text(questions[i].value);
+
+                }
+                doc.moveUp();
                 doc.x = 325;
                 doc.text('                                                            ', { underline: true });
             }
@@ -120,11 +122,22 @@ const addGate = async (req, res, next) => {
     try {
         let questions = req.body.questions;
         for (let i = 0; i < questions.length; i++) {
-            req.body[questions[i].key] = questions[i];            
+            req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
         req.body.timestamp = Date.now();
-        winston.verbose('Gate to be saved: ' + JSON.stringify(req.body, null, 2));
+        let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
+
+        // get array of non-selected images and decrement FileIndex counter by one
+        let arr = imageRefCounter.images.filter(i => req.body.profilePhoto != i);
+        imageRefCounter.images = imageRefCounter.images.filter(i => req.body.profilePhoto == i);
+        imageRefCounter.submit = true;
+        Promise.all([
+            ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean(),
+            FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true}).lean(),
+        ]).then(([iRC, fI]) => { winston.info('updated imageRefCounter: ' + iRC + ', fileIndex' + fI); });
+
+        //winston.verbose('Gate to be saved: ' + JSON.stringify(req.body, null, 2));
         const savedGate = await Gate.create(req.body);
         winston.debug('Saved Gate=' + savedGate);
         res.status(200).json(savedGate);
@@ -167,14 +180,14 @@ const editGate = async (req, res, next) => {
     try {
         let questions = req.body.questions;
         for (let i = 0; i < questions.length; i++) {
-            req.body[questions[i].key] = questions[i];            
+            req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
         req.body.timestamp = Date.now();
 
-        const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, req.body, { new: false }).lean();
+        const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, req.body, { new: true }).lean();
         //silly gate
-        winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));        
+        winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));
         res.status(200).json(editedGate);
     }
     catch (err) {
