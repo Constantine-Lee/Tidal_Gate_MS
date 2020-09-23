@@ -90,7 +90,7 @@ cron.schedule("* * * * *", function () {
 });
 
 console.log("running a task every minute");
-
+/*
 let dateOffset = (24*60*60*1000) * 1; // 1 day
 // find non-submit ImageRefCounter, and 0 reference fileIndex
 Promise.all([
@@ -119,7 +119,7 @@ Promise.all([
 }).then(([fI]) => {
   winston.info('Updated FileIndex: ' + JSON.stringify(fI, null, 2));
 });
-
+*/
 
 
 app.listen(3000, () => console.log(`listening at http://localhost:3000`))

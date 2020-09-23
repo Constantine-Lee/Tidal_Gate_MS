@@ -134,7 +134,7 @@ const addGate = async (req, res, next) => {
         imageRefCounter.submit = true;
         Promise.all([
             ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean(),
-            FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true}).lean(),
+            FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
         ]).then(([iRC, fI]) => { winston.info('updated imageRefCounter: ' + iRC + ', fileIndex' + fI); });
 
         //winston.verbose('Gate to be saved: ' + JSON.stringify(req.body, null, 2));
@@ -165,13 +165,18 @@ const getGate = async (req, res, next) => {
 const editGate = async (req, res, next) => {
     winston.info('Function=editGate req.params.gateID=' + req.params.gateID);
 
+    let gate;
+    let imageRefCounter;
     try {
-        const gate = await Gate.findById(req.params.gateID).lean();
-        //debug gate
+        let [g, i] = await Promise.all([
+            Gate.findById(req.params.gateID).lean(),
+            ImageRefCounter.findById(req.body._id).select('-__v').lean()
+        ]);
+        gate = g; imageRefCounter = i;  
         winston.debug('Fetched a Gate to Edit=' + gate);
         if (gate.timestamp != req.body.timestamp) {
             throw new ErrorHandler(404, "The Gate had been edited by others.");
-        }
+        }              
     } catch (err) {
         winston.error('Edit Gate Error=' + err);
         return next(err);
@@ -185,26 +190,36 @@ const editGate = async (req, res, next) => {
         delete req.body.questions;
         req.body.timestamp = Date.now();
 
-        const editedGate = await Gate.findOneAndUpdate({ _id: req.params.gateID }, req.body, { new: true }).lean();
-        //silly gate
+        let arr = imageRefCounter.images.filter(i => req.body.profilePhoto != i);
+        imageRefCounter.images = imageRefCounter.images.filter(i => req.body.profilePhoto == i);
+
+        let [editedGate, fI, iR] = await Promise.all([
+            Gate.findOneAndUpdate({ _id: req.params.gateID }, req.body, { new: true }).lean(),
+            FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
+            ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean()
+        ]);
+
         winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));
         res.status(200).json(editedGate);
-    }
-    catch (err) {
+    } catch (err) {
         winston.error('Edit Gate Error=' + err);
-        err = new ErrorHandler(500, 'Failed to edit the gate.');
         return next(err);
     }
 };
 
 const deleteGate = async (req, res, next) => {
-    const gateID = req.params.gateID;
-    winston.info('Function=deleteGate req.params.gateID=' + gateID);
+    winston.info('Function=deleteGate req.params.gateID=' + req.params.gateID);
 
     try {
-        const deleteResult = await Gate.deleteOne({ _id: gateID }).exec();
-        winston.info('Deleted Gate=' + gateID);
-        res.status(200).json(deleteResult);
+        let gate = await Gate.findById(req.params.gateID).select('-__v').lean();
+        Promise.all([
+            FileIndex.update({ _id: gate.profilePhoto }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
+            Gate.deleteOne({ _id: req.params.gateID }),
+            ImageRefCounter.deleteOne({ _id: req.params.gateID })
+        ]).then(_ => {
+            winston.info('Deleted Gate=' + req.params.gateID);
+            res.status(200).json();
+        })
     } catch (err) {
         winston.error('Delete Gate Error=' + err);
         err = new ErrorHandler(500, 'Failed to delete the Gate=' + gateID);
