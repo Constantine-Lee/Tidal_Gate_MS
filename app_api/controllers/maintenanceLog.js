@@ -4,6 +4,8 @@ const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error');
 const paginate = require('./paginate');
 const PDFDocument = require('pdfkit');
+const { ImageRefCounter, FileIndex } = require('../models/fileIndexing');
+const { GatewayTimeout } = require('http-errors');
 
 async function findMaintenanceLog(id) {
     winston.info('Function=findMaintenanceLog(id)');
@@ -30,7 +32,7 @@ const download = async (req, res, next) => {
         const questions = maintenanceLog.questions;
         winston.info("questions: " + JSON.stringify(questions, null, 2));
         doc.fontSize(14);
-        doc.text("Jabatan Pengairan dan Saliran Sarawak - Maintenance Log");        
+        doc.text("Jabatan Pengairan dan Saliran Sarawak - Maintenance Log");
         //TODO: Write to pdf from JSON
         doc.end();
     }
@@ -110,7 +112,34 @@ const addMaintenanceLog = async (req, res, next) => {
         }
         delete req.body.questions;
         req.body.gateName.controlType = 'disabled';
-        winston.verbose('Maintenance Log to be saved=' + JSON.stringify(req.body, null, 2));
+
+        let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
+        // get array of non-selected images and decrement FileIndex counter by one
+        let incomingPicArr = [];
+        req.body.actionTakenRTX.value.ops.map(i => {
+            if (i.insert.image) {
+                if (!incomingPicArr.includes(i.insert.image)) {
+                    incomingPicArr.push(i.insert.image);
+                }
+            }
+        });
+        req.body.actionNeedRTX.value.ops.map(i => {
+            if (i.insert.image) {
+                if (!incomingPicArr.includes(i.insert.image)) {
+                    incomingPicArr.push(i.insert.image);
+                }
+            }
+        })
+        //get arrary of non-selected images and decrement FileIndex counter by one
+        let arr = imageRefCounter.images.filter(i => !incomingPicArr.includes(i));
+        imageRefCounter.images = imageRefCounter.images.filter(i => incomingPicArr.includes(i));
+        imageRefCounter.submit = true;
+        Promise.all([
+            ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean(),
+            FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean()
+        ]).then(([iRC, fI]) => { winston.info('updated imageRefCounter: ' + iRC + ', fileIndex: ' + fI); });
+
+        //winston.verbose('Maintenance Log to be saved=' + JSON.stringify(req.body, null, 2));
         const savedMaintenanceLog = await MaintenanceLog.create(req.body);
         winston.debug('Saved a MaintenanceLog: ' + savedMaintenanceLog);
         res.status(200).json(savedMaintenanceLog);
@@ -136,8 +165,13 @@ const getMaintenanceLog = async (req, res, next) => {
 const editMaintenanceLog = async (req, res, next) => {
     winston.info('Function=editMaintenanceLog req.params.maintenanceLogID=' + req.params.maintenanceLogID);
     let maintenanceLog;
+    let imageRefCounter;
     try {
-        maintenanceLog = await MaintenanceLog.findById(req.params.maintenanceLogID).lean();
+        let [g, i] = await Promise.all([
+            MaintenanceLog.findById(req.params.maintenanceLogID).lean(),
+            ImageRefCounter.findById(req.body._id).select('-__v').lean()
+        ]);
+        maintenanceLog = g; imageRefCounter = i;
         winston.debug('Fetched a MaintenanceLog: ' + JSON.stringify(maintenanceLog, null, 2));
         //check if the record had been modified by others
         if (maintenanceLog.timestamp != req.body.timestamp) {
@@ -154,8 +188,33 @@ const editMaintenanceLog = async (req, res, next) => {
             req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
-        req.body.timestamp = new Date();
-        const editedMaintenanceLog = await MaintenanceLog.findOneAndUpdate({ _id: req.params.maintenanceLogID }, req.body, { new: false }).lean();
+        req.body.timestamp = Date.now();
+
+        let incomingPicArr = [];
+        req.body.actionTakenRTX.value.ops.map(i => {
+            if (i.insert.image) {
+                if (!incomingPicArr.includes(i.insert.image)) {
+                    incomingPicArr.push(i.insert.image);
+                }
+            }
+        });
+        req.body.actionNeedRTX.value.ops.map(i => {
+            if (i.insert.image) {
+                if (!incomingPicArr.includes(i.insert.image)) {
+                    incomingPicArr.push(i.insert.image);
+                }
+            }
+        })
+        //get arrary of non-selected images and decrement FileIndex counter by one
+        let arr = imageRefCounter.images.filter(i => !incomingPicArr.includes(i));
+        imageRefCounter.images = imageRefCounter.images.filter(i => incomingPicArr.includes(i));
+
+        let [editedMaintenanceLog, fI, iR] = await Promise.all([
+            MaintenanceLog.findOneAndUpdate({ _id: req.params.maintenanceLogID }, req.body, { new: true }).lean(),
+            FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
+            ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean()
+        ])
+
         winston.silly('Edited Maintenance Log=' + editedMaintenanceLog);
         res.status(200).json(editedMaintenanceLog);
     } catch (err) {
@@ -166,16 +225,37 @@ const editMaintenanceLog = async (req, res, next) => {
 };
 
 const deleteMaintenanceLog = async (req, res, next) => {
-    const maintenanceLogID = req.params.maintenanceLogID;
-    winston.info('Function=deleteMaintenanceLog req.params.maintenanceLogID=' + maintenanceLogID);
+    winston.info('Function=deleteMaintenanceLog req.params.maintenanceLogID=' + req.params.maintenanceLogID);
 
     try {
-        const deleteResult = await MaintenanceLog.deleteOne({ _id: maintenanceLogID }).lean();
-        winston.info('Deleted Maintenance Log=' + maintenanceLogID);
-        res.status(200).json(deleteResult);
+        let maintenanceLog = await MaintenanceLog.findById(req.params.maintenanceLogID).select('-__v').lean();
+        // extract image into an array (picArr)
+        let picArr = [];
+        maintenanceLog.actionTakenRTX.value.ops.map(i => {
+            if (i.insert.image) {
+                if (!picArr.includes(i.insert.image)) {
+                    picArr.push(i.insert.image);
+                }
+            }
+        });
+        maintenanceLog.actionNeedRTX.value.ops.map(i => {
+            if (i.insert.image) {
+                if (!picArr.includes(i.insert.image)) {
+                    picArr.push(i.insert.image);
+                }
+            }
+        })
+        Promise.all([
+            FileIndex.update({ _id: picArr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
+            MaintenanceLog.deleteOne({ _id: req.params.maintenanceLogID }).lean(),
+            ImageRefCounter.deleteOne({ _id: req.params.maintenanceLogID })
+        ]).then(_ => {
+            winston.info('Deleted Maintenance Log=' + req.params.maintenanceLogID);
+            res.status(200).json();
+        })
     } catch (err) {
         winston.error('Delete Maintenance Log Error=' + err);
-        err = new ErrorHandler(500, 'Failed to delete Maintenance Log: ' + maintenanceLogID);
+        err = new ErrorHandler(500, 'Failed to delete Maintenance Log: ' + req.params.maintenanceLogID);
         return next(err);
     }
 };

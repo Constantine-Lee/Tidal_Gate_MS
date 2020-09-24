@@ -48,9 +48,9 @@ db.once('open', function () {
 
     let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ checkboxes: [] });
 
-    var rtxQuestionSchema = new Schema({ _id: false 
-    })
-    rtxQuestionSchema.add(baseQuestionSchema);
+    let rtxQuestionSchema = new Schema({ _id: false}).add(baseQuestionSchema).add({
+        value: {}
+    });
 
     var maintenanceLogSchema = new Schema({
         _id: String,
@@ -136,7 +136,9 @@ db.once('open', function () {
     }, { _id: false }));
     var CategoryLabel = docArray.discriminator('groupLabel', new Schema({}, { _id: false }));
     let CheckBoxQuestion = docArray.discriminator('checkbox', new Schema({ checkboxes: [] }, { _id: false }));
-    var RTXQuestion = docArray.discriminator('RTX', new Schema({}, { _id: false }));
+    var RTXQuestion = docArray.discriminator('RTX', new Schema({
+        value: {}
+    }, { _id: false }));
 
     var form = db.model('form', maintenanceLogSchema);
 
@@ -635,7 +637,7 @@ db.once('open', function () {
             label: 'SUMMARY',
             required: false,
             order: thirteenth
-        }),        
+        }),
         actionTakenCB: new CheckBoxQuestion({
             key: 'actionTakenCB',
             label: 'Action Taken',
@@ -649,10 +651,15 @@ db.once('open', function () {
         }),
         actionTakenRTX: new RTXQuestion({
             key: 'actionTakenRTX',
-            value: '<p></p><br><p></p>',
+            value: {
+                ops: [
+                    { insert: '\n' },
+                    { insert: '\n' }
+                ]
+            },
             required: false,
             order: thirteenth
-        }),        
+        }),
         actionNeedCB: new CheckBoxQuestion({
             key: 'actionNeedCB',
             label: 'Action Needed',
@@ -667,7 +674,12 @@ db.once('open', function () {
         }),
         actionNeedRTX: new RTXQuestion({
             key: 'actionNeedRTX',
-            value: '<p></p><br><p></p>',
+            value: {
+                ops: [                    
+                    { insert: '\n' },
+                    { insert: '\n' }
+                ]
+            },
             required: false,
             order: thirteenth
         }),
@@ -710,11 +722,11 @@ db.once('open', function () {
             value: '',
             required: false,
             order: thirteenth
-        })        
-};
+        })
+    };
 
-form.create(batch).
-    then(function (doc) {
-    }).
-    catch();
+    form.create(batch).
+        then(function (doc) {
+        }).
+        catch();
 });

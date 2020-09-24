@@ -25,6 +25,7 @@ export class MaintenanceLogFormComponent implements OnInit {
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
   submitButtonLabel: string;
   maintenanceLog: MaintenanceLog;
+  _id: string;
 
   constructor(
     private qcs: QuestionControlService,
@@ -45,6 +46,7 @@ export class MaintenanceLogFormComponent implements OnInit {
         this.maintenanceLogService.getForms().subscribe(m => this.initForm(m, 'Submit'));
       }
     });
+    
   }
 
   initForm(m: MaintenanceLog, buttonLabel: string){
@@ -53,7 +55,8 @@ export class MaintenanceLogFormComponent implements OnInit {
     this.questions = m.questions;
     this.form = this.qcs.toFormGroup(this.questions);
     this.submitButtonLabel = buttonLabel;
-    this.logger.info("this.maintenanceLog: " + JSON.stringify(this.maintenanceLog, null, 2) + "this.submitButtonLabel: " + this.submitButtonLabel);
+    this._id = m._id;
+    //this.logger.info("this.maintenanceLog: " + JSON.stringify(this.maintenanceLog, null, 2) + "this.submitButtonLabel: " + this.submitButtonLabel);
   }
 
   onSubmit(): void {

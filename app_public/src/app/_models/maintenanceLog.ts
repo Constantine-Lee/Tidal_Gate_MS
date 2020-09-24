@@ -1,13 +1,13 @@
 import { QuestionBase } from './questionType';
 
 export class MaintenanceLog {
-    _id: number;
-    id: number;
+    _id: string;
+    id: string;
     timestamp: number;    
     questions: QuestionBase[];    
 
     constructor(options: {
-        _id?: number,
+        _id?: string,
         timestamp?: number;        
         questions?: QuestionBase[];
     } = {}) {

@@ -222,7 +222,7 @@ const deleteGate = async (req, res, next) => {
         })
     } catch (err) {
         winston.error('Delete Gate Error=' + err);
-        err = new ErrorHandler(500, 'Failed to delete the Gate=' + gateID);
+        err = new ErrorHandler(500, 'Failed to delete the Gate=' + req.params.gateID);
         return next(err);
     }
 };

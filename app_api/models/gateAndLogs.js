@@ -186,7 +186,7 @@ mongoose.model('inspectionlog', inspectionLogSchema);
 //Maintenance Log
 const maintenanceLogSchema = new mongoose.Schema({
   id: Number,
-  timestamp: Number,
+  timestamp: { type: Number, default: new Date() },
   gateInfo: categoryLabelSchema,
   gateName: dropDownQuestionSchema,
   date: dateQuestionSchema,

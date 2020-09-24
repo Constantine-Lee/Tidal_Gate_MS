@@ -15,8 +15,9 @@ const baseUrl = `${environment.apiUrl}`;
 
 @Injectable({ providedIn: 'root' })
 export class MaintenanceLogService {
-  constructor(private http: HttpClient) { }
 
+  constructor(private http: HttpClient) { }
+  
   addMaintenanceLog(maintenanceLog: MaintenanceLog): Observable<MaintenanceLog> {
     return this.http.post<MaintenanceLog>(baseUrl + `/maintenanceLogs`, maintenanceLog, httpOptions);
   }
@@ -45,8 +46,9 @@ export class MaintenanceLogService {
     return this.http.get(baseUrl + `/maintenanceLogs/download/${id}`, { responseType: 'blob'});
   }
 
-  upload(base64: any): Observable<string> {
+  upload(base64: string, _id: string): Observable<string> {
     const url = `${environment.apiUrl}/upload`;
-    return this.http.post<string>(url, base64);
-  }
+    console.log(_id);
+    return this.http.post<string>(url, { 'base64String': base64, 'id': _id });
+  }  
 }

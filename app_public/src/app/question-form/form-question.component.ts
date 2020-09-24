@@ -17,6 +17,8 @@ export class FormQuestionComponent {
 
   @Input() question: QuestionBase;
   @Input() form: FormGroup;
+  @Input() _id: string;
+
   quillEditorRef;
   modules = { toolbar: [{ header: 1 }, { list: 'ordered' }, { image: 1 }] };
 
@@ -61,7 +63,7 @@ export class FormQuestionComponent {
           ctx.drawImage(img, 0, 0, width, height);
 
           let base64: string = ctx.canvas.toDataURL('image/jpeg', 0.5);
-          this.maintenanceLogService.upload({ base64String: base64 }).subscribe(url => {
+          this.maintenanceLogService.upload(base64, this._id).subscribe(url => {
             const range = this.quillEditorRef.getSelection();
             this.quillEditorRef.insertEmbed(range.index, 'image', url);
           }

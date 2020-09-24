@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
 
 const uploadImage = async (req, res, next) => {
-    winston.info('Function=uploadImage');
+    winston.info('Function=uploadImage req.body.id: ' + req.body.id);
     try {
         let base64Image = req.body.base64String.split(';base64,').pop();
         const md5sum = crypto.createHash('md5').update(base64Image).digest('hex');
