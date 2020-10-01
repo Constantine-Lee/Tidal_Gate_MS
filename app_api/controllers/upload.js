@@ -4,12 +4,6 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
 
-//configuring the AWS environment
-AWS.config.update({
-    accessKeyId: "AKIAIUF3ALORT4QPI3QQ",
-    secretAccessKey: "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"
-});
-
 var s3 = new AWS.S3();
 
 const uploadImage = async (req, res, next) => {
