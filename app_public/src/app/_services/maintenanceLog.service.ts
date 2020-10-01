@@ -30,7 +30,7 @@ export class MaintenanceLogService {
     return this.http.get<MaintenanceLog>(baseUrl + `/maintenanceLogs/${id}`);
   }
 
-  deleteMaintenanceLog(id: number) {
+  deleteMaintenanceLog(id: string) {
     return this.http.delete<MaintenanceLog>(baseUrl + `/maintenanceLogs/${id}`);
   }
 
