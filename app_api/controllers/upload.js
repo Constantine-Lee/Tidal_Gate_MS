@@ -1,33 +1,58 @@
 const winston = require('../config/winston');
+const AWS = require('aws-sdk');
 const fs = require('fs');
 const crypto = require('crypto');
 const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
 
+//configuring the AWS environment
+AWS.config.update({
+    accessKeyId: "AKIAIUF3ALORT4QPI3QQ",
+    secretAccessKey: "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"
+});
+
+var s3 = new AWS.S3();
+
 const uploadImage = async (req, res, next) => {
     winston.info('Function=uploadImage req.body.id: ' + req.body.id);
+
     try {
-        let base64Image = req.body.base64String.split(';base64,').pop();
+        let base64Image = Buffer.from(req.body.base64String.split(';base64,').pop(), 'base64');
         const md5sum = crypto.createHash('md5').update(base64Image).digest('hex');
-        fs.writeFile('images/' + md5sum + '.jpg', base64Image, { encoding: 'base64' }, async (err) => {
+
+        //configuring parameters
+        var params = {
+            Bucket: 'tidalgate-ms',
+            Body: base64Image,
+            ContentEncoding: 'base64', // required
+            ContentType: `image/jpg`, // required. Notice the back ticks
+            Key: 'images/' + md5sum + '.jpg'
+        };
+
+        s3.upload(params, async (err, data) => {
             if (err) {
                 winston.error(err);
+                throw new ErrorHandler(404, 'Failed to upload image.');
             }
-            else {
-                winston.info('File created: ' + md5sum);
+            if (data) {
+                winston.info('File created: ' + data.Location);
                 let imageRefCounter = await ImageRefCounter.findById(req.body.id).select('-__v').lean();
 
                 //insert into images array if not existed, update ImageRefCounter and increment FileIndex
 
-                if (!imageRefCounter.images.includes(process.env.imgFolderUrl + md5sum + '.jpg')) {
-                    imageRefCounter.images.push(process.env.imgFolderUrl + md5sum + '.jpg');
+                if (!imageRefCounter.images.includes(data.location)) {
+                    imageRefCounter.images.push(data.location);
                     Promise.all([
                         ImageRefCounter.findByIdAndUpdate({ _id: req.body.id }, imageRefCounter, { new: true }).lean(),
-                        FileIndex.findByIdAndUpdate({ _id: process.env.imgFolderUrl + md5sum + '.jpg' }, { $inc: { pointer: 1 } }, { new: true, upsert: true }).lean()
-                    ]).then(([iRC, fI]) => { winston.info('updated imageRefCounter: ' + iRC + ', fileIndex' + fI); });
+                        FileIndex.findByIdAndUpdate({ _id: data.Location }, { $inc: { pointer: 1 } }, { new: true, upsert: true }).lean()
+                    ]).then(([iRC, fI]) => { winston.verbose('updated imageRefCounter: ' + iRC + ', fileIndex' + fI); });
                 }
+                res.status(200).json(data.Location);
+            }
+            else {
+                throw new ErrorHandler(404, 'Probably Database Error.');
             }
         });
-        res.status(200).json(process.env.imgFolderUrl + md5sum + '.jpg');
+
     } catch (err) {
         winston.error('Upload Image Error=' + err);
         err = new ErrorHandler(404, 'Failed to upload image.');

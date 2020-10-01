@@ -87,7 +87,7 @@ export class MaintenanceLogTableComponent implements OnInit {
       this.searchText$.next(searchText);
     }
 
-    showConfirmationModal(id: number){
+    showConfirmationModal(id: string){
       this.logger.info("Function: showConfirmationModal(id: string)");
       this.logger.info("id: string" + id);
 
