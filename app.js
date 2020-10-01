@@ -97,7 +97,7 @@ let s3 = new AWS.S3();
 
 
 // schedule tasks to be run on the server
-cron.schedule("* /30 * * *", function () {
+cron.schedule("*/30 * * * *", function () {
   console.log("running a task every minute");
 
   let dateOffset = (24 * 60 * 60 * 1000) * 1; // 1 day
