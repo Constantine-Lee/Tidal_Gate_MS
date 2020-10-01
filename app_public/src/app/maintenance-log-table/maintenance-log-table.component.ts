@@ -26,7 +26,7 @@ export class MaintenanceLogTableComponent implements OnInit {
   dateAscending: boolean = true;
   get dateSort(): number { return this.dateAscending ? 1 : -1 }
 
-  _idToDelete: number;
+  _idToDelete: string;
 
   constructor(
     private maintenanceLogService: MaintenanceLogService,
