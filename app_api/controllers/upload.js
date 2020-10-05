@@ -5,6 +5,11 @@ const crypto = require('crypto');
 const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
 
 var s3 = new AWS.S3();
+//configuring the AWS environment
+AWS.config.update({
+    accessKeyId: process.env.S3_KEY,
+    secretAccessKey:process.env.S3_SECRET 
+  });
 
 const uploadImage = async (req, res, next) => {
     winston.info('Function=uploadImage req.body.id: ' + req.body.id);

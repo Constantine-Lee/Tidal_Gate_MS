@@ -88,6 +88,11 @@ const fs = require('fs');
 const AWS = require('aws-sdk');
 
 let s3 = new AWS.S3();
+//configuring the AWS environment
+AWS.config.update({
+  accessKeyId: process.env.S3_KEY,
+  secretAccessKey:process.env.S3_SECRET 
+});
 
 // schedule tasks to be run on the server
 cron.schedule("*/30 * * * *", function () {
