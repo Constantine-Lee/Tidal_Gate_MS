@@ -78,7 +78,6 @@ app.use((err, req, res, next) => {
   // render the error page
   handleError(err, res);
   //res.status(err.status || 500).json(err.message);
-
 });
 
 const { FileIndex, ImageRefCounter } = require('./app_api/models/fileIndexing');
@@ -95,7 +94,7 @@ AWS.config.update({
 });
 
 // schedule tasks to be run on the server
-cron.schedule("*/30 * * * *", function () {
+//cron.schedule("*/30 * * * *", function () {
   console.log("running a task every minute");
 
   let dateOffset = (24 * 60 * 60 * 1000) * 1; // 1 day
@@ -133,7 +132,7 @@ cron.schedule("*/30 * * * *", function () {
   }).then(([fI]) => {
     winston.info('Updated FileIndex: ' + JSON.stringify(fI, null, 2));
   });
-});
+//});
 
 app.listen(3000, () => console.log(`listening at http://localhost:3000`))
 

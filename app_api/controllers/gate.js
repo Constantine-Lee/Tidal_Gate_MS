@@ -8,6 +8,14 @@ const { ErrorHandler } = require('../models/error');
 const PDFDocument = require('pdfkit');
 const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
 const fs = require('fs');
+const fetch = require('node-fetch');
+
+const fetchImage = async (src) => {
+    const response = await fetch(src);
+    const image = await response.buffer();
+  
+    return image;
+  };
 
 async function findGate(id) {
     let gate = await Gate.findById(id).select('-__v').lean();
@@ -27,16 +35,17 @@ async function findGate(id) {
 
 const download = async (req, res, next) => {
     winston.info('Function=download');
-    try {
+    try {      
         const doc = new PDFDocument;
         doc.pipe(res);
         const gate = await findGate(req.params.gateID);
+        const img = await fetchImage(gate.profilePhoto);
         const questions = gate.questions;
         winston.info("questions: " + JSON.stringify(questions, null, 2));
         doc.fontSize(14);
         doc.text("Jabatan Pengairan dan Saliran Sarawak - Gate");
         doc.moveDown(1);
-        doc.image(gate.profilePhoto.split('api/')[1], { width: 100 });
+        doc.image(img, { width: 100 });
         for (let i = 0; i < questions.length; i++) {
             if (questions[i].controlType == "groupLabel") {
                 doc.moveDown(1);
