@@ -16,10 +16,10 @@
         <ul class="list-group bg-light">
             <li *ngFor="let user of listedUsers" class="list-group-item bg-light">
                 <div class="d-flex justify-content-between bg-light">
-                    <h4 class="my-auto">{{user.username}}</h4>
-
-                    <h3 class="my-auto"><button (click)="showConfirmationModal(user._id)" class="btn btn-light "><i class="fa fa-remove" style="font-size:28px"
-                                ></i></button></h3>
+                    <h5 class="my-auto">{{user.username}} ({{user.role}})</h5>
+                    
+                    <h5 class="my-auto"><button (click)="showConfirmationModal(user._id)" class="btn btn-light "><i
+                                class="fa fa-remove" style="font-size:28px"></i></button></h5>
                 </div>
                 <!-- Modal -->
                 <div class="modal" id="confirmationModal">
@@ -69,6 +69,14 @@
                             <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                                 <div *ngIf="f.password.errors.required">Password is required</div>
                             </div>
+                        </div>
+                        <!--DropDown-->
+                        <div class="form-group mt-3 mb-3">
+                            <label for="role">Role</label>
+                            <select class="custom-select" formControlName="role">
+                                <option value="Supervisor">Supervisor</option>
+                                <option value="Operator">Operator</option>
+                            </select>
                         </div>
                     </form>
                 </div>

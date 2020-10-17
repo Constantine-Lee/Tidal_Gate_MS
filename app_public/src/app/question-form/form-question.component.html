@@ -19,7 +19,7 @@
             <label [attr.for]="question.key" class="col-form-label col-sm-6 ">{{question.label}}
             </label>
             <input disabled [ngClass]="{ 'is-invalid': !isValid}" [formControlName]="question.key" [id]="question.key"
-                [type]="question.controlType" class="col-sm-6 form-control bg-light" placeholder="Your answer">
+                [type]="question.controlType" class="col-sm-6 form-control bg-light" placeholder="">
         </div>
 
         <!--Date-->

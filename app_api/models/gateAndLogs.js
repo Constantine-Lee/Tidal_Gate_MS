@@ -7,7 +7,8 @@ const {
   categoryLabelSchema,
   refGateQuestionSchema,
   checkboxQuestionSchema,
-  rtxQuestionSchema } = require('./form');
+  rtxQuestionSchema, 
+  uniqueTextFieldSchema} = require('./form');
 
 //Gate
 const gateSchema = new mongoose.Schema({
@@ -15,7 +16,7 @@ const gateSchema = new mongoose.Schema({
   profilePhoto: String,
   timestamp: Number,
   gateInfo: baseQuestionSchema,
-  gateName: baseQuestionSchema,
+  gateName: uniqueTextFieldSchema,
   gateID: baseQuestionSchema,
   mitigationScheme: baseQuestionSchema,
   longitude: baseQuestionSchema,

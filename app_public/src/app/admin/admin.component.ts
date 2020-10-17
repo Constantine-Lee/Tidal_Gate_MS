@@ -41,13 +41,14 @@ export class AdminComponent implements OnInit {
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             username: ['', Validators.required],
-            password: ['', Validators.required]
+            password: ['', Validators.required],
+            role: ['Supervisor']
         });
 
         this.loading = true;
         this.userService.getAll().pipe(first()).subscribe(users => {
             this.loading = false;
-            this.users = users.filter(user => user.role == 'User');
+            this.users = users.filter(user => user.role == 'User' || user.role == 'Supervisor');
             console.log(this.users);
             this.search();
         });
@@ -85,7 +86,7 @@ export class AdminComponent implements OnInit {
         const operator = new User({
             username: this.f.username.value,
             password: this.f.password.value,
-            role: Role.User
+            role: this.f.role.value == "Supervisor" ? Role.Supervisor : Role.User
         })
         this.userService.addOperator(operator).subscribe(
             _ => {

@@ -5,9 +5,21 @@ const { ErrorHandler } = require('../models/error')
 const paginate = require('./paginate');
 const PDFDocument = require('pdfkit');
 
-async function findInspectionLog(id) {
+async function findInspectionLog(id, role) {
     winston.info('Function=findInspectionLog(id)');
     let inspectionLog = await InspectionLog.findById(id).select('-__v').lean();
+    if (role == 'User') {
+        inspectionLog.testedBy.controlType = 'disabled';
+        inspectionLog.witnessedBy.controlType = 'disabled';
+        inspectionLog.reviewedBy.controlType = 'disabled';
+        inspectionLog.approvedBy.controlType = 'disabled';
+    }
+    else if (role == 'Supervisor'){
+        inspectionLog.testedBy.controlType = 'disabled';
+        inspectionLog.witnessedBy.controlType = 'disabled';
+        inspectionLog.reviewedBy.controlType = 'textbox';
+        inspectionLog.approvedBy.controlType = 'textbox';
+    }
     let questions = [];
     const keys = Object.keys(inspectionLog);
     for (let i = 0; i < keys.length; i++) {
@@ -26,7 +38,7 @@ const download = async (req, res, next) => {
     try {
         const doc = new PDFDocument;
         doc.pipe(res);
-        const inspectionLog = await findInspectionLog(req.params.inspectionLogID);
+        const inspectionLog = await findInspectionLog(req.params.inspectionLogID, req.user.role);
         const questions = inspectionLog.questions;
         winston.info("questions: " + JSON.stringify(questions, null, 2));
         doc.fontSize(14);
@@ -120,7 +132,7 @@ const addInspectionLog = async (req, res, next) => {
 const getInspectionLog = async (req, res, next) => {
     winston.info('Function=getInspectionLog req.params.inspectionLogID=' + req.params.inspectionLogID);
     try {
-        const inspectionLog = await findInspectionLog(req.params.inspectionLogID);
+        const inspectionLog = await findInspectionLog(req.params.inspectionLogID, req.user.role);
         //winston.verbose('Fetched an Inspection Log=' + JSON.stringify(inspectionLog, null, 2));
         res.status(200).json(inspectionLog);
     } catch (err) {

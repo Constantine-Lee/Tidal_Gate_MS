@@ -18,6 +18,11 @@ var form = new Schema({
 
 mongoose.model('form', form);
 
+
+let uniqueTextFieldSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
+  value: { type: String, index: { unique: true } }
+});
+
 var textQuestionSchema = new Schema({}, { _id: false });
 textQuestionSchema.add(baseQuestionSchema);
 
@@ -30,14 +35,14 @@ let refGateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema);
 
 var dateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
   value: { type: Date, default: Date.now }
-}, );
+});
 
 var categoryLabelSchema = new Schema({}, { _id: false });
 categoryLabelSchema.add(baseQuestionSchema);
 
-let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add( { checkboxes: [] });
+let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ checkboxes: [] });
 
-let rtxQuestionSchema = new Schema({ _id: false}).add(baseQuestionSchema).add({ value: {}});
+let rtxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ value: {} });
 
 module.exports = {
   baseQuestionSchema,
@@ -47,7 +52,8 @@ module.exports = {
   categoryLabelSchema,
   refGateQuestionSchema,
   checkboxQuestionSchema,
-  rtxQuestionSchema
+  rtxQuestionSchema,
+  uniqueTextFieldSchema
 }
 
 

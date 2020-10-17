@@ -86,7 +86,7 @@ router
 
 router
     .route('/inspectionLogs/:inspectionLogID')
-    .get(inspectionLog.getInspectionLog)
+    .get(passport.authenticate('jwt', { session: false }), inspectionLog.getInspectionLog)
     .put(inspectionLog.editInspectionLog)
     .delete(inspectionLog.deleteInspectionLog)
 
@@ -97,7 +97,7 @@ router
 
 router
     .route('/form/:formID')
-    .get(form.getForm)
+    .get(passport.authenticate('jwt', { session: false }),form.getForm)
 
 router
     .route('/maintenanceLogs/:maintenanceLogID')

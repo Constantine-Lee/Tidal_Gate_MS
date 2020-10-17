@@ -23,6 +23,12 @@ const getForm = async (req, res, next) => {
       Form.findOne({ _id: formID }).select('-__v').lean()
     ]).then(([gate, form]) => {    
       if(req.params.formID == 'inspectionLogForm'){
+        if(req.user.role == 'User'){
+          form.testedBy.value = req.user.username;
+          form.testedBy.controlType = "disabled";
+          form.reviewedBy.controlType = "disabled";
+          form.approvedBy.controlType = "disabled";
+        }        
         form.lokasiPintuAir.options = gate;
       }  
       else if(req.params.formID == 'maintenanceLogForm'){

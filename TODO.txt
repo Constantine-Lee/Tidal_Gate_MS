@@ -1,0 +1,2 @@
+cannot change gate name after create
+disable change gate(maint & inspec)
