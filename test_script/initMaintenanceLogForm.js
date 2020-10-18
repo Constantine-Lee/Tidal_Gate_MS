@@ -27,30 +27,34 @@ db.once('open', function () {
         order: Number,
         required: Boolean,
         label: String,
-        value: String,
+        value: { type: String, default: ''}
     }, { discriminatorKey: 'controlType', _id: false });
 
-    var textQuestionSchema = new Schema({}, { _id: false });
-    textQuestionSchema.add(baseQuestionSchema);
-
-    var dropDownQuestionSchema = new Schema({
+    let uniqueTextFieldSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
+        value: { type: String, index: { unique: true } }
+      });
+      
+      var textQuestionSchema = new Schema({}, { _id: false });
+      textQuestionSchema.add(baseQuestionSchema);
+      
+      var dropDownQuestionSchema = new Schema({
         options: []
-    }, { _id: false });
-    dropDownQuestionSchema.add(baseQuestionSchema);
-
-    var dateQuestionSchema = new Schema({
-        value: { type: Date }
-    }, { _id: false });
-    dateQuestionSchema.add(baseQuestionSchema);
-
-    var categoryLabelSchema = new Schema({}, { _id: false });
-    categoryLabelSchema.add(baseQuestionSchema);
-
-    let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ checkboxes: [] });
-
-    let rtxQuestionSchema = new Schema({ _id: false}).add(baseQuestionSchema).add({
-        value: {}
-    });
+      }, { _id: false });
+      dropDownQuestionSchema.add(baseQuestionSchema);
+      
+      let refGateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema);
+      
+      var dateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
+        value: { type: Date, default: Date.now }
+      });
+      
+      var categoryLabelSchema = new Schema({}, { _id: false });
+      categoryLabelSchema.add(baseQuestionSchema);
+      
+      let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ checkboxes: [] });
+      
+      let rtxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ value: {} });
+      
 
     var maintenanceLogSchema = new Schema({
         _id: String,

@@ -30,9 +30,17 @@ const getForm = async (req, res, next) => {
           form.approvedBy.controlType = "disabled";
         }        
         form.lokasiPintuAir.options = gate;
-      }  
+        form.tarikh.value = new Date();
+      }   
       else if(req.params.formID == 'maintenanceLogForm'){
+        if(req.user.role == 'User'){
+          form.testedBy.value = req.user.username;
+          form.testedBy.controlType = "disabled";
+          form.reviewBy.controlType = "disabled";
+          form.approveBy.controlType = "disabled";
+        }
         form.gateName.options = gate;
+        form.date.value = new Date();
       }
       
       let questions = [];
@@ -52,7 +60,7 @@ const getForm = async (req, res, next) => {
 
   } catch (err) {
     winston.error('Get Form Error=' + err);
-    err - new ErrorHandler(404, 'Failed to get Form.');
+    err = new ErrorHandler(404, 'Failed to get Form.');
     return next(err);
   }
 }

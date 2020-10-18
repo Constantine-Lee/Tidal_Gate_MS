@@ -62,7 +62,7 @@ router
 
 router
     .route('/inspectionLogs/download/:inspectionLogID')
-    .get(inspectionLog.download);
+    .get(passport.authenticate('jwt', { session: false }), inspectionLog.download);
 
 router
     .route('/maintenanceLogs/download/:maintenanceLogID')
@@ -101,7 +101,7 @@ router
 
 router
     .route('/maintenanceLogs/:maintenanceLogID')
-    .get(maintenanceLog.getMaintenanceLog)
+    .get(passport.authenticate('jwt', { session: false }), maintenanceLog.getMaintenanceLog)
     .put(maintenanceLog.editMaintenanceLog)
     .delete(maintenanceLog.deleteMaintenanceLog)
 

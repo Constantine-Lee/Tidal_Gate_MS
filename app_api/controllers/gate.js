@@ -135,6 +135,8 @@ const addGate = async (req, res, next) => {
         }
         delete req.body.questions;
         req.body.timestamp = Date.now();
+        req.body.gateName.controlType = "disabled";
+        req.body.gateID.controlType = "disabled";
         let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
 
         // get array of non-selected images and decrement FileIndex counter by one

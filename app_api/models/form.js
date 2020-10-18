@@ -34,7 +34,7 @@ dropDownQuestionSchema.add(baseQuestionSchema);
 let refGateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema);
 
 var dateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
-  value: { type: Date, default: Date.now }
+  value: { type: Date, default: Date.now() }
 });
 
 var categoryLabelSchema = new Schema({}, { _id: false });

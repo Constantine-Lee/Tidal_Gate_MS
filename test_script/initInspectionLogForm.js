@@ -22,7 +22,7 @@ db.once('open', function () {
         order: Number,
         required: Boolean,
         label: String,
-        value: String,
+        value: { type: String, default: ''}
     }, { discriminatorKey: 'controlType', _id: false });
 
     var textQuestionSchema = new Schema({}, { _id: false });

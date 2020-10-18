@@ -5,11 +5,32 @@ const { ErrorHandler } = require('../models/error');
 const paginate = require('./paginate');
 const PDFDocument = require('pdfkit');
 const { ImageRefCounter, FileIndex } = require('../models/fileIndexing');
-const { GatewayTimeout } = require('http-errors');
 
-async function findMaintenanceLog(id) {
+const fetch = require('node-fetch');
+
+const fetchImage = async (src) => {
+    console.log(src);
+    const response = await fetch(src);
+    const image = await response.buffer();
+  
+    return image;
+  };
+
+async function findMaintenanceLog(id, role) {
     winston.info('Function=findMaintenanceLog(id)');
     let maintenanceLog = await MaintenanceLog.findById(id).select('-__v').lean();
+    if (role == 'User') {
+        maintenanceLog.testedBy.controlType = 'disabled';
+        maintenanceLog.witnessedBy.controlType = 'disabled';
+        maintenanceLog.reviewedBy.controlType = 'disabled';
+        maintenanceLog.approvedBy.controlType = 'disabled';
+    }
+    else if (role == 'Supervisor') {
+        maintenanceLog.testedBy.controlType = 'disabled';
+        maintenanceLog.witnessedBy.controlType = 'disabled';
+        maintenanceLog.reviewedBy.controlType = 'textbox';
+        maintenanceLog.approvedBy.controlType = 'textbox';
+    }
     let questions = [];
     const keys = Object.keys(maintenanceLog);
     for (let i = 0; i < keys.length; i++) {
@@ -31,9 +52,133 @@ const download = async (req, res, next) => {
         const maintenanceLog = await findMaintenanceLog(req.params.maintenanceLogID);
         const questions = maintenanceLog.questions;
         winston.info("questions: " + JSON.stringify(questions, null, 2));
-        doc.fontSize(14);
+        doc.fontSize(12);
         doc.text("Jabatan Pengairan dan Saliran Sarawak - Maintenance Log");
-        //TODO: Write to pdf from JSON
+        doc.moveDown(1);
+        for (let i = 0; i < questions.length; i++) {
+            if (questions[i].controlType == "groupLabel") {
+                doc.moveDown(1);
+                doc.fontSize(10);
+                doc.x = 75;
+                doc.text(questions[i].label);
+                doc.moveDown(0.5);
+            }
+            if (questions[i].controlType == "textbox") {
+                doc.fontSize(9);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 375;
+
+                if (questions[i].value != '') {
+                    doc.moveUp();
+                    doc.text(questions[i].value);
+                }
+                doc.moveUp();
+                doc.x = 375;
+                doc.text('                                                            ', { underline: true });
+                doc.moveDown(0.5);
+            }
+            if (questions[i].controlType == "dropdown") {
+                doc.fontSize(9);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 375;
+
+                if (questions[i].value != '') {
+                    doc.moveUp();
+                    doc.text(questions[i].value);
+
+                }
+                doc.moveUp();
+                doc.x = 375;
+                doc.text('                                                            ', { underline: true });
+                doc.moveDown(0.5);
+            }
+            if (questions[i].controlType == "date") {
+                doc.fontSize(9);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 375;
+
+                if (questions[i].value != '') {
+                    doc.moveUp();
+                    doc.text(questions[i].value.toString().substring(0, 15));
+
+                }
+                doc.moveUp();
+                doc.x = 375;
+                doc.text('                                                            ', { underline: true });
+                doc.moveDown(0.5);
+            }
+            if (questions[i].controlType == "disabled") {
+                doc.fontSize(9);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 375;
+
+                if (questions[i].value != '') {
+                    doc.moveUp();
+                    doc.text(questions[i].value);
+                }
+                doc.moveUp();
+                doc.x = 375;
+                doc.text('                                                            ', { underline: true });
+                doc.moveDown(0.5);
+            }
+            if (questions[i].key == "actionTakenCB") {
+                let value = questions[i].checkboxes
+                    .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+                console.log(value);
+                doc.fontSize(9);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 375;
+                doc.moveUp();
+                doc.text(value);
+                doc.moveUp();
+                doc.x = 375;
+                doc.text('                                                            ', { underline: true });
+                doc.moveDown(0.5);
+            }
+            if (questions[i].key == "actionNeedCB") {
+                let value = questions[i].checkboxes
+                    .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+                console.log(value);
+                doc.fontSize(9);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 375;
+                doc.moveUp();
+                doc.text(value);
+                doc.moveUp();
+                doc.x = 375;
+                doc.text('                                                            ', { underline: true });
+                doc.moveDown(0.5);
+            }
+            if (questions[i].controlType == "RTX"){
+                doc.x = 75;
+                let startY = doc.y;
+                for(let j = 0; j < questions[i].value.ops.length; j++){
+                    if(questions[i].value.ops[j].insert.image){
+                        const img = await fetchImage(questions[i].value.ops[j].insert.image);
+                        doc.image(img, { width: 50 });
+                    }
+                    else {
+                        doc.text(questions[i].value.ops[j].insert);
+                    }
+                }
+                doc.moveUp();
+                let height = doc.y - startY;
+                doc.rect(doc.x, startY, 450, height).stroke();
+                doc.moveDown();
+            }
+            if (questions[i].controlType == "fullTextbox") {
+                doc.fontSize(9);
+                doc.x = 75;
+                doc.text(questions[i].value, { underline: true });
+                doc.moveDown(0.5);
+            }
+        }
         doc.end();
     }
     catch (err) {

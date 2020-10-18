@@ -17,7 +17,7 @@ const gateSchema = new mongoose.Schema({
   timestamp: Number,
   gateInfo: baseQuestionSchema,
   gateName: uniqueTextFieldSchema,
-  gateID: baseQuestionSchema,
+  gateID: uniqueTextFieldSchema,
   mitigationScheme: baseQuestionSchema,
   longitude: baseQuestionSchema,
   lattitude: baseQuestionSchema,

@@ -1,2 +1,2 @@
-cannot change gate name after create
-disable change gate(maint & inspec)
+cannot delete gate if there are any linked maintenance log and inspection log
+create index at mongo atlas
