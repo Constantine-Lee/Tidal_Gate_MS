@@ -38,8 +38,8 @@ const uploadImage = async (req, res, next) => {
 
                 //insert into images array if not existed, update ImageRefCounter and increment FileIndex
 
-                if (!imageRefCounter.images.includes(data.location)) {
-                    imageRefCounter.images.push(data.location);
+                if (!imageRefCounter.images.includes(data.Location)) {
+                    imageRefCounter.images.push(data.Location);
                     Promise.all([
                         ImageRefCounter.findByIdAndUpdate({ _id: req.body.id }, imageRefCounter, { new: true }).lean(),
                         FileIndex.findByIdAndUpdate({ _id: data.Location }, { $inc: { pointer: 1 } }, { new: true, upsert: true }).lean()
