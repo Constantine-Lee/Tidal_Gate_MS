@@ -25,7 +25,7 @@ async function findGate(id) {
     const keys = Object.keys(gate);
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
-        if (!['_id', 'profilePhoto', 'timestamp'].includes(key)) {
+        if (!['_id', 'schemaOf', 'profilePhoto', 'timestamp'].includes(key)) {
             questions.push(gate[key]);
             delete gate[key];
         }

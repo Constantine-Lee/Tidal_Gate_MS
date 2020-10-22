@@ -36,7 +36,7 @@ async function findMaintenanceLog(id, role) {
     const keys = Object.keys(maintenanceLog);
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
-        if (!['_id', 'profilePhoto', 'timestamp', 'id'].includes(key)) {
+        if (!['_id', 'schemaOf', 'profilePhoto', 'timestamp', 'id'].includes(key)) {
             questions.push(maintenanceLog[key]);
             delete maintenanceLog[key];
         }
@@ -195,7 +195,7 @@ const getMaintenanceLogs = async (req, res, next) => {
         winston.info('req.query.page: ' + req.query.page + ' req.query.searchText: ' + req.query.searchText);
         let pipeline = [];
         if (req.query.searchText && req.query.searchText != "''") {
-            pipeline.push({ $match: { $text: { $search: req.query.serchText } } });
+            pipeline.push({ $match: { $text: { $search: req.query.searchText } } });
         }
         let sortCriteria;
         if (req.query.sortImportance == 'ID,DATE') {
@@ -218,7 +218,7 @@ const getMaintenanceLogs = async (req, res, next) => {
                     { $sort: sortCriteria },
                     { $skip: (parseInt(req.query.page) - 1) * 10 },
                     { $limit: 10 },
-                    { $project: { _id: 1, "id": "$id", "gate": "$gateName.value", "date": "$date.value", "actionTaken": "$actionTakenCB", "actionNeeded": "$actionNeedCB" } }
+                    { $project: { _id: 1, "id": "$id", "gate": "$gateName.value", "date": "$date.value", "actionTaken": "$actionTakenCB.value", "actionNeeded": "$actionNeedCB.value" } }
                 ]
             }
         });
@@ -229,13 +229,7 @@ const getMaintenanceLogs = async (req, res, next) => {
         }
         else {
             winston.info("Total Count: " + maintenanceLogs[0].totalCount.length);
-            length = maintenanceLogs[0].totalCount[0].count;
-            maintenanceLogs[0].searchResult.forEach(sR => {
-                sR.actionTaken = sR.actionTaken.checkboxes
-                    .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
-                sR.actionNeeded = sR.actionNeeded.checkboxes
-                    .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr)
-            })
+            length = maintenanceLogs[0].totalCount[0].count; 
         }
         const pager = paginate.paginate(length, parseInt(req.query.page), 10, 10);
         delete maintenanceLogs[0].totalCount;
@@ -258,7 +252,11 @@ const addMaintenanceLog = async (req, res, next) => {
         }
         delete req.body.questions;
         req.body.gateName.controlType = 'disabled';
-
+        req.body.actionTakenCB.value = req.body.actionTakenCB.checkboxes
+        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+        req.body.actionNeedCB.value = req.body.actionNeedCB.checkboxes
+        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+        
         let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
         // get array of non-selected images and decrement FileIndex counter by one
         let incomingPicArr = [];
@@ -335,7 +333,11 @@ const editMaintenanceLog = async (req, res, next) => {
         }
         delete req.body.questions;
         req.body.timestamp = Date.now();
-
+        req.body.actionTakenCB.value = req.body.actionTakenCB.checkboxes
+        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+        req.body.actionNeedCB.value = req.body.actionNeedCB.checkboxes
+        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+        
         let incomingPicArr = [];
         req.body.actionTakenRTX.value.ops.map(i => {
             if (i.insert.image) {

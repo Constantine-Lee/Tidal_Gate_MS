@@ -27,7 +27,7 @@ async function findInspectionLog(id, role) {
     const keys = Object.keys(inspectionLog);
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
-        if (!['_id', 'profilePhoto', 'timestamp', 'id'].includes(key)) {
+        if (!['_id', 'schemaOf', 'profilePhoto', 'timestamp', 'id'].includes(key)) {
             questions.push(inspectionLog[key]);
             delete inspectionLog[key];
         }
