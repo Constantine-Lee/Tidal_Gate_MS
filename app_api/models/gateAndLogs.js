@@ -37,6 +37,7 @@ const gateSchema = new mongoose.Schema({
   sensorHead: textQuestionSchema,
   SCADAComponents: textQuestionSchema,
   PLC: textQuestionSchema,
+  PLCModel: textQuestionSchema,
   HMIBrand: textQuestionSchema,
   HMIType: textQuestionSchema,
   HMIModel: textQuestionSchema,

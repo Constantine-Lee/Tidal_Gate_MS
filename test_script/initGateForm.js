@@ -174,6 +174,13 @@ db.once('open', function () {
             required: false,
             order: second
         }),
+        PLCModel: new TextboxQuestion({
+            key: 'PLCModel',
+            label: 'PLC Model',
+            value: '',
+            required: false,
+            order: second
+        }),
         HMIBrand: new TextboxQuestion({
             key: 'HMI',
             label: 'HMI Brand',
