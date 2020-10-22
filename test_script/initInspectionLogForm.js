@@ -1,131 +1,40 @@
 const mongoose = require('mongoose');
-var assert = require('assert');
-var Schema = mongoose.Schema;
 
-const zero = 0;
-const first = 1;
-const second = 2;
-const third = 3;
-const fourth = 4;
-const fifth = 5;
-const sixth = 6;
-const seventh = 7;
-const eighth = 8;
+const { zero,
+    first,
+    second,
+    third,
+    fourth,
+    fifth,
+    sixth,
+    seventh,
+    eighth} = require('../app_api/models/CONSTANT');
+
+const {
+    baseQuestionSchema } = require('../app_api/models/form');
+
+const {
+    inspectionLogSchema } = require('../app_api/models/gateAndLogs');
 
 mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-    var baseQuestionSchema = new Schema({
-        key: String,
-        controlType: String,
-        order: Number,
-        required: Boolean,
-        label: String,
-        value: { type: String, default: ''}
-    }, { discriminatorKey: 'controlType', _id: false });
-
-    var textQuestionSchema = new Schema({}, { _id: false });
-    textQuestionSchema.add(baseQuestionSchema);
-
-    var dropDownQuestionSchema = new Schema({
-        options: []
-    }, { _id: false });
-    dropDownQuestionSchema.add(baseQuestionSchema);
-
-    var dateQuestionSchema = new Schema({
-        value: { type: Date }
-    }, { _id: false });
-    dateQuestionSchema.add(baseQuestionSchema);
-
-    var categoryLabelSchema = new Schema({}, { _id: false });
-    categoryLabelSchema.add(baseQuestionSchema);
-
-    var inspectionLogSchema = new Schema({
-        _id: String,
-        id: Number,
-        namaPenjaga: textQuestionSchema,
-        noRujukan: textQuestionSchema,
-        lokasiPintuAir: dropDownQuestionSchema,
-        jenisGearbox: textQuestionSchema,
-        tarikh: dateQuestionSchema,
-        strukturPintu: categoryLabelSchema,
-        huluPintuAir: dropDownQuestionSchema,
-        hilirPintuAir: dropDownQuestionSchema,
-        pentasOperasi: dropDownQuestionSchema,
-        railPentasOperasi: dropDownQuestionSchema,
-        tangga: dropDownQuestionSchema,
-        tempatDudukPintu: dropDownQuestionSchema,
-        railPintuAir: dropDownQuestionSchema,
-        cadanganSP: textQuestionSchema,
-        badanPintuAir: categoryLabelSchema,
-        framePintuAir: dropDownQuestionSchema,
-        batuSeimbang: dropDownQuestionSchema,
-        blokBearing: dropDownQuestionSchema,
-        sistemPelincir: dropDownQuestionSchema,
-        sealGetah: dropDownQuestionSchema,
-        cadanganBPA: textQuestionSchema,
-        mekanismaP: categoryLabelSchema,
-        tangkiHidrolik: dropDownQuestionSchema,
-        minyak: dropDownQuestionSchema,
-        sistemPaip: dropDownQuestionSchema,
-        hos: dropDownQuestionSchema,
-        enjinDiesel: dropDownQuestionSchema,
-        motoHidrolik: dropDownQuestionSchema,
-        pamHidrolik: dropDownQuestionSchema,
-        penyukatT: dropDownQuestionSchema,
-        valvePengankut: dropDownQuestionSchema,
-        valveMenurun: dropDownQuestionSchema,
-        penyedutTekanan: dropDownQuestionSchema,
-        cadanganMknmPgkt: textQuestionSchema,
-        umum: categoryLabelSchema,
-        spindle: dropDownQuestionSchema,
-        wire: dropDownQuestionSchema,
-        clip: dropDownQuestionSchema,
-        tumbuckle: dropDownQuestionSchema,
-        cat: dropDownQuestionSchema,
-        cadanganUmum: textQuestionSchema,
-        railPL: categoryLabelSchema,
-        kalisAir: dropDownQuestionSchema,
-        kekuatan: dropDownQuestionSchema,
-        karat: dropDownQuestionSchema,
-        catPaint: dropDownQuestionSchema,
-        cadanganRPLLabel: textQuestionSchema,
-        fungsiAirPintu: categoryLabelSchema,
-        pelinciranL: dropDownQuestionSchema,
-        haus: dropDownQuestionSchema,
-        kP: dropDownQuestionSchema,
-        pDPGG: dropDownQuestionSchema,
-        wireAngkut: dropDownQuestionSchema,
-        cadanganRPLText: textQuestionSchema,
-        miscellaneous: categoryLabelSchema,
-        accessRoad: dropDownQuestionSchema,
-        stickGauge: dropDownQuestionSchema,
-        others: textQuestionSchema,
-        aITS: dropDownQuestionSchema,
-        TSASIR: categoryLabelSchema,
-        testedBy: textQuestionSchema,
-        witnessedBy: textQuestionSchema,
-        reviewedBy: textQuestionSchema,
-        approvedBy: textQuestionSchema
-    });
-
     var docArray = mongoose.model('BaseQuestion', baseQuestionSchema);
-
-    var TextboxQuestion = docArray.discriminator('textbox', new Schema({}, { _id: false }));
-    var DropdownQuestion = docArray.discriminator('dropdown', new Schema({
+    var TextboxQuestion = docArray.discriminator('textbox', new mongoose.Schema({}, { _id: false }));
+    var DropdownQuestion = docArray.discriminator('dropdown', new mongoose.Schema({
         options: []
     }, { _id: false }));
-    var DateQuestion = docArray.discriminator('date', new Schema({
+    var DateQuestion = docArray.discriminator('date', new mongoose.Schema({
         value: { type: Date }
     }, { _id: false }));
-    var CategoryLabel = docArray.discriminator('groupLabel', new Schema({}, { _id: false }));
+    var CategoryLabel = docArray.discriminator('groupLabel', new mongoose.Schema({}, { _id: false }));
 
     var form = db.model('form', inspectionLogSchema);
 
     // Create a new batch of events with different kinds
     var batch = {
-        _id: 'inspectionLogForm',
+        schemaOf: 'inspectionLogForm',
         namaPenjaga: new TextboxQuestion({
             key: 'namaPenjaga',
             label: 'Nama Penjaga',

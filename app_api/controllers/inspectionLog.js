@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const InspectionLog = mongoose.model('inspectionlog');
+const { inspectionLogSchema } = require('../models/gateAndLogs');
+const InspectionLog = mongoose.model('inspectionlog', inspectionLogSchema);
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error')
 const paginate = require('./paginate');

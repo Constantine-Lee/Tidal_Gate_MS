@@ -8,23 +8,14 @@ var baseQuestionSchema = new Schema({
   order: Number,
   required: Boolean,
   label: String,
-  value: String,
+  value: { type: String, default: ''}
 }, { discriminatorKey: 'controlType', _id: false });
-
-var form = new Schema({
-  _id: String,
-  questions: [baseQuestionSchema]
-});
-
-mongoose.model('form', form);
-
 
 let uniqueTextFieldSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
   value: { type: String, index: { unique: true } }
 });
 
-var textQuestionSchema = new Schema({}, { _id: false });
-textQuestionSchema.add(baseQuestionSchema);
+var textQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema);
 
 var dropDownQuestionSchema = new Schema({
   options: []
@@ -44,6 +35,8 @@ let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).
 
 let rtxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ value: {} });
 
+let fullTextBoxSchema = new Schema({ _id: false }).add(baseQuestionSchema);
+
 module.exports = {
   baseQuestionSchema,
   textQuestionSchema,
@@ -53,7 +46,8 @@ module.exports = {
   refGateQuestionSchema,
   checkboxQuestionSchema,
   rtxQuestionSchema,
-  uniqueTextFieldSchema
+  uniqueTextFieldSchema,
+  fullTextBoxSchema
 }
 
 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Gate = mongoose.model('Gate');
+const { gateSchema } = require('../models/gateAndLogs');
+const Gate = mongoose.model('Gate', gateSchema);
 const multer = require('multer')
 const path = require('path');
 const winston = require('../config/winston');

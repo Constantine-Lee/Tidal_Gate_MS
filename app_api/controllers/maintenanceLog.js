@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const MaintenanceLog = mongoose.model('MaintenanceLog');
+const { maintenanceLogSchema } = require('../models/gateAndLogs')
+const MaintenanceLog = mongoose.model('MaintenanceLog', maintenanceLogSchema);
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error');
 const paginate = require('./paginate');

@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
-const Form = mongoose.model('form');
 const winston = require('../config/winston');
 const Gate = mongoose.model('Gate');
 const { ErrorHandler } = require('../models/error')
 const { FileIndex, ImageRefCounter } = require('../models/fileIndexing');
+
+let form = new mongoose.Schema({
+  id: String
+});
+
+const Form = mongoose.model('form', form);
 
 
 const getForm = async (req, res, next) => {
@@ -16,11 +21,12 @@ const getForm = async (req, res, next) => {
     winston.info('ImageRefCounter: ' + imageRefCounter);
 
     Promise.all([
+      // need to fetch the possible gate name
       Gate.aggregate([
         { $match: {} },
         { $project: { "key": "$_id", "value": "$gateName.value", "_id": 0 } }
       ]),
-      Form.findOne({ _id: formID }).select('-__v').lean()
+      Form.findOne({ schemaOf: formID }).select('-__v').lean()
     ]).then(([gate, form]) => {    
       if(req.params.formID == 'inspectionLogForm'){
         if(req.user.role == 'User'){
@@ -47,7 +53,7 @@ const getForm = async (req, res, next) => {
       const keys = Object.keys(form);
       for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
-        if (!['_id', 'profilePhoto', 'id', 'timestamp'].includes(key)) {
+        if (!['schemaOf', '_id', 'profilePhoto', 'id', 'timestamp'].includes(key)) {
           questions.push(form[key]);
           delete form[key];
         }

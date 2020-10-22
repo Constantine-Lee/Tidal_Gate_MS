@@ -1,146 +1,42 @@
 const mongoose = require('mongoose');
-var assert = require('assert');
-var Schema = mongoose.Schema;
 
-const zero = 0;
-const first = 1;
-const second = 2;
-const third = 3;
-const fourth = 4;
-const fifth = 5;
-const sixth = 6;
-const seventh = 7;
-const eighth = 8;
-const ninth = 9;
-const tenth = 10;
-const eleventh = 11;
-const twelfth = 12;
-const thirteenth = 13;
+const { zero,
+    first,
+    second,
+    third,
+    fourth,
+    fifth,
+    sixth,
+    seventh,
+    eighth,
+    ninth,
+    tenth,
+    eleventh,
+    twelfth,
+    thirteenth } = require('../app_api/models/CONSTANT');
+
+    const {
+        baseQuestionSchema } = require('../app_api/models/form');
+    
+    const {
+        maintenanceLogSchema } = require('../app_api/models/gateAndLogs');    
 
 mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-    var baseQuestionSchema = new Schema({
-        key: String,
-        controlType: String,
-        order: Number,
-        required: Boolean,
-        label: String,
-        value: { type: String, default: ''}
-    }, { discriminatorKey: 'controlType', _id: false });
-
-    let uniqueTextFieldSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
-        value: { type: String, index: { unique: true } }
-      });
-      
-      var textQuestionSchema = new Schema({}, { _id: false });
-      textQuestionSchema.add(baseQuestionSchema);
-      
-      var dropDownQuestionSchema = new Schema({
-        options: []
-      }, { _id: false });
-      dropDownQuestionSchema.add(baseQuestionSchema);
-      
-      let refGateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema);
-      
-      var dateQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({
-        value: { type: Date, default: Date.now }
-      });
-      
-      var categoryLabelSchema = new Schema({}, { _id: false });
-      categoryLabelSchema.add(baseQuestionSchema);
-      
-      let checkboxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ checkboxes: [] });
-      
-      let rtxQuestionSchema = new Schema({ _id: false }).add(baseQuestionSchema).add({ value: {} });
-      
-
-    var maintenanceLogSchema = new Schema({
-        _id: String,
-        gateInfo: categoryLabelSchema,
-        gateName: dropDownQuestionSchema,
-        date: dateQuestionSchema,
-        powerSupply415: categoryLabelSchema,
-        redBlueTest: textQuestionSchema,
-        redYellowTest: textQuestionSchema,
-        yellowBlueTest: textQuestionSchema,
-        rCCBReclose: dropDownQuestionSchema,
-        rCCBFunc: dropDownQuestionSchema,
-        powerSupply240: categoryLabelSchema,
-        redNeutral: textQuestionSchema,
-        yellowNeutral: textQuestionSchema,
-        blueNeutral: textQuestionSchema,
-        powerSupply24: textQuestionSchema,
-        pwrSupply5: textQuestionSchema,
-        solarPwrLbl: categoryLabelSchema,
-        solarPwrTest: dropDownQuestionSchema,
-        solarPwrTestVal: textQuestionSchema,
-        solarPwrAmpTest: dropDownQuestionSchema,
-        solarPwrAmpTestVal: textQuestionSchema,
-        secondPwr: categoryLabelSchema,
-        uPSBack: dropDownQuestionSchema,
-        pwrResume: dropDownQuestionSchema,
-        uPSBackTime: dropDownQuestionSchema,
-        durationBack: textQuestionSchema,
-        gateOper: categoryLabelSchema,
-        actuatorOpen: dropDownQuestionSchema,
-        actuatorClose: dropDownQuestionSchema,
-        gateManual: dropDownQuestionSchema,
-        gateAuto: dropDownQuestionSchema,
-        emergency: dropDownQuestionSchema,
-        waterLvl: categoryLabelSchema,
-        upWaterLvl: textQuestionSchema,
-        downWaterLvl: textQuestionSchema,
-        veriUpRead: dropDownQuestionSchema,
-        veriDownRead: dropDownQuestionSchema,
-        touch: categoryLabelSchema,
-        userLog: dropDownQuestionSchema,
-        btnVeri: dropDownQuestionSchema,
-        gateInfoVeri: dropDownQuestionSchema,
-        sysEmerAlert: categoryLabelSchema,
-        locEmerAlert: dropDownQuestionSchema,
-        emerSMSAlert: dropDownQuestionSchema,
-        gateInfoReq: dropDownQuestionSchema,
-        gateInfoReqText: textQuestionSchema,
-        actuatorFunc: categoryLabelSchema,
-        actuatorLocRem: dropDownQuestionSchema,
-        gateLoc: dropDownQuestionSchema,
-        rep9VBattery: dropDownQuestionSchema,
-        no9VBattery: textQuestionSchema,
-        floodSurv: categoryLabelSchema,
-        PTZCam: dropDownQuestionSchema,
-        PTZCamFunc: dropDownQuestionSchema,
-        rainGauge: categoryLabelSchema,
-        rainGaugeFunc: dropDownQuestionSchema,
-        ctrlPan: categoryLabelSchema,
-        ctrlPanClean: dropDownQuestionSchema,
-        ctrlPanMain: dropDownQuestionSchema,
-        ctrlPanComp: dropDownQuestionSchema,
-        summary: categoryLabelSchema,
-        actionTakenCB: checkboxQuestionSchema,
-        actionTakenRTX: rtxQuestionSchema,
-        actionNeedCB: checkboxQuestionSchema,
-        actionNeedRTX: rtxQuestionSchema,
-        complete: dropDownQuestionSchema,
-        testedBy: textQuestionSchema,
-        witnessedBy: textQuestionSchema,
-        reviewBy: textQuestionSchema,
-        approveBy: textQuestionSchema
-    });
 
     var docArray = mongoose.model('BaseQuestion', baseQuestionSchema);
-
-    var TextboxQuestion = docArray.discriminator('textbox', new Schema({}, { _id: false }));
-    var DropdownQuestion = docArray.discriminator('dropdown', new Schema({
+    var TextboxQuestion = docArray.discriminator('textbox', new mongoose.Schema({}, { _id: false }));
+    var DropdownQuestion = docArray.discriminator('dropdown', new mongoose.Schema({
         options: []
     }, { _id: false }));
-    var DateQuestion = docArray.discriminator('date', new Schema({
+    var DateQuestion = docArray.discriminator('date', new mongoose.Schema({
         value: { type: Date }
     }, { _id: false }));
-    var CategoryLabel = docArray.discriminator('groupLabel', new Schema({}, { _id: false }));
-    let CheckBoxQuestion = docArray.discriminator('checkbox', new Schema({ checkboxes: [] }, { _id: false }));
-    var RTXQuestion = docArray.discriminator('RTX', new Schema({
+    var CategoryLabel = docArray.discriminator('groupLabel', new mongoose.Schema({}, { _id: false }));
+    let CheckBoxQuestion = docArray.discriminator('checkbox', new mongoose.Schema({ checkboxes: [] }, { _id: false }));
+    var RTXQuestion = docArray.discriminator('RTX', new mongoose.Schema({
         value: {}
     }, { _id: false }));
 
@@ -148,7 +44,7 @@ db.once('open', function () {
 
     // Create a new batch of events with different kinds
     var batch = {
-        _id: 'maintenanceLogForm',
+        schemaOf: 'maintenanceLogForm',
         gateInfo: new CategoryLabel({
             key: 'gateInfo',
             label: '0.0 GATE INFORMATION',
@@ -679,7 +575,7 @@ db.once('open', function () {
         actionNeedRTX: new RTXQuestion({
             key: 'actionNeedRTX',
             value: {
-                ops: [                    
+                ops: [
                     { insert: '\n' },
                     { insert: '\n' }
                 ]
