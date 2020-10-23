@@ -7,6 +7,7 @@ import { LogLevel } from 'src/app/_models/CONSTANT';
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
+  imageFolderUrl: 'https://tidalgate-ms.s3-ap-southeast-1.amazonaws.com/images',
   testBrowser: 'Chrome',
   log: LogLevel.Debug
 };

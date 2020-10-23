@@ -2,9 +2,9 @@ var appRoot = require('app-root-path');
 var winston = require('winston');
 const { format } = require('logform');
 
-let date = new Date().toISOString();
+let todayDate = new Date().toLocaleString();
 const logFormat = format.printf(function(info) {
-  return `${date}-${info.level}:` + info.message;
+  return `${todayDate}(${info.level}): ` + info.message;
 });
 
 const levels = { 

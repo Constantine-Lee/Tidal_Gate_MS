@@ -4,6 +4,7 @@ import { QuestionBase, CheckBoxQuestion } from '../_models/questionType.js';
 import { LoggingService } from '../_services/logging.service.js';
 import { GateService } from '../_services/gate.service.js';
 import { MaintenanceLogService } from '../_services/maintenanceLog.service.js';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-form-question',
@@ -62,15 +63,15 @@ export class FormQuestionComponent {
           const ctx = elem.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          let base64: string = ctx.canvas.toDataURL('image/jpeg', 0.5);
+          let base64: string = ctx.canvas.toDataURL('image/jpeg', 0.85);
           this.maintenanceLogService.upload(base64, this._id).subscribe(url => {
             const range = this.quillEditorRef.getSelection();
-            this.quillEditorRef.insertEmbed(range.index, 'image', url);
+            this.quillEditorRef.insertEmbed(range.index, 'image', `${environment.imageFolderUrl}/${url}`);
           }
           );
         }
       } else {
-        console.warn('You could only upload images.');
+        alert('You could only upload images.');
       }
     };
   }

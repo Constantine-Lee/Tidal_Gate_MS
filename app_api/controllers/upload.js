@@ -33,19 +33,21 @@ const uploadImage = async (req, res, next) => {
                 throw new ErrorHandler(404, 'Failed to upload image.');
             }
             if (data) {
-                winston.info('File created: ' + data.Location);
+                winston.info('File created: ' + data.Location.split('images/').pop());
                 let imageRefCounter = await ImageRefCounter.findById(req.body.id).select('-__v').lean();
 
                 //insert into images array if not existed, update ImageRefCounter and increment FileIndex
 
-                if (!imageRefCounter.images.includes(data.Location)) {
-                    imageRefCounter.images.push(data.Location);
+                if (!imageRefCounter.images.includes(data.Location.split('images/').pop())) {
+                    imageRefCounter.images.push(data.Location.split('images/').pop());
                     Promise.all([
                         ImageRefCounter.findByIdAndUpdate({ _id: req.body.id }, imageRefCounter, { new: true }).lean(),
-                        FileIndex.findByIdAndUpdate({ _id: data.Location }, { $inc: { pointer: 1 } }, { new: true, upsert: true }).lean()
-                    ]).then(([iRC, fI]) => { winston.verbose('updated imageRefCounter: ' + iRC + ', fileIndex' + fI); });
+                        FileIndex.findByIdAndUpdate({ _id: data.Location.split('images/').pop() }, { $inc: { pointer: 1 } }, { new: true, upsert: true }).lean()
+                    ]).then(([iRC, fI]) => { 
+                        winston.verbose('updated Image Reference Counter: ' + JSON.stringify(iRC, null, 2)); 
+                        winston.verbose('updated File Index: ' + JSON.stringify(fI, null, 2)); });
                 }
-                res.status(200).json(data.Location);
+                res.status(200).json(data.Location.split('images/').pop());
             }
             else {
                 throw new ErrorHandler(404, 'Probably Database Error.');

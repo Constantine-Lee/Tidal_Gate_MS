@@ -43,6 +43,7 @@ const gateSchema = new mongoose.Schema({
   HMIModel: textQuestionSchema,
   RTUEmbedded: textQuestionSchema,
   modemBrand: textQuestionSchema,
+  modemModel: textQuestionSchema,
   modemCommunication: textQuestionSchema,
   modemConnectivity: textQuestionSchema,
   modemPhoneNo: textQuestionSchema,

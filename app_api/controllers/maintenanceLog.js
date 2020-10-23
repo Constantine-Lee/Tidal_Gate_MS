@@ -258,23 +258,23 @@ const addMaintenanceLog = async (req, res, next) => {
         .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
         
         let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
-        // get array of non-selected images and decrement FileIndex counter by one
+        // get array of non-selected images and decrement File Index counter by one
         let incomingPicArr = [];
         req.body.actionTakenRTX.value.ops.map(i => {
             if (i.insert.image) {
-                if (!incomingPicArr.includes(i.insert.image)) {
-                    incomingPicArr.push(i.insert.image);
+                if (!incomingPicArr.includes(i.insert.image.split('images/').pop())) {
+                    incomingPicArr.push(i.insert.image.split('images/').pop());
                 }
             }
         });
         req.body.actionNeedRTX.value.ops.map(i => {
             if (i.insert.image) {
-                if (!incomingPicArr.includes(i.insert.image)) {
-                    incomingPicArr.push(i.insert.image);
+                if (!incomingPicArr.includes(i.insert.image.split('images/').pop())) {
+                    incomingPicArr.push(i.insert.image.split('images/').pop());
                 }
             }
         })
-        //get arrary of non-selected images and decrement FileIndex counter by one
+        //get array of non-selected images and decrement File Index counter by one
         let arr = imageRefCounter.images.filter(i => !incomingPicArr.includes(i));
         imageRefCounter.images = imageRefCounter.images.filter(i => incomingPicArr.includes(i));
         imageRefCounter.submit = true;
@@ -381,15 +381,15 @@ const deleteMaintenanceLog = async (req, res, next) => {
         let picArr = [];
         maintenanceLog.actionTakenRTX.value.ops.map(i => {
             if (i.insert.image) {
-                if (!picArr.includes(i.insert.image)) {
-                    picArr.push(i.insert.image);
+                if (!picArr.includes(i.insert.image.split('images/').pop())) {
+                    picArr.push(i.insert.image.split('images/').pop());
                 }
             }
         });
         maintenanceLog.actionNeedRTX.value.ops.map(i => {
             if (i.insert.image) {
-                if (!picArr.includes(i.insert.image)) {
-                    picArr.push(i.insert.image);
+                if (!picArr.includes(i.insert.image.split('images/').pop())) {
+                    picArr.push(i.insert.image.split('images/').pop());
                 }
             }
         })

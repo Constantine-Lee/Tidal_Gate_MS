@@ -7,7 +7,7 @@ var fileIndex = new mongoose.Schema({
 const FileIndex = mongoose.model('FileIndex', fileIndex);
 
 const imageRefCounterSchema = new mongoose.Schema({
-    timestamp: { type: Date, default: Date.now },
+    timestamp: { type: Date },
     submit: { type: Boolean, default: false},
     images: [String]
 })

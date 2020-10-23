@@ -141,8 +141,9 @@ const addGate = async (req, res, next) => {
         let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
 
         // get array of non-selected images and decrement FileIndex counter by one
-        let arr = imageRefCounter.images.filter(i => req.body.profilePhoto != i);
-        imageRefCounter.images = imageRefCounter.images.filter(i => req.body.profilePhoto == i);
+        let arr = imageRefCounter.images.filter(i => req.body.profilePhoto.split('images/').pop() != i);
+        // remove outdated images
+        imageRefCounter.images = imageRefCounter.images.filter(i => req.body.profilePhoto.split('images/').pop() == i);
         imageRefCounter.submit = true;
         Promise.all([
             ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean(),
@@ -225,7 +226,7 @@ const deleteGate = async (req, res, next) => {
     try {
         let gate = await Gate.findById(req.params.gateID).select('-__v').lean();
         Promise.all([
-            FileIndex.update({ _id: gate.profilePhoto }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
+            FileIndex.update({ _id: gate.profilePhoto.split('images/').pop() }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
             Gate.deleteOne({ _id: req.params.gateID }),
             ImageRefCounter.deleteOne({ _id: req.params.gateID })
         ]).then(_ => {

@@ -216,6 +216,13 @@ db.once('open', function () {
             required: false,
             order: second
         }),
+        modemModel: new TextboxQuestion({
+            key: 'modemModel',
+            label: 'Modem Model',
+            value: '',
+            required: false,
+            order: second
+        }),
         modemCommunication: new TextboxQuestion({
             key: 'modemCommunication',
             label: 'Modem Communication',
