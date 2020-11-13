@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
 const winston = require('../config/winston');
 const Gate = mongoose.model('Gate');
-const { ErrorHandler } = require('../models/error')
+const { ErrorHandler } = require('../models/error');
 const { ImageRefCounter } = require('../models/fileIndexing');
 
-let form = new mongoose.Schema({
-  id: String
-});
+const {
+  Form } = require('../models/gateAndLogs');
 
-const Form = mongoose.model('form', form);
 
 const getForm = async (req, res, next) => {
   winston.info('Function=getForm req.params.formID=' + req.params.formID);
@@ -19,9 +17,9 @@ const getForm = async (req, res, next) => {
     let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
 
     //testing purpose, create it with 1 day ago
-    //const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate - (24*60*60*1000) * 1 });
+    const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate - (24*60*60*1000) * 1 });
 
-    const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate });
+    //const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate });
     winston.info('ImageRefCounter: ' + imageRefCounter);
 
     Promise.all([
@@ -57,7 +55,7 @@ const getForm = async (req, res, next) => {
       const keys = Object.keys(form);
       for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
-        if (!['schemaOf', '_id', 'profilePhoto', 'id', 'timestamp'].includes(key)) {
+        if (!['schemaOf', '_id', 'profilePhoto', 'id', 'timestamp', 'version'].includes(key)) {
           questions.push(form[key]);
           delete form[key];
         }

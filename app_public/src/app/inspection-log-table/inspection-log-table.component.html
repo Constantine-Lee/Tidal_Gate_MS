@@ -32,7 +32,7 @@
                     <td class="align-middle">{{inspectionLog.id}}
                     </td>
                     <td class="align-middle">{{inspectionLog.gate}}</td>
-                    <td class="text-truncate align-middle">{{inspectionLog.date | date}}</td>
+                    <td class="text-truncate align-middle">{{inspectionLog.date | date : 'short' : '-0000'}}</td>
                     <td>
                         <div class="d-flex justify-content-center">
                             <button class="btn btn-light" [routerLink]="['/updateInspectionLog/',inspectionLog._id]"><i

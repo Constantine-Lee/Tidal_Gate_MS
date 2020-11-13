@@ -1,6 +1,19 @@
 const mongoose = require('mongoose');
-const { inspectionLogSchema } = require('../models/gateAndLogs');
+const { inspectionLogSchema, v1Schema, v2Schema, counter } = require('../models/gateAndLogs');
+// increment the counter before save
+inspectionLogSchema.pre('save', function (next) {
+    var doc = this;
+    counter.findByIdAndUpdate({ _id: 'inspectionLog' }, { $inc: { seq: 1 } }, { new: true, upsert: true}, function (error, counter) {
+      if (error)
+        return next(error);
+      doc.id = counter.seq;
+      next();
+    });
+  });
 const InspectionLog = mongoose.model('inspectionlog', inspectionLogSchema);
+const v1 = InspectionLog.discriminator('v1', v1Schema);
+const v2 = InspectionLog.discriminator('v2', v2Schema);
+
 const winston = require('../config/winston');
 const { ErrorHandler } = require('../models/error')
 const paginate = require('./paginate');
@@ -27,7 +40,7 @@ async function findInspectionLog(id, role) {
     const keys = Object.keys(inspectionLog);
     for (let i = 0; i < keys.length; i++) {
         let key = keys[i];
-        if (!['_id', 'schemaOf', 'profilePhoto', 'timestamp', 'id'].includes(key)) {
+        if (!['_id', 'schemaOf', 'profilePhoto', 'timestamp', 'id', 'version'].includes(key)) {
             questions.push(inspectionLog[key]);
             delete inspectionLog[key];
         }
@@ -245,7 +258,13 @@ const addInspectionLog = async (req, res, next) => {
         delete req.body.questions;
         req.body.lokasiPintuAir.controlType = 'disabled';
         winston.verbose('Inspection Log to be saved: ' + JSON.stringify(req.body, null, 2));
-        const savedInspectionLog = await InspectionLog.create(req.body);
+        let savedInspectionLog;
+        if(req.body.version == "v1"){
+            savedInspectionLog = await v1.create(req.body);
+        }
+        else {
+            savedInspectionLog = await v2.create(req.body);
+        }       
         winston.debug('Saved a InspectionLog: ' + savedInspectionLog);
         res.status(200).json(savedInspectionLog);
     } catch (err) {
@@ -289,7 +308,13 @@ const editInspectionLog = async (req, res, next) => {
         }
         delete req.body.questions;
         req.body.timestamp = new Date();
-        const editedInspectionLog = await InspectionLog.findOneAndUpdate({ _id: req.params.inspectionLogID }, req.body, { new: false }).lean();
+        let editedInspectionLog;
+        if(req.body.version == "v1"){
+            editedInspectionLog = await v1.findOneAndUpdate({ _id: req.params.inspectionLogID }, req.body, { new: false }).lean();
+        }
+        else {
+            editedInspectionLog = await v2.findOneAndUpdate({ _id: req.params.inspectionLogID }, req.body, { new: false }).lean();
+        }       
         //silly inspectionLog
         winston.silly('Edited Inspection Log=' + editedInspectionLog);
         res.status(200).json(editedInspectionLog);

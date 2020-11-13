@@ -8,17 +8,19 @@ const { zero,
     fifth,
     sixth,
     seventh,
-    eighth} = require('../app_api/models/CONSTANT');
+    eighth } = require('../app_api/models/CONSTANT');
 
 const {
     baseQuestionSchema } = require('../app_api/models/form');
 
 const {
-    inspectionLogSchema } = require('../app_api/models/gateAndLogs');
+    Form, v2Schema } = require('../app_api/models/gateAndLogs');
 
 mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
 const db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
+
 db.once('open', function () {
     var docArray = mongoose.model('BaseQuestion', baseQuestionSchema);
     var TextboxQuestion = docArray.discriminator('textbox', new mongoose.Schema({}, { _id: false }));
@@ -29,11 +31,10 @@ db.once('open', function () {
         value: { type: Date }
     }, { _id: false }));
     var CategoryLabel = docArray.discriminator('groupLabel', new mongoose.Schema({}, { _id: false }));
-
-    var form = db.model('form', inspectionLogSchema);
+    const v2 = Form.discriminator('v2', v2Schema);
 
     // Create a new batch of events with different kinds
-    var batch = {
+    var batch = new v2({
         schemaOf: 'inspectionLogForm',
         namaPenjaga: new TextboxQuestion({
             key: 'namaPenjaga',
@@ -66,61 +67,25 @@ db.once('open', function () {
             required: true,
             order: zero
         }),
-        strukturPintu: new CategoryLabel({
-            key: 'strukturPintu',
-            label: '1. Struktur Pintu',
+        newFieldLabel: new CategoryLabel({
+            key: 'newFieldLabel',
+            label: '1. New Field Category',
             required: false,
             order: first
-        }),
-        huluPintuAir: new DropdownQuestion({
-            key: 'huluPintuAir',
-            label: 'Hulu Pintu Air',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
-            order: first
-        }),
-        hilirPintuAir: new DropdownQuestion({
-            key: 'hilirPintuAir',
-            label: 'Hilir Pintu Air',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
-            order: first
-        }),
-        pentasOperasi: new DropdownQuestion({
-            key: 'pentasOperasi',
-            label: 'Pentas Operasi',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
-            order: first
-        }),
-        railPentasOperasi: new DropdownQuestion({
-            key: 'railPentasOperasi',
-            label: 'Rail Pentas Operasi',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
-            order: first
-        }),
-        tangga: new DropdownQuestion({
-            key: 'tangga',
-            label: 'Tangga',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
-            order: first
-        }),
-        tempatDudukPintu: new DropdownQuestion({
-            key: 'tempatDudukPintu',
-            label: 'Tempat Duduk Pintu',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
-            order: first
-        }),
-        railPintuAir: new DropdownQuestion({
-            key: 'railPintuAir',
-            label: 'Rail Pintu Air',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
-            order: first
-        }),
-        cadanganSP: new TextboxQuestion({
-            key: 'cadanganSP',
-            label: 'Cadangan (Struktur Pintu)',
+        }), newFieldText: new TextboxQuestion({
+            key: 'newFieldText',
+            label: 'New Field (Text)',
             value: '',
             required: false,
             order: first
         }),
+        newFieldDropDown: new DropdownQuestion({
+            key: 'newFieldDropDown',
+            label: 'New Field (DropDown)',
+            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            order: first
+        }),
+
         badanPintuAir: new CategoryLabel({
             key: 'badanPintuAir',
             label: '2. Badan Pintu Air',
@@ -429,7 +394,7 @@ db.once('open', function () {
             required: false,
             order: eighth
         })
-    };
+    });
 
-    form.create(batch).then(doc => { }).catch();
+    v2.create(batch).then(doc => { }).catch();
 });

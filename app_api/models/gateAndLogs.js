@@ -106,6 +106,7 @@ const CounterSchema = new mongoose.Schema({
 const counter = mongoose.model('Counter', CounterSchema);
 
 //Inspection Log
+let options = { discriminatorKey: 'version' };
 const inspectionLogSchema = new mongoose.Schema({  
   schemaOf: String,
   id: Number,
@@ -115,15 +116,7 @@ const inspectionLogSchema = new mongoose.Schema({
   lokasiPintuAir: refGateQuestionSchema,
   jenisGearbox: textQuestionSchema,
   tarikh: dateQuestionSchema,
-  strukturPintu: categoryLabelSchema,
-  huluPintuAir: dropDownQuestionSchema,
-  hilirPintuAir: dropDownQuestionSchema,
-  pentasOperasi: dropDownQuestionSchema,
-  railPentasOperasi: dropDownQuestionSchema,
-  tangga: dropDownQuestionSchema,
-  tempatDudukPintu: dropDownQuestionSchema,
-  railPintuAir: dropDownQuestionSchema,
-  cadanganSP: textQuestionSchema,
+
   badanPintuAir: categoryLabelSchema,
   framePintuAir: dropDownQuestionSchema,
   batuSeimbang: dropDownQuestionSchema,
@@ -174,17 +167,8 @@ const inspectionLogSchema = new mongoose.Schema({
   witnessedBy: textQuestionSchema,
   reviewedBy: textQuestionSchema,
   approvedBy: textQuestionSchema
-});
-// increment the counter before save
-inspectionLogSchema.pre('save', function (next) {
-  var doc = this;
-  counter.findByIdAndUpdate({ _id: 'inspectionLog' }, { $inc: { seq: 1 } }, { new: true, upsert: true}, function (error, counter) {
-    if (error)
-      return next(error);
-    doc.id = counter.seq;
-    next();
-  });
-});
+}, options);
+
 
 //Maintenance Log
 const maintenanceLogSchema = new mongoose.Schema({
@@ -271,9 +255,33 @@ maintenanceLogSchema.pre('save', function (next) {
   });
 });
 
+const Form = mongoose.model('form', inspectionLogSchema);
+
+const v1Schema = new mongoose.Schema({
+  strukturPintu: categoryLabelSchema,
+  huluPintuAir: dropDownQuestionSchema,
+  hilirPintuAir: dropDownQuestionSchema,
+  pentasOperasi: dropDownQuestionSchema,
+  railPentasOperasi: dropDownQuestionSchema,
+  tangga: dropDownQuestionSchema,
+  tempatDudukPintu: dropDownQuestionSchema,
+  railPintuAir: dropDownQuestionSchema,
+  cadanganSP: textQuestionSchema,
+}, options);
+
+const v2Schema = new mongoose.Schema({
+  newFieldLabel: categoryLabelSchema,
+  newFieldText: textQuestionSchema,
+  newFieldDropDown: dropDownQuestionSchema
+}, options);
+
 module.exports = {
   gateSchema,
   inspectionLogSchema,
-  maintenanceLogSchema
+  maintenanceLogSchema,
+  v1Schema,
+  v2Schema,
+  Form,
+  counter
 }
 

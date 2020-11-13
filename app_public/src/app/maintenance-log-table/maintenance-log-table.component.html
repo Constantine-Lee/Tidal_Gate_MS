@@ -38,7 +38,7 @@
                     <td class="align-middle">{{maintenanceLog.id}}
                     </td>
                     <td class="align-middle">{{maintenanceLog.gate}}</td>
-                    <td class="text-truncate align-middle">{{maintenanceLog.date | date}}</td>
+                    <td class="text-truncate align-middle">{{maintenanceLog.date | date : 'short' : '-0000'}}</td>
                     <td class="text-truncate align-middle d-none d-sm-table-cell" style="max-width: 75px;">
                         {{maintenanceLog.actionTaken}}</td>
                     <td class="text-truncate align-middle d-none d-sm-table-cell" style="max-width: 75px;">

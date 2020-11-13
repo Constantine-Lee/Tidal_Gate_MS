@@ -70,6 +70,21 @@ const download = async (req, res, next) => {
                 doc.x = 325;
                 doc.text('                                                            ', { underline: true });
             }
+            if (questions[i].controlType == "disabled") {
+                doc.fontSize(10);
+                doc.x = 75;
+                doc.text(questions[i].label + ' : ');
+                doc.x = 375;
+
+                if (questions[i].value != '') {
+                    doc.moveUp();
+                    doc.text(questions[i].value);
+                }
+                doc.moveUp();
+                doc.x = 325;
+                doc.text('                                                            ', { underline: true });
+                //doc.moveDown(0.5);
+            }
             if (questions[i].controlType == "fullTextbox") {
                 doc.fontSize(10);
                 doc.x = 75;
