@@ -17,9 +17,9 @@ const getForm = async (req, res, next) => {
     let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
 
     //testing purpose, create it with 1 day ago
-    const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate - (24*60*60*1000) * 1 });
+    //const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate - (24*60*60*1000) * 1 });
 
-    //const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate });
+    const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate });
     winston.info('ImageRefCounter: ' + imageRefCounter);
 
     Promise.all([

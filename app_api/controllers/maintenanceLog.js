@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const { ChangelogSchema } = require('../models/changelog');
+const Changelog = mongoose.model('changelog', ChangelogSchema);
+
 const { maintenanceLogSchema } = require('../models/gateAndLogs')
 const MaintenanceLog = mongoose.model('MaintenanceLog', maintenanceLogSchema);
 const winston = require('../config/winston');
@@ -13,9 +16,9 @@ const fetchImage = async (src) => {
     console.log(src);
     const response = await fetch(src);
     const image = await response.buffer();
-  
+
     return image;
-  };
+};
 
 async function findMaintenanceLog(id, role) {
     winston.info('Function=findMaintenanceLog(id)');
@@ -156,11 +159,11 @@ const download = async (req, res, next) => {
                 doc.text('                                                            ', { underline: true });
                 doc.moveDown(0.5);
             }
-            if (questions[i].controlType == "RTX"){
+            if (questions[i].controlType == "RTX") {
                 doc.x = 75;
                 let startY = doc.y;
-                for(let j = 0; j < questions[i].value.ops.length; j++){
-                    if(questions[i].value.ops[j].insert.image){
+                for (let j = 0; j < questions[i].value.ops.length; j++) {
+                    if (questions[i].value.ops[j].insert.image) {
                         const img = await fetchImage(questions[i].value.ops[j].insert.image);
                         doc.image(img, { width: 50 });
                     }
@@ -229,7 +232,7 @@ const getMaintenanceLogs = async (req, res, next) => {
         }
         else {
             winston.info("Total Count: " + maintenanceLogs[0].totalCount.length);
-            length = maintenanceLogs[0].totalCount[0].count; 
+            length = maintenanceLogs[0].totalCount[0].count;
         }
         const pager = paginate.paginate(length, parseInt(req.query.page), 10, 10);
         delete maintenanceLogs[0].totalCount;
@@ -244,6 +247,8 @@ const getMaintenanceLogs = async (req, res, next) => {
 
 const addMaintenanceLog = async (req, res, next) => {
     winston.info('Function=addMaintenanceLog');
+    let date = new Date();
+    let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
 
     try {
         let questions = req.body.questions;
@@ -251,12 +256,13 @@ const addMaintenanceLog = async (req, res, next) => {
             req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
+        req.body.timestamp = todayDate;
         req.body.gateName.controlType = 'disabled';
         req.body.actionTakenCB.value = req.body.actionTakenCB.checkboxes
-        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+            .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
         req.body.actionNeedCB.value = req.body.actionNeedCB.checkboxes
-        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
-        
+            .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+
         let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
         // get array of non-selected images and decrement File Index counter by one
         let incomingPicArr = [];
@@ -285,11 +291,12 @@ const addMaintenanceLog = async (req, res, next) => {
 
         //winston.verbose('Maintenance Log to be saved=' + JSON.stringify(req.body, null, 2));
         const savedMaintenanceLog = await MaintenanceLog.create(req.body);
+        changelog = await Changelog.create({ timestamp: todayDate, userName: req.user.username, userID: req.user._id.toString(), userRole: req.user.role, action: 'added', subjectType: 'Maintenance Log', subjectID: savedMaintenanceLog.id, subjectMongoID: savedMaintenanceLog._id, subjectLinkTo: '/updateMaintenanceLog/' + savedMaintenanceLog._id })
         winston.debug('Saved a MaintenanceLog: ' + savedMaintenanceLog);
         res.status(200).json(savedMaintenanceLog);
     } catch (err) {
-        winston.error('Add Maintenance Log Error=' + err);
-        err = new ErrorHandler(500, 'Failed to Add Maintenance Log.');
+        winston.error('Add Maintenance Log Error \n' + err.stack);
+        err = new ErrorHandler(500, 'Failed to Add Maintenance Log.' + '\n' + err);
         return next(err);
     }
 };
@@ -310,16 +317,20 @@ const editMaintenanceLog = async (req, res, next) => {
     winston.info('Function=editMaintenanceLog req.params.maintenanceLogID=' + req.params.maintenanceLogID);
     let maintenanceLog;
     let imageRefCounter;
+    let date = new Date();
+    let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
+
     try {
-        let [g, i] = await Promise.all([
+        [maintenanceLog, imageRefCounter] = await Promise.all([
             MaintenanceLog.findById(req.params.maintenanceLogID).lean(),
             ImageRefCounter.findById(req.body._id).select('-__v').lean()
         ]);
-        maintenanceLog = g; imageRefCounter = i;
         winston.debug('Fetched a MaintenanceLog: ' + JSON.stringify(maintenanceLog, null, 2));
+        console.log(maintenanceLog.timestamp);
+        console.log(req.body.timestamp);
         //check if the record had been modified by others
-        if (maintenanceLog.timestamp != req.body.timestamp) {
-            throw new ErrorHandler(404, "The Maintenance Log had been edited by others.");
+        if (new Date(maintenanceLog.timestamp).getTime() != new Date(req.body.timestamp).getTime()) {
+            throw new ErrorHandler(404, "The Maintenance Log had been edited by others. \n The latest information have been fetched and updated on this page.");
         }
     } catch (err) {
         winston.error('Edit Maintenance Log Error=' + err);
@@ -332,12 +343,12 @@ const editMaintenanceLog = async (req, res, next) => {
             req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
-        req.body.timestamp = Date.now();
+        req.body.timestamp = todayDate;
         req.body.actionTakenCB.value = req.body.actionTakenCB.checkboxes
-        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+            .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
         req.body.actionNeedCB.value = req.body.actionNeedCB.checkboxes
-        .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
-        
+            .filter(c => c.value == true).map(c => c.label).reduce((acc, curr) => acc + ', ' + curr);
+
         let incomingPicArr = [];
         req.body.actionTakenRTX.value.ops.map(i => {
             if (i.insert.image) {
@@ -362,6 +373,7 @@ const editMaintenanceLog = async (req, res, next) => {
             FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
             ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean()
         ])
+        changelog = await Changelog.create({ timestamp: todayDate, userName: req.user.username, userID: req.user._id.toString(), userRole: req.user.role, action: 'edited', subjectType: 'Maintenance Log', subjectID: editedMaintenanceLog.id, subjectMongoID: editedMaintenanceLog._id, subjectLinkTo: '/updateMaintenanceLog/' + editedMaintenanceLog._id })
 
         winston.silly('Edited Maintenance Log=' + editedMaintenanceLog);
         res.status(200).json(editedMaintenanceLog);
@@ -374,9 +386,12 @@ const editMaintenanceLog = async (req, res, next) => {
 
 const deleteMaintenanceLog = async (req, res, next) => {
     winston.info('Function=deleteMaintenanceLog req.params.maintenanceLogID=' + req.params.maintenanceLogID);
+    let date = new Date();
+    let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
+    let maintenanceLog;
 
     try {
-        let maintenanceLog = await MaintenanceLog.findById(req.params.maintenanceLogID).select('-__v').lean();
+        maintenanceLog = await MaintenanceLog.findById(req.params.maintenanceLogID).select('-__v').lean();
         // extract image into an array (picArr)
         let picArr = [];
         maintenanceLog.actionTakenRTX.value.ops.map(i => {
@@ -393,14 +408,15 @@ const deleteMaintenanceLog = async (req, res, next) => {
                 }
             }
         })
-        Promise.all([
+        await Promise.all([
             FileIndex.update({ _id: picArr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
             MaintenanceLog.deleteOne({ _id: req.params.maintenanceLogID }).lean(),
             ImageRefCounter.deleteOne({ _id: req.params.maintenanceLogID })
-        ]).then(_ => {
-            winston.info('Deleted Maintenance Log=' + req.params.maintenanceLogID);
-            res.status(200).json();
-        })
+        ]);
+
+        let changelog = await Changelog.create({ timestamp: todayDate, userName: req.user.username, userID: req.user._id.toString(), userRole: req.user.role, action: 'deleted', subjectType: 'Maintenance Log', subjectID: maintenanceLog.id, subjectMongoID: maintenanceLog._id, subjectLinkTo: '' });
+        winston.info('Deleted Maintenance Log=' + req.params.maintenanceLogID);
+        res.status(200).json();
     } catch (err) {
         winston.error('Delete Maintenance Log Error=' + err);
         err = new ErrorHandler(500, 'Failed to delete Maintenance Log: ' + req.params.maintenanceLogID);

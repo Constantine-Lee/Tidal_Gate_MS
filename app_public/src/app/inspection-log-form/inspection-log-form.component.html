@@ -1,4 +1,7 @@
 <div>
+    <div *ngIf="NotFound" class="pt-5 mt-5 text-center">
+        <h1 style="font-size: 7em;">404 Not Found </h1>
+    </div>
     <div @fadeInAnimation *ngIf="form" class="container ">
         <form (ngSubmit)="onSubmit()" [formGroup]="form">
 
@@ -35,7 +38,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-body text-danger">
-                            <h4>{{errorString}}</h4>
+                            <h4 style="white-space: pre-line;"><span [innerHTML]="errorString"></span></h4>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-outline-danger" data-dismiss="modal">OK</button>

@@ -1,4 +1,7 @@
 const mongoose = require('mongoose');
+const { ChangelogSchema } = require('../models/changelog');
+const Changelog = mongoose.model('changelog', ChangelogSchema);
+
 const { gateSchema } = require('../models/gateAndLogs');
 const Gate = mongoose.model('Gate', gateSchema);
 const multer = require('multer')
@@ -14,9 +17,9 @@ const fetch = require('node-fetch');
 const fetchImage = async (src) => {
     const response = await fetch(src);
     const image = await response.buffer();
-  
+
     return image;
-  };
+};
 
 async function findGate(id) {
     let gate = await Gate.findById(id).select('-__v').lean();
@@ -36,7 +39,7 @@ async function findGate(id) {
 
 const download = async (req, res, next) => {
     winston.info('Function=download');
-    try {      
+    try {
         const doc = new PDFDocument;
         doc.pipe(res);
         const gate = await findGate(req.params.gateID);
@@ -144,13 +147,15 @@ const getGates = async (req, res, next) => {
 
 const addGate = async (req, res, next) => {
     winston.info('Function=addGate');
+    let date = new Date();
+    let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
     try {
         let questions = req.body.questions;
         for (let i = 0; i < questions.length; i++) {
             req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
-        req.body.timestamp = Date.now();
+        req.body.timestamp = todayDate;
         req.body.gateName.controlType = "disabled";
         req.body.gateID.controlType = "disabled";
         let imageRefCounter = await ImageRefCounter.findById(req.body._id).select('-__v').lean();
@@ -165,13 +170,19 @@ const addGate = async (req, res, next) => {
             FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
         ]).then(([iRC, fI]) => { winston.info('updated imageRefCounter: ' + iRC + ', fileIndex' + fI); });
 
-        //winston.verbose('Gate to be saved: ' + JSON.stringify(req.body, null, 2));
-        const savedGate = await Gate.create(req.body);
+        let savedGate = await Gate.create(req.body);
+        let changelog = await Changelog.create({ timestamp: todayDate, userName: req.user.username, userID: req.user._id.toString(), userRole: req.user.role, action: 'added', subjectType: 'Gate', subjectID: req.body.gateID.value, subjectMongoID: req.body._id, subjectLinkTo: '/updateGate/' + req.body._id });
+        winston.info('changelog \n' + changelog);
         winston.debug('Saved Gate=' + savedGate);
         res.status(200).json(savedGate);
     } catch (err) {
-        winston.error('Save Gate Error=' + err);
-        err = new ErrorHandler(500, 'Failed to Save Gate.');
+        winston.error('Save Gate Error Stack \n' + err.stack);
+        if (err.message.indexOf("11000") != -1) {
+            err = new ErrorHandler(500, 'Failed to Save Gate. Gate Name is used.');
+        }
+        else {
+            err = new ErrorHandler(500, 'Failed to Save Gate.' + '\n' + err);
+        }
         return next(err);
     }
 };
@@ -200,13 +211,13 @@ const editGate = async (req, res, next) => {
             Gate.findById(req.params.gateID).lean(),
             ImageRefCounter.findById(req.body._id).select('-__v').lean()
         ]);
-        gate = g; imageRefCounter = i;  
+        gate = g; imageRefCounter = i;
         winston.debug('Fetched a Gate to Edit=' + gate);
-        if (gate.timestamp != req.body.timestamp) {
-            throw new ErrorHandler(404, "The Gate had been edited by others.");
-        }              
+        if (new Date(gate.timestamp).getTime() != new Date(req.body.timestamp).getTime()) {
+            throw new ErrorHandler(404, "The Gate had been edited by others. \n The latest information have been fetched and updated on this page.");
+        }
     } catch (err) {
-        winston.error('Edit Gate Error=' + err);
+        winston.error('Edit Gate Error \n' + err.stack);
         return next(err);
     }
 
@@ -226,6 +237,7 @@ const editGate = async (req, res, next) => {
             FileIndex.update({ _id: arr }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
             ImageRefCounter.findByIdAndUpdate({ _id: req.body._id }, imageRefCounter, { new: true }).lean()
         ]);
+        changelog = await Changelog.create({ timestamp: todayDate, userName: req.user.username, userID: req.user._id.toString(), userRole: req.user.role, action: 'edited', subjectType: 'Gate', subjectID: editedGate.id, subjectMongoID: editedGate._id, subjectLinkTo: '/updateGate/' + editedGate._id });
 
         winston.silly('Edited Gate=' + JSON.stringify(editedGate, null, 2));
         res.status(200).json(editedGate);
@@ -237,17 +249,20 @@ const editGate = async (req, res, next) => {
 
 const deleteGate = async (req, res, next) => {
     winston.info('Function=deleteGate req.params.gateID=' + req.params.gateID);
+    let date = new Date();
+    let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
+    let gate;
 
     try {
-        let gate = await Gate.findById(req.params.gateID).select('-__v').lean();
-        Promise.all([
+        gate = await Gate.findById(req.params.gateID).select('-__v').lean();
+        await Promise.all([
             FileIndex.update({ _id: gate.profilePhoto.split('images/').pop() }, { $inc: { pointer: -1 } }, { multi: true, new: true }).lean(),
             Gate.deleteOne({ _id: req.params.gateID }),
             ImageRefCounter.deleteOne({ _id: req.params.gateID })
-        ]).then(_ => {
-            winston.info('Deleted Gate=' + req.params.gateID);
-            res.status(200).json();
-        })
+        ])
+        let changelog = await Changelog.create({ timestamp: todayDate, userName: req.user.username, userID: req.user._id.toString(), userRole: req.user.role, action: 'deleted', subjectType: 'Gate', subjectID: gate.gateID.value, subjectMongoID: gate._id, subjectLinkTo: '' });
+        winston.info('Deleted Gate=' + req.params.gateID);
+        res.status(200).json();
     } catch (err) {
         winston.error('Delete Gate Error=' + err);
         err = new ErrorHandler(500, 'Failed to delete the Gate=' + req.params.gateID);

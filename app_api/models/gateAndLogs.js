@@ -16,7 +16,7 @@ const gateSchema = new mongoose.Schema({
   schemaOf: String,
   id: String,
   profilePhoto: String,
-  timestamp: Number,
+  timestamp: { type: Date },
   gateInfo: baseQuestionSchema,
   gateName: uniqueTextFieldSchema,
   gateID: uniqueTextFieldSchema,
@@ -110,7 +110,7 @@ let options = { discriminatorKey: 'version' };
 const inspectionLogSchema = new mongoose.Schema({  
   schemaOf: String,
   id: Number,
-  timestamp: { type: Number, default: new Date() },
+  timestamp: { type: Date },
   namaPenjaga: textQuestionSchema,
   noRujukan: textQuestionSchema,
   lokasiPintuAir: refGateQuestionSchema,
@@ -174,7 +174,7 @@ const inspectionLogSchema = new mongoose.Schema({
 const maintenanceLogSchema = new mongoose.Schema({
   schemaOf: String,
   id: Number,
-  timestamp: { type: Number, default: new Date() },
+  timestamp: { type: Date },
   gateInfo: categoryLabelSchema,
   gateName: dropDownQuestionSchema,
   date: dateQuestionSchema,

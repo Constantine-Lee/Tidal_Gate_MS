@@ -29,6 +29,7 @@ import { InspectionLogTableComponent } from './inspection-log-table/inspection-l
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { QuillModule } from 'ngx-quill';
+import { ChangelogComponent } from './changelog/changelog.component';
 
 export const httpInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
@@ -51,7 +52,8 @@ export const httpInterceptorProviders = [
     AdminComponent,
     JwPaginationComponent,
     InspectionLogFormComponent,
-    InspectionLogTableComponent
+    InspectionLogTableComponent,
+    ChangelogComponent
   ],
   imports: [
     QuillModule.forRoot(),

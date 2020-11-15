@@ -22,7 +22,7 @@ export class LoggingService {
   debug(message: string) {
     if(this.shouldLog(LogLevel.Debug)){
       let logEntry = this.createLogStatement('debug', message)
-      console.info(logEntry);      
+      console.trace(logEntry);      
     }
 
   }

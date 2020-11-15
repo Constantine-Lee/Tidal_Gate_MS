@@ -24,6 +24,7 @@ export class InspectionLogFormComponent implements OnInit {
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
   submitButtonLabel: string;
   inspectionLog: InspectionLog;
+  NotFound: string;
 
   constructor(
     private qcs: QuestionControlService,
@@ -36,7 +37,9 @@ export class InspectionLogFormComponent implements OnInit {
     this.logger.info("Function: ngOnInit()");
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.has('inspectionLogID')) {
-        this.inspectionLogService.getInspectionLogByID(params.get('inspectionLogID')).subscribe(i => this.initForm(i, 'Update'));
+        this.inspectionLogService.getInspectionLogByID(params.get('inspectionLogID')).subscribe(
+          i => this.initForm(i, 'Update'),
+          err => this.NotFound = err.status);
       }
       else {
         this.inspectionLogService.getForms().subscribe(i => this.initForm(i, 'Submit'));
@@ -85,6 +88,9 @@ export class InspectionLogFormComponent implements OnInit {
   submitErrHandling(err) {
     console.log(err);
     if (err != undefined) {
+      if (err.error == "The Inspection Log had been edited by others. \n The latest information have been fetched and updated on this page.") {
+        this.ngOnInit();
+      }
       this.errorString = err.error;
     }
     else {
@@ -93,4 +99,5 @@ export class InspectionLogFormComponent implements OnInit {
     this.submitting = false;
     $('#errorModal').modal('show');
   }
+
 }

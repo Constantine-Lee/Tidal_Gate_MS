@@ -1,0 +1,5 @@
+<div @fadeInAnimation class="container pt-5 d-flex justify-content-center">
+    <div class = "" style = "max-width: 900px;" >
+        <p class ="" *ngFor="let changelog of changelogs" style = "color:rgb(77, 77, 77)"><u *ngIf="changelog.subjectLinkTo != ''" style = "color:black"><a [routerLink]="changelog.subjectLinkTo" >{{changelog.subjectType}} with ID ({{changelog.subjectID}})</a></u> <span *ngIf="changelog.subjectLinkTo == ''">{{changelog.subjectType}} with ID ({{changelog.subjectID}})</span> {{changelog.action}} by {{changelog.userName}} with Role ({{changelog.userRole}}) at [{{changelog.timestamp | date : 'short' : '-0000'}}].</p>
+    </div>    
+</div>

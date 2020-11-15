@@ -31,6 +31,7 @@ export class GateFormComponent implements OnInit {
   errorString: string = 'Unknown Error Occurs... Operation Failed.';
   gate: Gate;
   submitButtonLabel: string;
+  NotFound: string;
 
   get isAdmin() {
     return this.currentUser && this.currentUser.role === Role.Admin;
@@ -55,7 +56,10 @@ export class GateFormComponent implements OnInit {
     );
     this.route.paramMap.subscribe((params: ParamMap) => {
       if (params.has('gateID')) {
-        this.gateService.getGateByID(params.get('gateID')).subscribe(g => this.initForm(g, 'Update'));
+        this.gateService.getGateByID(params.get('gateID')).subscribe(
+          g => this.initForm(g, 'Update'),
+          err => this.NotFound = err.status
+        )
       }
       else {
         this.gateService.getForms().subscribe(g => this.initForm(g, 'Submit'));
@@ -106,6 +110,9 @@ export class GateFormComponent implements OnInit {
   submitErrHandling(err) {
     this.logger.error(err);
     if (err != undefined) {
+      
+        this.ngOnInit();
+      
       this.errorString = err.error;
     }
     else {

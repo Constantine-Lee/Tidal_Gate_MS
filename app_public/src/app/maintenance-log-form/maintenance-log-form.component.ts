@@ -7,7 +7,7 @@ import { MaintenanceLog } from '../_models/maintenanceLog';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { fadeInAnimation } from '../_animations';
 import { DialogService } from '../_services/dialog.service';
-import { QuestionBase} from '../_models/questionType';
+import { QuestionBase } from '../_models/questionType';
 import { LoggingService } from '../_services/logging.service';
 
 //for modal
@@ -26,6 +26,7 @@ export class MaintenanceLogFormComponent implements OnInit {
   submitButtonLabel: string;
   maintenanceLog: MaintenanceLog;
   _id: string;
+  NotFound: string;
 
   constructor(
     private qcs: QuestionControlService,
@@ -39,17 +40,19 @@ export class MaintenanceLogFormComponent implements OnInit {
   ngOnInit(): void {
     this.logger.info("Function: ngOnInit()");
     this.route.paramMap.subscribe((params: ParamMap) => {
-      if(params.has('maintenanceLogID')){
-        this.maintenanceLogService.getMaintenanceLogByID(params.get('maintenanceLogID')).subscribe(m => this.initForm(m, 'Update'));
+      if (params.has('maintenanceLogID')) {
+        this.maintenanceLogService.getMaintenanceLogByID(params.get('maintenanceLogID'))
+          .subscribe(
+            m => this.initForm(m, 'Update'),
+            err => this.NotFound = err.status);
       }
       else {
         this.maintenanceLogService.getForms().subscribe(m => this.initForm(m, 'Submit'));
       }
     });
-    
   }
 
-  initForm(m: MaintenanceLog, buttonLabel: string){
+  initForm(m: MaintenanceLog, buttonLabel: string) {
     this.logger.info("Function: initForm(m: MaintenanceLog, buttonLabel: string)");
     this.maintenanceLog = m;
     this.questions = m.questions;
@@ -93,6 +96,9 @@ export class MaintenanceLogFormComponent implements OnInit {
   submitErrHandling(err) {
     console.log(err);
     if (err != undefined) {
+      if (err.error == "The Gate had been edited by others. \n The latest information have been fetched and updated on this page.") {
+        this.ngOnInit();
+      }
       this.errorString = err.error;
     }
     else {

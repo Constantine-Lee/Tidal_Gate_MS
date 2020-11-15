@@ -44,16 +44,18 @@ export class QuestionControlService {
     });
 
     let formGroup = new FormGroup(group);
-    let seen = [];
+    
+    let seen = [];    
     this.logger.debug(JSON.stringify(formGroup, function (key, val) {
       if (val != null && typeof val == "object") {
-        if (seen.indexOf(val) >= 0) {
+        if (seen.indexOf(val) >= 0) { 
           return;
         }
         seen.push(val);
       }
       return val;
     }));
+    
     return formGroup;
   }
 

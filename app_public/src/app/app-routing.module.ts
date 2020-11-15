@@ -15,6 +15,7 @@ import { Role } from './_models/role';
 import { InspectionLogTableComponent } from './inspection-log-table/inspection-log-table.component';
 import { InspectionLogFormComponent } from './inspection-log-form/inspection-log-form.component';
 import { CanDeactivateGuard } from './_helpers/can-deactivate.guard';
+import { ChangelogComponent } from './changelog/changelog.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [AuthGuard], data: { title: 'Tidal Gate Management System', breadcrumb: [] } },
@@ -35,7 +36,6 @@ const routes: Routes = [
       ]
     }
   },
-
   {
     path: 'gate', component: GateTableComponent, canActivate: [AuthGuard],
     data: {
@@ -92,7 +92,6 @@ const routes: Routes = [
       ]
     }
   },
-
   {
     path: 'inspectionLog', component: InspectionLogTableComponent, canActivate: [AuthGuard], data: {
       title: 'Inspection Log', breadcrumb: [
@@ -113,6 +112,13 @@ const routes: Routes = [
       title: 'Update Inspection Log', breadcrumb: [
         { link: '/inspectionLog', label: 'Inspection Log', order: 1, current: false },
         { link: '', label: 'Update', order: 2, current: true }
+      ]
+    }
+  },
+  {
+    path: 'changelog', component: ChangelogComponent, canActivate: [AuthGuard], data: {
+      title: 'Changelog', breadcrumb: [
+        { link: '', label: 'Changelog', order: 1, current: true }
       ]
     }
   },

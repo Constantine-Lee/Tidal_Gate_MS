@@ -13,6 +13,7 @@ const gate = require('../controllers/gate');
 const counter = require('../controllers/counter');
 const form = require('../controllers/form');
 const upload = require('../controllers/upload');
+const changelog = require('../controllers/changelog');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -87,38 +88,42 @@ router
 router
     .route('/inspectionLogs/:inspectionLogID')
     .get(passport.authenticate('jwt', { session: false }), inspectionLog.getInspectionLog)
-    .put(inspectionLog.editInspectionLog)
-    .delete(inspectionLog.deleteInspectionLog)
+    .put(passport.authenticate('jwt', { session: false }), inspectionLog.editInspectionLog)
+    .delete(passport.authenticate('jwt', { session: false }), inspectionLog.deleteInspectionLog)
 
 router
     .route('/inspectionLogs')
-    .get(inspectionLog.getInspectionLogs)
-    .post(inspectionLog.addInspectionLog)
+    .get(passport.authenticate('jwt', { session: false }), inspectionLog.getInspectionLogs)
+    .post(passport.authenticate('jwt', { session: false }), inspectionLog.addInspectionLog)
 
 router
     .route('/form/:formID')
-    .get(passport.authenticate('jwt', { session: false }),form.getForm)
+    .get(passport.authenticate('jwt', { session: false }), form.getForm)
 
 router
     .route('/maintenanceLogs/:maintenanceLogID')
     .get(passport.authenticate('jwt', { session: false }), maintenanceLog.getMaintenanceLog)
-    .put(maintenanceLog.editMaintenanceLog)
-    .delete(maintenanceLog.deleteMaintenanceLog)
+    .put(passport.authenticate('jwt', { session: false }), maintenanceLog.editMaintenanceLog)
+    .delete(passport.authenticate('jwt', { session: false }), maintenanceLog.deleteMaintenanceLog)
 
 router
     .route('/maintenanceLogs')
     .get(maintenanceLog.getMaintenanceLogs)
-    .post(maintenanceLog.addMaintenanceLog)
+    .post(passport.authenticate('jwt', { session: false }), maintenanceLog.addMaintenanceLog)
 
 router
     .route('/gates/:gateID')
     .get(gate.getGate)
-    .put(gate.editGate)
-    .delete(gate.deleteGate)
+    .put(passport.authenticate('jwt', { session: false }), gate.editGate)
+    .delete(passport.authenticate('jwt', { session: false }), gate.deleteGate)
 
 router
     .route('/gates')
     .get(gate.getGates)
-    .post(gate.addGate)
+    .post(passport.authenticate('jwt', { session: false }), gate.addGate)
+
+router
+    .route('/changelogs')
+    .get(changelog.getChangelog)
 
 module.exports = router;
