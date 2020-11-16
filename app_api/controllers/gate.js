@@ -124,8 +124,8 @@ const getGates = async (req, res, next) => {
                 ],
                 "searchResult": [
                     { $skip: skip },
-                    { $limit: 10 },
-                    { $project: { _id: 1, "id": "$gateID.value", "name": "$gateName.value" } }
+                    { $limit: parseInt(req.query.limit) },
+                    { $project: { _id: 1, "id": "$gateID.value", "name": "$gateName.value", "lat": "$lattitude.value", "lon": "$longitude.value" } }
                 ]
             }
         })

@@ -24,9 +24,9 @@ export class GateService {
     return this.http.post<any>(`${environment.apiUrl}/gates`, gate);
   }
 
-  getGates(page: number, searchText: string): Observable<{ pager: {}, gates: [] }> {
+  getGates(page: number, searchText: string, limit: number): Observable<{ pager: {}, gates: [] }> {
     this.logger.info('Function: getGates(' + page + ', ' + searchText + ')');
-    return this.http.get<{ pager: {}, gates: [] }>(`${environment.apiUrl}/gates?page=${page}&searchText=${searchText}`);
+    return this.http.get<{ pager: {}, gates: [] }>(`${environment.apiUrl}/gates?page=${page}&searchText=${searchText}&limit=${limit}`);
   }
 
   getGateByID(id: string): Observable<Gate> {

@@ -1,14 +1,14 @@
 <div @fadeInAnimation *ngIf="receive" class="container mt-4">
     <div class="d-flex flex-row-reverse">
         <div class="input-group input-group-lg mb-3">
-            <input type="text" (keyup)="search($event.target.value)" [(ngModel)]="searchTerm"
-                class="form-control" placeholder="Search">
+            <input type="text" (keyup)="search($event.target.value)" [(ngModel)]="searchTerm" class="form-control"
+                placeholder="Search">
             <div class="input-group-append">
                 <button *ngIf="isAdmin" type="button" class="btn btn-outline-secondary" routerLink="/addGate"><i
                         class="fa fa-plus-circle" aria-hidden="true"></i> Add</button>
             </div>
         </div>
-    </div>  
+    </div>
 
     <div class="bg-light card">
         <table class="table table-sm mb-0">
@@ -27,8 +27,7 @@
             </thead>
             <tbody class="text-center">
                 <tr *ngFor="let gate of pageOfItems">
-                    <td class="align-middle">{{gate.id}}
-                    </td>
+                    <td class="align-middle">{{gate.id}} </td>
                     <td class="align-middle">{{gate.name}}</td>
                     <td>
                         <div class="d-flex justify-content-center">

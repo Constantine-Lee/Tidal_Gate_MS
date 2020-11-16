@@ -606,7 +606,7 @@ db.once('open', function () {
             key: 'witnessedBy',
             label: 'Witnessed by',
             value: '',
-            required: false,
+            required: true,
             order: thirteenth
         }),
         reviewBy: new TextboxQuestion({

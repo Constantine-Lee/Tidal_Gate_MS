@@ -11,6 +11,8 @@ declare var $: any;
 @Component({
   selector: 'app-inspection-log-table',
   templateUrl: './inspection-log-table.component.html',
+  styles: ['tr:hover { cursor:pointer; background-color: gainsboro } ', '.hoverBtn:hover {background-color: white}', 
+  ''],
   animations: [fadeInAnimation]
 })
 export class InspectionLogTableComponent implements OnInit {

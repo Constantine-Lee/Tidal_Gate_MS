@@ -5,8 +5,9 @@ const { ErrorHandler } = require('../models/error');
 const { ImageRefCounter } = require('../models/fileIndexing');
 
 const {
-  Form } = require('../models/gateAndLogs');
+  inspectionLogSchema } = require('../models/gateAndLogs');
 
+const Form = mongoose.model('form', inspectionLogSchema);
 
 const getForm = async (req, res, next) => {
   winston.info('Function=getForm req.params.formID=' + req.params.formID);

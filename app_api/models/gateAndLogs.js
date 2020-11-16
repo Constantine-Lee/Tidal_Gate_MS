@@ -255,7 +255,6 @@ maintenanceLogSchema.pre('save', function (next) {
   });
 });
 
-const Form = mongoose.model('form', inspectionLogSchema);
 
 const v1Schema = new mongoose.Schema({
   strukturPintu: categoryLabelSchema,
@@ -281,7 +280,6 @@ module.exports = {
   maintenanceLogSchema,
   v1Schema,
   v2Schema,
-  Form,
   counter
 }
 

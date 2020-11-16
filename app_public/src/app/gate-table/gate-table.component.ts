@@ -44,7 +44,7 @@ export class GateTableComponent implements OnInit {
       .pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(searchText => this.gateService.getGates(1, searchText))
+        switchMap(searchText => this.gateService.getGates(1, searchText, 10))
       )
       .subscribe(x => {
         this.logger.info("succeed");
@@ -64,7 +64,7 @@ export class GateTableComponent implements OnInit {
 
   getGates(page: number) {
     this.logger.info("Function: getGates()");
-    this.gateService.getGates(page, this.searchTerm)
+    this.gateService.getGates(page, this.searchTerm, 10)
       .subscribe(x => {
         this.pageOfItems = x.gates;
         this.pager = x.pager;

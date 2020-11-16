@@ -221,7 +221,7 @@ const getMaintenanceLogs = async (req, res, next) => {
                     { $sort: sortCriteria },
                     { $skip: (parseInt(req.query.page) - 1) * 10 },
                     { $limit: 10 },
-                    { $project: { _id: 1, "id": "$id", "gate": "$gateName.value", "date": "$date.value", "actionTaken": "$actionTakenCB.value", "actionNeeded": "$actionNeedCB.value" } }
+                    { $project: { _id: 1, "id": "$id", "gate": "$gateName.value", "date": "$date.value", "actionTaken": "$actionTakenCB.value", "actionNeeded": "$actionNeedCB.value", "reviewed": "$reviewBy.value" } }
                 ]
             }
         });

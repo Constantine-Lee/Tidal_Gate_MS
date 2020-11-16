@@ -14,7 +14,7 @@ const {
     baseQuestionSchema } = require('../app_api/models/form');
 
 const {
-    Form, v1Schema } = require('../app_api/models/gateAndLogs');
+    inspectionLogSchema, v1Schema } = require('../app_api/models/gateAndLogs');
 
 mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
 const db = mongoose.connection;
@@ -31,6 +31,7 @@ db.once('open', function () {
         value: { type: Date }
     }, { _id: false }));
     var CategoryLabel = docArray.discriminator('groupLabel', new mongoose.Schema({}, { _id: false }));
+    const Form = mongoose.model('form', inspectionLogSchema);
     const v1 = Form.discriminator('v1', v1Schema);
 
     // Create a new batch of events with different kinds
@@ -413,7 +414,7 @@ db.once('open', function () {
             key: 'witnessedBy',
             label: 'Witnessed By',
             value: '',
-            required: false,
+            required: true,
             order: eighth
         }),
         reviewedBy: new TextboxQuestion({
