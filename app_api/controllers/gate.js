@@ -203,7 +203,8 @@ const getGate = async (req, res, next) => {
 //TODO: race condition problem existed
 const editGate = async (req, res, next) => {
     winston.info('Function=editGate req.params.gateID=' + req.params.gateID);
-
+    let date = new Date();
+    let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
     let gate;
     let imageRefCounter;
     try {
@@ -227,7 +228,7 @@ const editGate = async (req, res, next) => {
             req.body[questions[i].key] = questions[i];
         }
         delete req.body.questions;
-        req.body.timestamp = Date.now();
+        req.body.timestamp = todayDate;
 
         let arr = imageRefCounter.images.filter(i => req.body.profilePhoto != i);
         imageRefCounter.images = imageRefCounter.images.filter(i => req.body.profilePhoto == i);
