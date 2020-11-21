@@ -68,40 +68,57 @@ export class HomeComponent {
             .scale(7000)                       // This is like the zoom
             .translate([width / 2, height / 2])
 
-        //Number formatting for population values
-        var formatAsThousands = d3.format(",");  //e.g. converts 123456 to "123,456"
-
-        let arrDat = [
-            {
-                lat: "1.5500",
-                lon: "110.3333",
-                name: "Iris Gate"
-            }
-        ]
-
-
-
+        //Define path generator
+        var path = d3.geoPath()
+            .projection(projection);
 
         // Load external data and boot
         d3.json<ResponseData>("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then((data) => {
 
             console.log(data)
             // Filter data
-            data.features = data.features.filter(d => { console.log(d.properties.name); return d.properties.name == 'Malaysia' });
+            data.features = data.features.filter(d => { console.log(d.properties.name); return d.properties.name == 'Malaysia' || d.properties.name == 'Indonesia' });
 
             // Draw the map
             svg.selectAll("path")
                 .data(data.features)
                 .enter()
                 .append("path")
-                .attr("fill", "white")
-                .attr("d", d3.geoPath()
-                    .projection(projection)
-                )
+                .attr("fill", function (d) {
+                    console.log(d);
+                    if (d.id == 'IDN') {
+                        return "black";
+                    }
+                    else {
+                        return "black";
+                    }
+                })
+                .attr("d", path)
                 .style("stroke", "none");
 
+            d3.csv(environment.apiUrl + '/images/sarawakCity.csv').then((data) => {
+                console.log('sarawakCity' + data);
+                //Create one label per state
+                svg.selectAll("text")
+                    .data(data)
+                    .enter()
+                    .append("text")
+                    .attr("class", "label")
+                    .attr("fill", "white")
+                    .attr("x", function (d) {
+                        return projection([parseFloat(d.lon), parseFloat(d.lat)])[0];
+                    })
+                    .attr("y", function (d) {
+                        return projection([parseFloat(d.lon), parseFloat(d.lat)])[1];
+                    })
+                    .text(function (d) {
+                        return d.place;
+                    });
+
+            })
+
             this.gateService.getGates(1, '', 10)
-                .subscribe(x => {                    
+                .subscribe(x => {
                     let dat: gateMap[] = x.gates;
                     console.log(x);
                     console.log(dat);
@@ -116,9 +133,9 @@ export class HomeComponent {
                             return projection([parseFloat(d.lon), parseFloat(d.lat)])[1];
                         })
                         .attr("r", function (d) {
-                            return 4;
+                            return 10;
                         })
-                        .style("fill", "lightblue")
+                        .style("fill", "yellow")
                         .style("stroke", "gray")
                         .style("stroke-width", 0.25)
                         .style("opacity", 0.75)
