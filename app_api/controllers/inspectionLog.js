@@ -24,20 +24,22 @@ const PDFDocument = require('pdfkit');
 
 
 
-async function findInspectionLog(id, role) {
+async function findInspectionLog(id, role, username) {
     winston.info('Function=findInspectionLog(id)');
     let inspectionLog = await InspectionLog.findById(id).select('-__v').lean();
     if (role == 'User') {
+        inspectionLog.testedBy.value = username;
+        inspectionLog.witnessedBy.value = username;
         inspectionLog.testedBy.controlType = 'disabled';
         inspectionLog.witnessedBy.controlType = 'disabled';
         inspectionLog.reviewedBy.controlType = 'disabled';
         inspectionLog.approvedBy.controlType = 'disabled';
     }
     else if (role == 'Supervisor') {
-        inspectionLog.testedBy.controlType = 'disabled';
-        inspectionLog.witnessedBy.controlType = 'disabled';
-        inspectionLog.reviewedBy.controlType = 'textbox';
-        inspectionLog.approvedBy.controlType = 'textbox';
+        inspectionLog.reviewedBy.value = username;
+        inspectionLog.approvedBy.value = username;
+        inspectionLog.reviewedBy.controlType = 'disabled';
+        inspectionLog.approvedBy.controlType = 'disabled';
     }
     let questions = [];
     const keys = Object.keys(inspectionLog);
@@ -284,7 +286,7 @@ const addInspectionLog = async (req, res, next) => {
 const getInspectionLog = async (req, res, next) => {
     winston.info('Function=getInspectionLog req.params.inspectionLogID=' + req.params.inspectionLogID);
     try {
-        const inspectionLog = await findInspectionLog(req.params.inspectionLogID, req.user.role);
+        const inspectionLog = await findInspectionLog(req.params.inspectionLogID, req.user.role, req.user.username);
         //winston.verbose('Fetched an Inspection Log=' + JSON.stringify(inspectionLog, null, 2));
         res.status(200).json(inspectionLog);
     } catch (err) {

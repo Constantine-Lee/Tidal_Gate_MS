@@ -20,7 +20,7 @@ const register = (req, res, next) => {
 
   user.save((err) => {
     if (err) {
-      const error = new ErrorHandler(400, err);
+      const error = new ErrorHandler(400, "Username exists.");
       next(error);
     } else {
       const token = user.generateJwt(), id = user._id, username = user.username, role = user.role;

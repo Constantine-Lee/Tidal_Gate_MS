@@ -1,0 +1,61 @@
+1) Show Difference Between Admin and Operator - Ashley
+	1. Log In with Admin account
+	2. Navigate to Gate Table and show delete button, Add button
+	3. Show Add Gate on Navigation Bar
+	4. Go to Admin board and say which operator account I am going to use.
+	5. Log In with Operator Account.
+	6. Go to Gate Table and show lack of delete button and add button on Nav Bar.
+	7. Show Navigation by BreadCrumb
+
+2) Mobile Responsive - Ashley
+	0. Press f12, press the phone icon
+    1. Press through Gate, Add Gate
+	
+3) Show CRUD of Gate. - Ashley
+	Log in Admin Account.
+	1. Add a Gate, but try to Submit without fill in all the required fields to show the error dialog. 
+	2. Fill in the required details then submit it.
+	3. Demonstrate search function. 	
+	4. Edit the Gate.
+	5. Download the pdf.
+	5. Delete the (Gate add at Mock Presentation). 
+
+4) Admin Board Function - Ashley
+	1. Add A new Supervisor and Operator.
+	2. Show that the username have to be unique.
+	2. Log in with the new Operator but key in wrong password
+	3. Then log in with correct password.
+	4. Logout and Log In with admin to delete the account. 
+	5. Show the Operator Account cannot be accessed anymore. 
+
+5) The client want Auto Navigation Function for Operator, thus now I will demonstrate the feature and Security Measure along with it. - Ashena
+	1. Logout
+	2. Enter the URL http://localhost:4200/addInspectionLog, then log in with Operator Account to show the page auto navigate to Add Gate.
+	3. Logout
+	3. Enter the URL http://localhost:4200/addGate, then log in with Operator Account to show denied access. 
+	4. Logout for both of the account.	
+
+6) Show CRUD and Concurrency Control of Maintenance Log. - Anshena
+	Use Supervisor and Operator Account in two browser for demonstration.		
+	1. Operator submit a new log.
+	2. Show that the label is red if the supervisor has not review it yet.
+	3. Supervisor review the log, then show the label change to green.
+	2. Review the log with supervisor account and show the auto added supervisor username. 
+	4. Supervisor and Operator view the same log.
+	5. Operator update the log, then only Supervisor try to update it.
+	6. However, the system will not allowed it.
+	7. Show the page of Supervisor has refreshed with latest info then choose to update it or not. 
+	8. Delete the Maintenance Log. 
+
+7) Show CRUD of Inspection Log. - Anshena
+	1. Show the auto added operator username when add a new log.
+	2. Sort by ID and Date.
+	3. Pagination
+
+8) Changelog Function. - Daniel
+	1. Delete all the log.
+	2. Add a new inspection log.
+	3. Show that a new changelog appeared and navigate to the newly added inspection log through the changelog interface.
+	4. Delete the inspection log.
+	5. Show the 404 page if trying to access the deleted inspection log.
+	

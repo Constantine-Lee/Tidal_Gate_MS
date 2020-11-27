@@ -20,20 +20,22 @@ const fetchImage = async (src) => {
     return image;
 };
 
-async function findMaintenanceLog(id, role) {
+async function findMaintenanceLog(id, role, username) {
     winston.info('Function=findMaintenanceLog(id)');
     let maintenanceLog = await MaintenanceLog.findById(id).select('-__v').lean();
     if (role == 'User') {
+        maintenanceLog.testedBy.value = username;
+        maintenanceLog.witnessedBy.value = username;
         maintenanceLog.testedBy.controlType = 'disabled';
         maintenanceLog.witnessedBy.controlType = 'disabled';
-        maintenanceLog.reviewedBy.controlType = 'disabled';
-        maintenanceLog.approvedBy.controlType = 'disabled';
+        maintenanceLog.reviewBy.controlType = 'disabled';
+        maintenanceLog.approveBy.controlType = 'disabled';
     }
-    else if (role == 'Supervisor') {
-        maintenanceLog.testedBy.controlType = 'disabled';
-        maintenanceLog.witnessedBy.controlType = 'disabled';
-        maintenanceLog.reviewedBy.controlType = 'textbox';
-        maintenanceLog.approvedBy.controlType = 'textbox';
+    else if (role == 'Supervisor') {        
+        maintenanceLog.reviewBy.value = username;
+        maintenanceLog.approveBy.value = username;
+        maintenanceLog.reviewBy.controlType = 'disabled';
+        maintenanceLog.approveBy.controlType = 'disabled';
     }
     let questions = [];
     const keys = Object.keys(maintenanceLog);
@@ -304,11 +306,11 @@ const addMaintenanceLog = async (req, res, next) => {
 const getMaintenanceLog = async (req, res, next) => {
     winston.info('Function=getMaintenanceLog req.params.maintenanceLogID=' + req.params.maintenanceLogID);
     try {
-        const maintenanceLog = await findMaintenanceLog(req.params.maintenanceLogID);
+        const maintenanceLog = await findMaintenanceLog(req.params.maintenanceLogID, req.user.role, req.user.username);
         res.status(200).json(maintenanceLog);
     } catch (err) {
-        winston.error('Get MaintenanceLog Error=' + err);
-        err = new ErrorHandler(404, 'Failed to get MaintenanceLog=' + maintenanceLogID);
+        winston.error('Get MaintenanceLog Error \n' + err.stack);
+        err = new ErrorHandler(404, 'Failed to get MaintenanceLog=' + req.params.maintenanceLogID);
         return next(err);
     }
 };

@@ -1,3 +1,4 @@
+const { IoTThingsGraph } = require('aws-sdk');
 const mongoose = require('mongoose');
 
 const { zero,
@@ -531,6 +532,54 @@ db.once('open', function () {
                 { key: 'NA', value: 'NA' },
             ],
             order: twelfth
+        }),
+        fungsiAirPintu: new CategoryLabel({
+            key: 'fungsiAirPintu',
+            label: 'Fungsi Air Pintu',
+            required: false,
+            order: thirteenth
+        }),
+        pelinciranL: new TextboxQuestion({
+            key: 'pelinciranL',
+            label: 'Pelinciran (Lubrication)',
+            value: '',
+            required: false,
+            order: thirteenth
+        }),
+        haus: new TextboxQuestion({
+            key: 'haus',
+            label: 'Haus (Wear)',
+            value: '',
+            required: false,
+            order: thirteenth
+        }),
+        kP: new TextboxQuestion({
+            key: 'kP',
+            label: 'Kemudahan Pengangkutan (Ease of Travel)',
+            value: '',
+            required: false,
+            order: thirteenth
+        }),
+        pDPGG: new TextboxQuestion({
+            key: 'pDPGG',
+            label: 'Pembukaan dan Penutupan Gear-Gear',
+            value: '',
+            required: false,
+            order: thirteenth
+        }),
+        wireAngkut: new TextboxQuestion({
+            key: 'wireAngkut',
+            label: 'Wire Angkut (Lifting Rope)',
+            value: '',
+            required: false,
+            order: thirteenth
+        }),
+        cadanganRPLText: new TextboxQuestion({
+            key: 'cadanganRPLText',
+            label: 'Cadangan (Rail Pintu dan Lekatnya)',
+            value: '',
+            required: false,
+            order: thirteenth
         }),
         summary: new CategoryLabel({
             key: 'summary',

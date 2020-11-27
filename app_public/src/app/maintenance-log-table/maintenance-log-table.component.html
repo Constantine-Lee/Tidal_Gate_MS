@@ -34,7 +34,7 @@
                 </tr>
             </thead>
             <tbody class="text-center">
-                <tr [routerLink]="['/updateMaintenanceLog/',maintenanceLog._id]"
+                <tr class="rw" [routerLink]="['/updateMaintenanceLog/',maintenanceLog._id]"
                     *ngFor="let maintenanceLog of pageOfItems">
                     <td class="align-middle" style="position: relative;"><span
                             style="position:absolute; top:50%; left:50%; transform: translate(-50%, -50%);">{{maintenanceLog.id}}</span>

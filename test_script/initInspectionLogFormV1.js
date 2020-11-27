@@ -74,46 +74,53 @@ db.once('open', function () {
             required: false,
             order: first
         }),
-        huluPintuAir: new DropdownQuestion({
+        huluPintuAir: new TextboxQuestion({
             key: 'huluPintuAir',
             label: 'Hulu Pintu Air',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: first
         }),
-        hilirPintuAir: new DropdownQuestion({
+        hilirPintuAir: new TextboxQuestion({
             key: 'hilirPintuAir',
             label: 'Hilir Pintu Air',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: first
         }),
-        pentasOperasi: new DropdownQuestion({
+        pentasOperasi: new TextboxQuestion({
             key: 'pentasOperasi',
             label: 'Pentas Operasi',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: first
         }),
-        railPentasOperasi: new DropdownQuestion({
+        railPentasOperasi: new TextboxQuestion({
             key: 'railPentasOperasi',
             label: 'Rail Pentas Operasi',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: first
         }),
-        tangga: new DropdownQuestion({
+        tangga: new TextboxQuestion({
             key: 'tangga',
             label: 'Tangga',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: first
         }),
-        tempatDudukPintu: new DropdownQuestion({
+        tempatDudukPintu: new TextboxQuestion({
             key: 'tempatDudukPintu',
             label: 'Tempat Duduk Pintu',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: first
         }),
-        railPintuAir: new DropdownQuestion({
+        railPintuAir: new TextboxQuestion({
             key: 'railPintuAir',
             label: 'Rail Pintu Air',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: first
         }),
         cadanganSP: new TextboxQuestion({
@@ -129,34 +136,39 @@ db.once('open', function () {
             required: false,
             order: second
         }),
-        framePintuAir: new DropdownQuestion({
+        framePintuAir: new TextboxQuestion({
             key: 'framePintuAir',
             label: 'Frame Pintu Air',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: second
         }),
-        batuSeimbang: new DropdownQuestion({
+        batuSeimbang: new TextboxQuestion({
             key: 'batuSeimbang',
             label: 'Batu Seimbang',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: second
         }),
-        blokBearing: new DropdownQuestion({
+        blokBearing: new TextboxQuestion({
             key: 'blokBearing',
             label: 'Blok Bearing / Trunnion',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: second
         }),
-        sistemPelincir: new DropdownQuestion({
+        sistemPelincir: new TextboxQuestion({
             key: 'sistemPelincir',
             label: 'Sistem Pelinciran',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: second
         }),
-        sealGetah: new DropdownQuestion({
+        sealGetah: new TextboxQuestion({
             key: 'sealGetah',
             label: 'Seal Getah (bawah dan tepi)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: second
         }),
         cadanganBPA: new TextboxQuestion({
@@ -172,70 +184,81 @@ db.once('open', function () {
             required: false,
             order: third
         }),
-        tangkiHidrolik: new DropdownQuestion({
+        tangkiHidrolik: new TextboxQuestion({
             key: 'tangkiHidrolik',
             label: 'Tangki Hidrolik',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        minyak: new DropdownQuestion({
+        minyak: new TextboxQuestion({
             key: 'minyak',
             label: 'Minyak / Suhu Hidrolik',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        sistemPaip: new DropdownQuestion({
+        sistemPaip: new TextboxQuestion({
             key: 'sistemPaip',
             label: 'Sistem Paip',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        hos: new DropdownQuestion({
+        hos: new TextboxQuestion({
             key: 'hos',
             label: 'Hos',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        enjinDiesel: new DropdownQuestion({
+        enjinDiesel: new TextboxQuestion({
             key: 'enjinDiesel',
             label: 'Enjin Diesel',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        motoHidrolik: new DropdownQuestion({
+        motoHidrolik: new TextboxQuestion({
             key: 'motoHidrolik',
             label: 'Moto Hidrolik',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        pamHidrolik: new DropdownQuestion({
+        pamHidrolik: new TextboxQuestion({
             key: 'pamHidrolik',
             label: 'Pam Hidrolik',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        penyukatT: new DropdownQuestion({
+        penyukatT: new TextboxQuestion({
             key: 'penyukatT',
             label: 'Penyukat Tekanan',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        valvePengankut: new DropdownQuestion({
+        valvePengankut: new TextboxQuestion({
             key: 'valvePengankut',
             label: 'Valve Pemilik Tekanan (Pengankut)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        valveMenurun: new DropdownQuestion({
+        valveMenurun: new TextboxQuestion({
             key: 'valveMenurun',
             label: 'Valve Pemilik Tekanan (Menurun)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
-        penyedutTekanan: new DropdownQuestion({
+        penyedutTekanan: new TextboxQuestion({
             key: 'penyedutTekanan',
             label: 'Penyedut Tekanan (Suction Strainer)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: third
         }),
         cadanganMknmPgkt: new TextboxQuestion({
@@ -251,34 +274,39 @@ db.once('open', function () {
             required: false,
             order: fourth
         }),
-        spindle: new DropdownQuestion({
+        spindle: new TextboxQuestion({
             key: 'spindle',
             label: 'Spindle',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fourth
         }),
-        wire: new DropdownQuestion({
+        wire: new TextboxQuestion({
             key: 'wire',
             label: 'Wire',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fourth
         }),
-        clip: new DropdownQuestion({
+        clip: new TextboxQuestion({
             key: 'clip',
             label: 'Clip',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fourth
         }),
-        tumbuckle: new DropdownQuestion({
+        tumbuckle: new TextboxQuestion({
             key: 'tumbuckle',
             label: 'Tumbuckle',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fourth
         }),
-        cat: new DropdownQuestion({
+        cat: new TextboxQuestion({
             key: 'cat',
             label: 'Cat',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fourth
         }),
         cadanganUmum: new TextboxQuestion({
@@ -293,28 +321,32 @@ db.once('open', function () {
             required: false,
             order: fifth
         }),
-        kalisAir: new DropdownQuestion({
+        kalisAir: new TextboxQuestion({
             key: 'kalisAir',
             label: 'Kalis Air (Waterproof Coating)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fifth
         }),
-        kekuatan: new DropdownQuestion({
+        kekuatan: new TextboxQuestion({
             key: 'kekuatan',
             label: 'Kekuatan (Strength)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fifth
         }),
-        karat: new DropdownQuestion({
+        karat: new TextboxQuestion({
             key: 'karat',
             label: 'Karat (Rust)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fifth
         }),
-        catPaint: new DropdownQuestion({
+        catPaint: new TextboxQuestion({
             key: 'catPaint',
             label: 'Cat (Paint)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: fifth
         }),
         cadanganRPLLabel: new TextboxQuestion({
@@ -329,34 +361,39 @@ db.once('open', function () {
             required: false,
             order: sixth
         }),
-        pelinciranL: new DropdownQuestion({
+        pelinciranL: new TextboxQuestion({
             key: 'pelinciranL',
             label: 'Pelinciran (Lubrication)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: sixth
         }),
-        haus: new DropdownQuestion({
+        haus: new TextboxQuestion({
             key: 'haus',
             label: 'Haus (Wear)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: sixth
         }),
-        kP: new DropdownQuestion({
+        kP: new TextboxQuestion({
             key: 'kP',
             label: 'Kemudahan Pengangkutan (Ease of Travel)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: sixth
         }),
-        pDPGG: new DropdownQuestion({
+        pDPGG: new TextboxQuestion({
             key: 'pDPGG',
             label: 'Pembukaan dan Penutupan Gear-Gear',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: sixth
         }),
-        wireAngkut: new DropdownQuestion({
+        wireAngkut: new TextboxQuestion({
             key: 'wireAngkut',
             label: 'Wire Angkut (Lifting Rope)',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: sixth
         }),
         cadanganRPLText: new TextboxQuestion({
@@ -372,16 +409,18 @@ db.once('open', function () {
             required: false,
             order: seventh
         }),
-        accessRoad: new DropdownQuestion({
+        accessRoad: new TextboxQuestion({
             key: 'accessRoad',
             label: 'Access Road',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: seventh
         }),
-        stickGauge: new DropdownQuestion({
+        stickGauge: new TextboxQuestion({
             key: 'stickGauge',
             label: 'Stick Gauge Condition',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: seventh
         }),
         others: new TextboxQuestion({
@@ -391,10 +430,11 @@ db.once('open', function () {
             required: false,
             order: seventh
         }),
-        aITS: new DropdownQuestion({
+        aITS: new TextboxQuestion({
             key: 'aITS',
             label: 'Adakah Inspeksi TCG Selesai?',
-            options: [{ key: 'Ya', value: 'Ya' }, { key: 'Tidak', value: 'Tidak' }],
+            value: '',
+            required: false,
             order: seventh
         }),
         TSASIR: new CategoryLabel({

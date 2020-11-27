@@ -18,9 +18,9 @@ const getForm = async (req, res, next) => {
     let todayDate = new Date(date.getTime() + (8 * 60 * 60 * 1000) * 1);
 
     //testing purpose, create it with 1 day ago
-    //const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate - (24*60*60*1000) * 1 });
+    const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate - (24*60*60*1000) * 1 });
 
-    const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate });
+    //const imageRefCounter = await ImageRefCounter.create({ timestamp: todayDate });
     winston.info('ImageRefCounter: ' + imageRefCounter);
 
     Promise.all([
@@ -38,6 +38,12 @@ const getForm = async (req, res, next) => {
           form.reviewedBy.controlType = "disabled";
           form.approvedBy.controlType = "disabled";
         }
+        else if (req.user.role == 'Supervisor') {
+          form.reviewedBy.value = req.user.username;
+          form.approvedBy.value = req.user.username;
+          form.reviewedBy.controlType = "disabled";
+          form.approvedBy.controlType = "disabled";
+        }
         form.lokasiPintuAir.options = gate;
         form.tarikh.value = todayDate;
       }
@@ -45,6 +51,12 @@ const getForm = async (req, res, next) => {
         if (req.user.role == 'User') {
           form.testedBy.value = req.user.username;
           form.testedBy.controlType = "disabled";
+          form.reviewBy.controlType = "disabled";
+          form.approveBy.controlType = "disabled";
+        }
+        else if (req.user.role == 'Supervisor') {
+          form.reviewBy.value = req.user.username;
+          form.approveBy.value = req.user.username;
           form.reviewBy.controlType = "disabled";
           form.approveBy.controlType = "disabled";
         }

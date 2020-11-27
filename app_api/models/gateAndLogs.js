@@ -12,7 +12,7 @@ const {
   fullTextBoxSchema } = require('./form');
 
 //Gate
-const gateSchema = new mongoose.Schema({
+const gateSchema = new mongoose.Schema({  
   schemaOf: String,
   id: String,
   profilePhoto: String,

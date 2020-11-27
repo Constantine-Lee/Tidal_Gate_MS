@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 var ChangelogSchema = new mongoose.Schema({
-    timestamp: { type: Date, default: Date.now() },
+    create: { type: Date, expires:'25m', default: Date.now },
+    timestamp: { type: Date, default: Date.now },
     userName: String,
     userID: String,
     userRole: String,

@@ -77,7 +77,7 @@ const download = async (req, res, next) => {
                 doc.fontSize(10);
                 doc.x = 75;
                 doc.text(questions[i].label + ' : ');
-                doc.x = 375;
+                doc.x = 325;
 
                 if (questions[i].value != '') {
                     doc.moveUp();

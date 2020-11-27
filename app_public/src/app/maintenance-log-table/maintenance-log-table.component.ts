@@ -11,7 +11,7 @@ declare var $: any;
 @Component({
   selector: 'app-maintenance-log-table',
   templateUrl: './maintenance-log-table.component.html',
-  styles: ['tr:hover { cursor:pointer; background-color: gainsboro } ', '.hoverBtn:hover {background-color: white}', 
+  styles: ['.rw:hover { cursor:pointer; background-color: gainsboro } ', '.hoverBtn:hover {background-color: white}', 
   ''],
   animations: [fadeInAnimation]
 })

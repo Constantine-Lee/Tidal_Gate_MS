@@ -28,7 +28,7 @@
                 </tr>
             </thead>
             <tbody class="text-center">
-                <tr [routerLink]="['/updateInspectionLog/',inspectionLog._id]"
+                <tr class="rw" [routerLink]="['/updateInspectionLog/',inspectionLog._id]"
                     *ngFor="let inspectionLog of pageOfItems">
                     <td class="align-middle" style="position: relative;"><span
                             style="position:absolute; top:50%; left:50%; transform: translate(-50%, -50%);">{{inspectionLog.id}}</span>
@@ -48,7 +48,6 @@
                             <button style="margin-right: 0.2em; margin-left: 0.2em;"
                                 (click)="$event.stopPropagation(); showConfirmationModal(inspectionLog._id)"
                                 class="btn hoverBtn"><i class="fa fa-trash"></i></button>
-
                         </div>
                     </td>
                 </tr>

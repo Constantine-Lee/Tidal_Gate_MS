@@ -26,34 +26,15 @@
                 </tr>
             </thead>
             <tbody class="text-center">
-                <tr *ngFor="let gate of pageOfItems">
+                <tr class="rw" [routerLink]="['/updateGate/',gate._id]" *ngFor="let gate of pageOfItems">
                     <td class="align-middle">{{gate.id}} </td>
                     <td class="align-middle">{{gate.name}}</td>
                     <td>
                         <div class="d-flex justify-content-center">
-                            <button class="btn btn-light " [routerLink]="['/updateGate/',gate._id]"><i
-                                    class="fa fa-search"></i></button>
-                            <button class="btn btn-light " (click)="downloadPDF(gate._id)"><i
+                            <button style="margin-right: 0.2em; margin-left: 0.2em;" class="btn hoverBtn" (click)="$event.stopPropagation(); downloadPDF(gate._id)"><i
                                     class="fa fa-file-pdf-o"></i></button>
-                            <button *ngIf="isAdmin" (click)="showConfirmationModal(gate._id)" class="btn btn-light"><i
+                            <button style="margin-right: 0.2em; margin-left: 0.2em;" *ngIf="isAdmin" (click)="$event.stopPropagation(); showConfirmationModal(gate._id)" class="btn hoverBtn"><i
                                     class="fa fa-trash"></i></button>
-
-                            <!-- Modal -->
-                            <div class="modal" id="confirmationModal">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-body">
-                                            <h4>Confirm Delete the Gate ?</h4>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-primary"
-                                                data-dismiss="modal">Cancel</button>
-                                            <button type="button" (click)="delete()" class="btn btn-outline-danger"
-                                                data-dismiss="modal">Delete</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </td>
                 </tr>
@@ -61,5 +42,21 @@
         </table>
         <app-jw-pagination [pager]="pager" (changePage)="getGates($event)">
         </app-jw-pagination>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="confirmationModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Confirm Delete the Gate ?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                <button type="button" (click)="delete()" class="btn btn-outline-danger"
+                    data-dismiss="modal">Delete</button>
+            </div>
+        </div>
     </div>
 </div>

@@ -14,7 +14,7 @@ const {
     baseQuestionSchema } = require('../app_api/models/form');
 
 const {
-    v2Schema } = require('../app_api/models/gateAndLogs');
+    inspectionLogSchema, v2Schema } = require('../app_api/models/gateAndLogs');
 
 mongoose.connect('mongodb://localhost/fyp', { useNewUrlParser: true });
 const db = mongoose.connection;

@@ -78,10 +78,14 @@
                                 <option value="Operator">Operator</option>
                             </select>
                         </div>
+                        <div *ngIf="userExist" >
+                            <div style="color: red;">Username exist.</div>
+                        </div>
                     </form>
+                    
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-link" data-dismiss="modal" (click)="reset()">Cancel</button>
                     <button (click)="onSubmit()" type="button" class="btn btn-primary">Add</button>
                 </div>
             </div>

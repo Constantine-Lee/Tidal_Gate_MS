@@ -96,7 +96,7 @@ export class MaintenanceLogFormComponent implements OnInit {
   submitErrHandling(err) {
     console.log(err);
     if (err != undefined) {
-      if (err.error == "The Gate had been edited by others. \n The latest information have been fetched and updated on this page.") {
+      if (err.error == "The Maintenance Log had been edited by others. \n The latest information have been fetched and updated on this page.") {
         this.ngOnInit();
       }
       this.errorString = err.error;

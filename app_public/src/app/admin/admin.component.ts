@@ -26,7 +26,7 @@ export class AdminComponent implements OnInit {
     returnUrl: string;
     error = '';
     searchTerm: string = "";
-
+    userExist = false;
     receive: boolean;
 
     _idToDelete: number;
@@ -93,7 +93,17 @@ export class AdminComponent implements OnInit {
                 this.submitted = false;
                 $('#exampleModal').modal('hide');
                 this.ngOnInit();
+            },
+            err => {
+                console.log('err: ' + err.error);
+                if (err.error == 'Username exists.') {
+                    this.userExist = true;
+                }                             
             }
         );
+    }
+
+    reset() {
+        this.userExist = false;
     }
 }

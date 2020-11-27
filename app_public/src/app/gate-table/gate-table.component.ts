@@ -15,7 +15,8 @@ declare var $: any;
 @Component({
   selector: 'app-gate-table',
   templateUrl: './gate-table.component.html',
-
+  styles: ['.rw:hover { cursor:pointer; background-color: gainsboro } ', '.hoverBtn:hover {background-color: white}', 
+  ''],
   // make fade in animation available to this component
   animations: [fadeInAnimation]
 })
